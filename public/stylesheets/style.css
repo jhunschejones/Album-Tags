@@ -1,0 +1,59 @@
+nav {
+  padding-top: 15px !important;
+  padding-bottom: 0px !important;
+}
+
+/* ====== custom styling for cards ======= */
+.card-deck {
+  margin: 15px;
+  margin-bottom: 50px;
+}
+
+.card {
+  margin: 5px !important;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+.card-title {
+  margin-bottom: 0px;
+}
+
+.card-block {
+  padding: 10px;
+}
+
+.album {
+  font-style: italic;
+}
+
+.label, .release {
+  color: gray;
+}
+
+.card-footer {
+  padding: 5px;
+  text-align: center;
+  font-size: 0.7em;
+}
+
+.card-footer small {
+  color: #d3d3d3 !important;
+}
+
+
+/* ====== stling for the footer ======== */
+hr {
+  margin-bottom: 0px;
+}
+.my_footer .nav-item {
+  margin-bottom: 0px;
+}
+
+.my_footer small {
+  color: lightgray !important;
+  margin-top: 0px;
+}
