@@ -11,4 +11,4 @@ The greatest challenge of this app was the actual process of accessing the Apple
 Finally, I worked to build my express router and global.js files up so they could return, store, and use the data from my api calls to populate the page. 
 
 ## Outcome
-To take a look at the final product, click [here](music-this-week.herokuapp.com)! I hosted the app on Heroku for practice deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.
+To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I hosted the app on Heroku for practice deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.
