@@ -1,15 +1,20 @@
 console.log("custom script is running")
 $(document).ready(function() {
-    populateCard(1);
-    populateCard(2);
-    populateCard(3);
-    populateCard(4);
-    populateCard(5);
+    populateCard(1, 1338961464);
+    populateCard(2, 1074379425);
+    populateCard(3, 1334753255);
+    populateCard(4, 1296409535);
+    populateCard(5, 1241196179);
 });
 
-function populateCard(cardNumber){
+function populateCard(cardNumber, albumNumber){
     var cardContent = ''
-    $.getJSON ( '/users/album' + cardNumber, function(rawData) {
+    // this is populating the URL
+    $.ajax({
+        type: 'GET',
+        url: '/users/album/' + albumNumber})
+    // this is pulling data from url and populating cards
+    $.getJSON ( '/users/album/' + albumNumber, function(rawData) {
         var artist = rawData.data[0].attributes.artistName;
         var album = rawData.data[0].attributes.name;
         var label = rawData.data[0].attributes.recordLabel;
