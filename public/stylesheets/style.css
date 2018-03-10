@@ -1,6 +1,20 @@
-nav {
-  padding-top: 15px !important;
+.jumbotron {
+  padding-top: 10px !important;
   padding-bottom: 0px !important;
+  padding-left: 17px !important;
+  text-align: left !important;
+  margin-bottom: 15px;
+}
+
+.jumbotron h1 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.jumbotron p {
+  padding-top: 0px;
+  margin-top: 0px;
+  padding-bottom: 15px;
 }
 
 /* ====== custom styling for cards ======= */
@@ -22,7 +36,7 @@ nav {
   margin-bottom: 0px;
 }
 
-.card-block {
+.card-body {
   padding: 10px;
 }
 

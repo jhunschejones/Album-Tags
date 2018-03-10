@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <% include partials/templates/head_tags.ejs %>
+        <link rel="stylesheet" href="/stylesheets/albumdetails.css">
+    </head>
+    <body>
+
+        <!-- BASIC NAVBAR TEMPLATE -->
+        <% include partials/templates/navbar_basic.ejs %>
+
+        <!-- START PAGE CONTENT -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 clear-fixt">
+                    <div class="albumdetails_details">
+                        <h1 class="albumdetails_artist"></h1> 
+                        <span class="albumdetails_album"></span>
+                        <img class="img-fluid albumdetails_cover" src="" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <div class="card" style="width: 18rem;">
+                            <h6 class="card-header">Details</h6>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Label: </strong><span class="albumdetails_label"></span></p>
+                                <p class="card-text"><strong>Released: </strong><span class="albumdetails_release"></span></p>
+                                <a href="" target="_blank" class="btn btn-sm btn-primary applemusicurl">Listen on Apple Music</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card" style="width: 18rem;">
+                            <h6 class="card-header">Tags</h6>
+                            <div class="card-body tag_pile">
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <br />
+                    <button class="btn btn-sm btn-secondary" onclick="window.history.back()">Go Back</button>
+                </div>
+            </div>
+
+        </div>
+        <!-- END PAGE CONTENT -->    
+
+        <!-- Messy way to pull album ID so I can get it in my javascript -->
+        <p class="heres_the_album_id" style="display:none;"> <%= albumId %> </p>   
+
+        <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
+        <% include partials/templates/footer.ejs %>
+
+        <script src="/javascripts/albumdetails.js"></script>
+    </body>
+</html>

@@ -10,5 +10,10 @@ The greatest challenge of this app was the actual process of accessing the Apple
 
 Finally, I worked to build my express router and global.js files up so they could return, store, and use the data from my api calls to populate the page. At this stage it may look like much of the functionality of the site could be duplicated by just hard-coding in the values, however the real power of Express and Node becomes apparent when the content needs to be updated. I can simply update the album ID in the global.js file and all the data on the page updates automatically, including the images. This flexibility expands the potential of the app for additional future features, and makes the weekly maintenance easy.
 
+#### Update 1:
+As I look to the future features I would like to bring to this app, I decided I would benefit from a different view engine and some of the features it offers. I converted the app from jade to ejs, and in the process took the oportunity to upgrade the bootstrap from v4 Alpha to the current stable 4.x now that v4 aplha is depreciated.
+
+I really enjoy how easy it is to work with partials in ejs. It helped DRY up my code quite a bit and gives me a fast way to build more new views yet maintain content easily throughout the app.
+
 ## Outcome
-To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I hosted the app on Heroku for practice deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.
+To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.
