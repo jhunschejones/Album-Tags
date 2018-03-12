@@ -31,4 +31,13 @@ router.get('/json/:albumId', function(req, res) {
     })
 });
 
+router.get('/database/:albumId', function(req, res) {
+    var db = req.db;
+    var collection = db.get('musictags');
+    var thisAlbum = req.params.albumId;
+    collection.find({ "albumId" : thisAlbum }, function(e,docs){
+        res.json(docs);
+    })
+});
+
 module.exports = router;

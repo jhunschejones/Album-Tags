@@ -14,13 +14,11 @@ function populateSearchResults() {
     $('.warning_label').html('');
 
     // main functionality is wrapped in some basic error handling
+    // dealing with blank results catagories
     if (mySearch != '') {
         $('.warning_label').html('');
         // this is pulling data from url and populating cards
         $.getJSON ( '/search/' + mySearch, function(rawData) {
-
-            console.log("artists = ", rawData.results.artists)
-            console.log("albums = ", rawData.results.albums)
 
             if (typeof(rawData.results.artists) != "undefined") {
                 // this stores an array

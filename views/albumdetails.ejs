@@ -12,7 +12,7 @@
         <!-- START PAGE CONTENT -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6 clear-fixt">
+                <div class="col-sm-6">
                     <div class="albumdetails_details">
                         <h1 class="albumdetails_artist"></h1> 
                         <span class="albumdetails_album"></span>
@@ -21,20 +21,22 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="row">
-                        <div class="card" style="width: 18rem;">
+                        <div class="card details_card" style="width: 18rem;">
                             <h6 class="card-header">Details</h6>
                             <div class="card-body">
-                                <p class="card-text"><strong>Label: </strong><span class="albumdetails_label"></span></p>
+                                <p class="card-text"><strong>Record Label: </strong><span class="albumdetails_label"></span></p>
                                 <p class="card-text"><strong>Released: </strong><span class="albumdetails_release"></span></p>
-                                <a href="" target="_blank" class="btn btn-sm btn-primary applemusicurl">Listen on Apple Music</a>
+                                <!-- there is intentionally no href here, it is set in albumdetails.js -->
+                                <a href="" target="_blank" class="btn btn-sm btn-outline-primary applemusicurl">Listen on Apple Music</a>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="card" style="width: 18rem;">
                             <h6 class="card-header">Tags</h6>
-                            <div class="card-body tag_pile">
-                                <div></div>
+                            <div id="tag_pile" class="card-body">
+                                <div class="tag_results"></div>
+                                <a href="" class="btn btn-sm btn-outline-primary tag_search_button">Search by Sellected Tags</a>
                             </div>
                         </div>
                     </div>                    

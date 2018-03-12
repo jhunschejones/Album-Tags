@@ -10,6 +10,16 @@ var thisweek = require('./routes/thisweek');
 var search = require('./routes/search');
 var albumdetails = require('./routes/albumdetails');
 
+// Connecting my database
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('mongodb://joshua:roofuzz@ds263948.mlab.com:63948/music-tags');
+
+// Use this to see when the database is connected
+// db.then(() => {
+//   console.log('Connected correctly to database server')
+// })
+
 var app = express();
 
 // view engine setup
@@ -23,6 +33,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Making my DB accessable to the router
+app.use(function(req,res,next){
+	req.db = db;
+	next();
+});
+
 
 app.use('/', index);
 app.use('/thisweek', thisweek);
