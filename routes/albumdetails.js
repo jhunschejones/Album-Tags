@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router(); 
 const request = require("request"); 
 
-/* GET search page. */
+/* GET album details page. */
 router.get('/:albumId', function(req, res) {
     res.render('albumdetails', {
         pageId: 'albumdetails',

@@ -71,17 +71,48 @@ function populateTags(albumNumber) {
 
 
 // this function is avaiable onclick for all the tags it will toggle
-// between two boostrap classes to change the color of sellected tags
+// between two boostrap classes to change the color of selected tags
 // it takes in the unique tag ID assigned to eatch badge durring
 // creation so that only the desired badge toggles colors
 function changeClass(tagName) {
     event.preventDefault();
     var thisTag = document.getElementById(tagName.id);
     thisTag.classList.toggle("badge-primary");
+    thisTag.classList.toggle("selected_tag");
     thisTag.classList.toggle("badge-light");
+    // see below
+    addToTagArray(thisTag.innerHTML);
+};
+
+
+// this function creates an array and adds or removes tags as the
+// applicable tag badges are clicked
+var selectedTags = [];
+function addToTagArray(tag) {
+    // this conditional returns -1 value if tag is not in array
+    if ($.inArray(tag, selectedTags) === -1) {
+        selectedTags.push(tag);
+    } else {
+        // cant use pop because it removes last item only
+        // this finds the item being clicked and uses that
+        // index with splice() to remove 1 item only
+        let index = selectedTags.indexOf(tag)
+        selectedTags.splice(index, 1);
+    };
 };
 
 
 // calling populateAlbumDetails and populateTags to fill the page
 populateAlbumDetails(albumId);
 populateTags(albumId);
+
+// called by the search button on tags card
+function tagSearch() {
+    event.preventDefault();
+
+    if (selectedTags.length > 0) {
+        // right now this opens in new page, can change when done with testing
+        var win = window.open(`/search/tags/${selectedTags}`);
+        win.focus();
+    }
+};

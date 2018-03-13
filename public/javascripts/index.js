@@ -1,11 +1,11 @@
 console.log("The custom script for the index page is running")
 
 $(document).ready(function() {
-    populateCard(1, 1338961464);
-    populateCard(2, 1074379425);
-    populateCard(3, 1334753255);
-    populateCard(4, 1296409535);
-    populateCard(5, 1241196179);
+    populateCard(1, 1110576026);
+    populateCard(2, 1314637017);
+    populateCard(3, 1316167917);
+    populateCard(4, 1318043781);
+    populateCard(5, 1092370167);
 });
 
 function populateCard(cardNumber, albumNumber){
