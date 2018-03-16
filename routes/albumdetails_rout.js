@@ -5,7 +5,8 @@ const request = require("request");
 /* GET album details page. */
 router.get('/:albumId', function(req, res) {
     res.render('albumdetails', {
-        pageId: 'albumdetails',
+        pageTitle: ': Album Details',
+        subTitle: 'Album Details',
         albumId: req.params.albumId
     });
 });

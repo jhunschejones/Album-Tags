@@ -8,28 +8,14 @@
         <!-- BASIC NAVBAR TEMPLATE -->
         <% include partials/templates/navbar_basic.ejs %>
 
-        <!-- BEGIN ALBUM CARDS -->
-        <div class="card-deck">
-            <div id="card1" class="card">
-                <% include partials/content/card_content.ejs %>
-            </div>
-            <div id="card2" class="card">
-                <% include partials/content/card_content.ejs %>
-            </div>
-            <div id="card3" class="card">
-                <% include partials/content/card_content.ejs %>
-            </div>
-            <div id="card4" class="card">
-                <% include partials/content/card_content.ejs %>
-            </div>
-            <div id="card5" class="card">
-                <% include partials/content/card_content.ejs %>
-            </div>
-        </div>
-        <!-- END ALBUM CARDS -->       
+        <div class='container-fluid'>
+            <h1>Welcome to Josh's Music Tag Cloud App</h1>
+            <p>Take a look around, things are still under construction but much of the app is already functional.</p>
+            <p>The <a href="/search/">search</a> is a great place to start, or you can check out <a href="/thisweek">what albums</a> I'm listening to this week.</p>
+        </div>     
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>
-        <script src="/javascripts/index.js"></script>
+        <script src="/javascripts/index_script.js"></script>
     </body>
 </html>

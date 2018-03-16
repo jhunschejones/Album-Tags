@@ -10,7 +10,7 @@
         <% include partials/templates/navbar_basic.ejs %>
 
         <div class="container-fluid">
-            <h1>Search Page</h1> 
+            <br />
             <form class="form-inline">
                 <div class="form-group mx-sm-3 mb-2 artist_search">
                     <!-- for continuous search, add oninput="populateSearchResults()" to input field -->
@@ -20,16 +20,16 @@
             </form>
             <span class="warning_label"></span>
             <br />
-            <h4>Artists:</h4>
+            <h4 class="artists_label"></h4>
             <span class="artist_results"></span>
             <br />
-            <h4>Albums:</h4>
+            <h4 class="albums_label"></h4>
             <span class="album_results"></span>
         </div>           
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>
 
-        <script src="/javascripts/search.js"></script>
+        <script src="/javascripts/search_script.js"></script>
     </body>
 </html>

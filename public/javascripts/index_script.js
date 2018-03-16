@@ -1,0 +1,1 @@
+console.log("The custom script for the home page is running")

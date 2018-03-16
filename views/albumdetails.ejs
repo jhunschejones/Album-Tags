@@ -35,10 +35,11 @@
                         <div class="card" style="width: 18rem;">
                             <h6 class="card-header">Tags</h6>
                             <div id="tag_pile" class="card-body">
-                                <div class="tag_results"></div>
+                                <div class="tag_results">There are currently no tags for this album.</div>
                                 <a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button">Search by Selected Tags</a>
                             </div>
                         </div>
+                        <span class="warning_label"></span>
                     </div>                    
                 </div>
             </div>
@@ -58,6 +59,6 @@
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>
 
-        <script src="/javascripts/albumdetails.js"></script>
+        <script src="/javascripts/albumdetails_script.js"></script>
     </body>
 </html>

@@ -15,5 +15,8 @@ As I look to the future features I would like to bring to this app, I decided I 
 
 I really enjoy how easy it is to work with partials in ejs. It helped DRY up my code quite a bit and gives me a fast way to build more new views yet maintain content easily throughout the app.
 
+#### Update 2:
+I have pushed a few small updates over the past week, but the culmination of these changes is that there is now a "under-construction" home page with basic links through the site as well as a functioning tag database. The tag search functionality allows users to see what tags an album is associated with and find related albums by searching using one or more tags.
+
 ## Outcome
 To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.

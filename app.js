@@ -5,10 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var thisweek = require('./routes/thisweek');
-var search = require('./routes/search');
-var albumdetails = require('./routes/albumdetails');
+var index = require('./routes/index_rout');
+var thisweek = require('./routes/thisweek_rout');
+var search = require('./routes/search_rout');
+var albumdetails = require('./routes/albumdetails_rout');
 
 // Connecting my database
 var mongo = require('mongodb');

@@ -1,4 +1,4 @@
-console.log("The custom script for the index page is running")
+console.log('The custom script for the "this week" page is running')
 
 $(document).ready(function() {
     populateCard(1, 1110576026);

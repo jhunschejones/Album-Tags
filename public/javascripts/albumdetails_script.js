@@ -47,6 +47,8 @@ function makeNiceDate(uglyDate) {
 function populateTags(albumNumber) {
     $.getJSON ( '/albumdetails/database/' + albumNumber, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
+            // clear default no-tags notice if tags exist
+            $(".tag_results").text('');
             var tags = rawData[0].tags;
 
             tags.forEach(element => {
@@ -76,6 +78,8 @@ function populateTags(albumNumber) {
 // creation so that only the desired badge toggles colors
 function changeClass(tagName) {
     event.preventDefault();
+    // clear warning label
+    $('.warning_label').text('');
     var thisTag = document.getElementById(tagName.id);
     thisTag.classList.toggle("badge-primary");
     thisTag.classList.toggle("selected_tag");
@@ -111,8 +115,8 @@ function tagSearch() {
     event.preventDefault();
 
     if (selectedTags.length > 0) {
-        // right now this opens in new page, can change when done with testing
-        var win = window.open(`/search/tags/${selectedTags}`);
-        win.focus();
+        var win = window.location = (`/search/tags/${selectedTags}`);
+    }  else {
+        $('.warning_label').append('<p>Click one or more tags to make a selection before searching by tags.</p>')
     }
 };

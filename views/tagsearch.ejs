@@ -10,12 +10,15 @@
         <% include partials/templates/navbar_basic.ejs %>
 
         <div class="container-fluid">
-            <h1>Tag Search Page</h1>
             <h4>Tags:</h4>
             <span class="tags_searched"></span>
             <br /> 
+            <br />
             <h4>Albums:</h4>
             <span class="album_results"></span>
+            <br />
+            <br />
+            <button class="btn btn-sm btn-secondary" onclick="window.history.back()">Go Back</button>
 
         </div>           
 
@@ -25,6 +28,6 @@
         <!-- Messy way to pull album ID so I can get it in my javascript -->
         <p class="heres_the_selected_tags" style="display:none;"> <%= selectedTags %> </p>   
 
-        <script src="/javascripts/tagsearch.js"></script>
+        <script src="/javascripts/tagsearch_script.js"></script>
     </body>
 </html>

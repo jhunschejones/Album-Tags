@@ -5,7 +5,8 @@ const request = require("request");
 /* GET search page. */
 router.get('/', function(req, res) {
     res.render('search', {
-        pageId: 'search'
+        pageTitle: ': Album Search',
+        subTitle: 'Search By Album or Artist'
     });
 });
 
@@ -35,7 +36,8 @@ router.get('/:search', function(req, res) {
 /* GET tags-search page. */
 router.get('/tags/:selectedtags', function(req, res) {
     res.render('tagsearch', {
-        pageId: 'Tag Search',
+        pageTitle: ': Tag Search',
+        subTitle: 'Tag Search Results',
         selectedTags: req.params.selectedtags
     });
 });
@@ -56,8 +58,6 @@ router.get('/tags/database/:selectedtags', function(req, res) {
         // put the item back in the array
         selectedTags.push(element);
     });
-
-    console.log(selectedTags)
 
     collection.find({ "tags" : { $all: selectedTags } }, function(e,docs){
         res.json(docs);

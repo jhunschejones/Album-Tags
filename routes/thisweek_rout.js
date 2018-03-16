@@ -2,6 +2,14 @@ var express = require('express');
 var router = express.Router(); 
 const request = require("request");  
 
+/* GET "this week" page. */
+router.get('/', function(req, res, next) {
+    res.render('thisweek', { 
+      pageTitle: "",
+      subTitle: "What is Josh listening to this week?"
+  });
+});
+
 /* GET album info. */
 router.get('/album/:albumId', function(req, res) {
   const jwtToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik05OVpGUEMyR1UifQ.eyJpYXQiOjE1MjAyODgwNDQsImV4cCI6MTUzNTg0MDA0NCwiaXNzIjoiUzJaUDI1NlBQSyJ9.aHYYWnOKFNxP-l5gXFq8SUurmtDuGvf_ZklQfFXgT-IlPrlXtXUIvHLDUz_psHQNyVwQeN8SxdEcgzMNR2x9Kg"
