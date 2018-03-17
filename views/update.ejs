@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <% include partials/templates/head_tags.ejs %>
+        <link rel="stylesheet" href="/stylesheets/albumdetails.css">
+    </head>
+    <body>
+
+        <!-- BASIC NAVBAR TEMPLATE -->
+        <% include partials/templates/navbar_basic.ejs %>
+
+        <!-- START PAGE CONTENT -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row container-fluid">
+                        <div class="albumdetails_details">
+                            <h1 class="albumdetails_artist"></h1> 
+                            <span class="albumdetails_album"></span>
+                            <img class="img-fluid albumdetails_cover" src="" alt="">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <form class="form-inline">
+                            <div class="form-group mx-sm-3 mb-2 artist_search">
+                                <!-- for continuous search, add oninput="populateSearchResults()" to input field -->
+                                <input type="text" class="form-control" id="new_tag" placeholder="Add a Tag!">
+                            </div>
+                            <button type="button" onclick="updateTags()" class="btn btn-primary mb-2">Add</button>
+                            <span class="warning_label text-danger"></span>
+                        </form>   
+                    </div>
+                </div>
+                <div class="col-sm-8 container-fluid">
+                    <table class="table table-striped table-bordered table-dark" id="tags_table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Tag</th>
+                            <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tag_results">                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                <br />
+                <button class="btn btn-sm btn-secondary" onclick="window.history.back()">Go Back</button>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT -->    
+
+        <!-- Messy way to pull album ID so I can get it in my javascript -->
+        <p class="heres_the_album_id" style="display:none;"> <%= albumId %> </p>   
+
+        <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
+        <% include partials/templates/footer.ejs %>
+
+        <script src="/javascripts/update.script.js"></script>
+    </body>
+</html>

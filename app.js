@@ -5,10 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index_rout');
-var thisweek = require('./routes/thisweek_rout');
-var search = require('./routes/search_rout');
-var albumdetails = require('./routes/albumdetails_rout');
+var index = require('./routes/index.rout');
+var thisweek = require('./routes/thisweek.rout');
+var search = require('./routes/search.rout');
+var albumdetails = require('./routes/albumdetails.rout');
+var update = require('./routes/update.rout');
 
 // Connecting my database
 var mongo = require('mongodb');
@@ -45,6 +46,7 @@ app.use('/', index);
 app.use('/thisweek', thisweek);
 app.use('/search', search);
 app.use('/albumdetails', albumdetails);
+app.use('/update', update);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
