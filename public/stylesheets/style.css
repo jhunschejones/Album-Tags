@@ -58,8 +58,15 @@
   color: #d3d3d3 !important;
 }
 
+/* ======= styling for warnings ========= */
+.warning_label {
+  margin-left: 16px;
+  margin-right: 16px;
+  font-size: .8em !important;
+}
 
-/* ====== stling for the footer ======== */
+
+/* ====== styling for the footer ======== */
 hr {
   margin-bottom: 0px;
 }

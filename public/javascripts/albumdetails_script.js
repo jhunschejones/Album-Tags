@@ -49,6 +49,7 @@ function populateTags(albumNumber) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
             $(".tag_results").text('');
+            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button">Search by Selected Tags</a>');
             var tags = rawData[0].tags;
 
             tags.forEach(element => {
@@ -106,9 +107,13 @@ function addToTagArray(tag) {
 };
 
 
-// calling populateAlbumDetails and populateTags to fill the page
-populateAlbumDetails(albumId);
-populateTags(albumId);
+// waiting for the page to be ready before filling content
+// decide if this looks better than just calling functions
+$( document ).ready(function(){
+    // calling populateAlbumDetails and populateTags to fill the page
+    populateAlbumDetails(albumId);
+    populateTags(albumId);
+});
 
 // called by the search button on tags card
 function tagSearch() {
@@ -117,6 +122,7 @@ function tagSearch() {
     if (selectedTags.length > 0) {
         var win = window.location = (`/search/tags/${selectedTags}`);
     }  else {
-        $('.warning_label').append('<p>Click one or more tags to make a selection before searching by tags.</p>')
+        $('.warning_label').text('');
+        $('.warning_label').text('Select one or more tags to preform a tag-search.');
     }
 };

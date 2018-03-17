@@ -11,6 +11,11 @@
 
 .details_card {
     margin-top: 15px !important;
+    margin-left: 16px !important;
+}
+
+.tags_card {
+    margin-left: 16px !important;
 }
 
 .tag_search_button {
