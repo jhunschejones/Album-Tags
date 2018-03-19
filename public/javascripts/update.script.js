@@ -65,6 +65,9 @@ function populateTags(albumNumber) {
                 // tag to toggle a badge-success class name and change the color
                 $('.tag_results').append(`<tr><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);               
             });
+        } else {
+            // create database entry if none exists
+            postTags(); 
         };
     });
 };
@@ -106,6 +109,20 @@ function deleteTag(event) {
     }
     populateTags(albumId);
 };
+
+
+function postTags() {
+
+    // Use AJAX to post the new tag in the database   
+    $.ajax(`database/${albumId}`, {
+        method: 'POST',
+        contentType: 'application/json',
+        processData: false,
+        // have to convert albumId to string so it works with the rest of app logic
+        data: JSON.stringify({"albumId" : albumId.toString(), "tags" : []})
+    })
+};
+
 
 populateTable(albumId);
 populateTags(albumId);

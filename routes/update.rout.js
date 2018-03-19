@@ -26,9 +26,22 @@ router.put('/database/:albumId', function(req, res) {
     var db = req.db;
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
-    console.log(Object.values(req.body)[0]);
+    // console.log(Object.values(req.body)[0]);
     collection.update({ "albumId" : thisAlbum }, {$set: { "tags" : Object.values(req.body)[0]}});
     res.sendStatus(200)   
+});
+
+// POST to database
+router.post('/database/:albumId', function(req, res) {
+    var db = req.db;
+    var collection = db.get('musictags');
+    var thisAlbum = req.params.albumId;
+    // console.log(req.body)
+    collection.insert(req.body, function(err, result){
+        res.send(
+            (err === null) ? { msg: '' } : { msg: err }
+        );
+    });
 });
 
 
