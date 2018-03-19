@@ -89,6 +89,7 @@ function updateTags() {
         $(".warning_label").text("Enter a non-empty tag")
     } 
     populateTags(albumId);
+    $('#new_tag').val('');
 };
 
 function deleteTag(event) {
