@@ -14,13 +14,13 @@
 .jumbotron p {
   padding-top: 0px;
   margin-top: 0px;
-  /* padding-bottom: 15px; */
+  margin-bottom: 0px;
 }
 
 .my_dropdown {
   padding-top: 0px;
-  padding-bottom: 0px;
-  padding-left: 12px;
+  padding-bottom: 12px;
+  padding-left: 0px;
 }
 
 .dropdown-menu a {
