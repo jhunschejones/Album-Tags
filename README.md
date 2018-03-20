@@ -21,5 +21,8 @@ I have pushed a few small updates over the past week, but the culmination of the
 #### Update 3:
 Over the last two commits I added an "update" page which allows a user to add and delete tags from an album in the database. The tags are stored as an array value in an album's document in the MongoDB database. Because of this, the update functionality had to be written as a PUT request, not just a POST request. I use two different functions in the page script file--one to add tags to an array and one to remove them, then the array is used in the final PUT request. Once this put functionality was in place, I also added a POST functionality that is used when the album is not in the tags database. This is necessary because the actual album details are called from Apple's API, so there are many more albums viewable in the app than are in the tags database.
 
+### Update 4:
+The app search has been greatly expanded, offering up to 25 results for both albums and artists as well as an "albums" link to show the top five albums by a specific artist returned in the results. Navigation was added to every page and several bugs were fixed, including simplifying the error page, preventing duplicate tag entries, and reloading search results when the search page is navigated to using the "back" button.
+
 ## Outcome
 To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.

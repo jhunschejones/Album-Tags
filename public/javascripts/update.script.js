@@ -76,7 +76,15 @@ function updateTags() {
 
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
-        currentTags.push(newTag);
+        // checking for duplicates
+        if (currentTags.indexOf(newTag) == -1) {
+            currentTags.push(newTag);
+            $(".warning_label").text('')
+        } 
+        else {
+            $(".warning_label").text("This tag is already assigned to this album.")
+        };
+        
     
         // Use AJAX to put the new tag in the database   
         $.ajax(`database/${albumId}`, {

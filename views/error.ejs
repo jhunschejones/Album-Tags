@@ -1,14 +1,28 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <% include partials/templates/head_tags.ejs %>
+        <!-- Required meta tags -->
+        <meta http-equiv="X-UA-Compatible" content="IE=10">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.css">
+        <link rel="stylesheet" href="/stylesheets/style.css">
+
+        <title>Music This Week</title>
     </head>
     <body>
+        <!-- BEGIN NAVBAR -->
+        <div class="jumbotron jumbotron-fluid bg-dark ">
+            <h1 class="display-5 text-light">Music This Week</h1>
+            <p class="lead text-muted">Error Page</p>
+        </div>
+        <!-- END NAVBAR -->
 
-        <!-- BASIC NAVBAR TEMPLATE -->
-        <% include partials/templates/navbar_basic.ejs %>
+
         <h1>There appears to have been an error!</h1>
-        <%= error %>       
+        <p> <%= error %> </p>
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>
