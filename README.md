@@ -10,6 +10,8 @@ The greatest challenge of this app was the actual process of accessing the Apple
 
 Finally, I worked to build my express router and global.js files up so they could return, store, and use the data from my api calls to populate the page. At this stage it may look like much of the functionality of the site could be duplicated by just hard-coding in the values, however the real power of Express and Node becomes apparent when the content needs to be updated. I can simply update the album ID in the global.js file and all the data on the page updates automatically, including the images. This flexibility expands the potential of the app for additional future features, and makes the weekly maintenance easy.
 
+## Updates
+
 #### Update 1:
 As I look to the future features I would like to bring to this app, I decided I would benefit from a different view engine and some of the features it offers. I converted the app from jade to ejs, and in the process took the oportunity to upgrade the bootstrap from v4 Alpha to the current stable 4.x now that v4 aplha is depreciated.
 
@@ -23,6 +25,9 @@ Over the last two commits I added an "update" page which allows a user to add an
 
 ### Update 4:
 The app search has been greatly expanded, offering up to 25 results for both albums and artists as well as an "albums" link to show the top five albums by a specific artist returned in the results. Navigation was added to every page and several bugs were fixed, including simplifying the error page, preventing duplicate tag entries, and reloading search results when the search page is navigated to using the "back" button.
+
+### Update 5:
+An "all tags" page has been added, completing the list of main functions the site requires. This page allows a user to see all available tags in the database and search by any combination of one or more tags. The layout has been slightly tweaked as well to be more usable on a mobile screen, and "album details" links have been added to the "music this week" page to further link the app's functionality together.
 
 ## Outcome
 To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.

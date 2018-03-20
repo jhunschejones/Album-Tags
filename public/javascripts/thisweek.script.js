@@ -25,6 +25,7 @@ function populateCard(cardNumber, albumNumber){
         
         $('#card' + cardNumber + ' .card-body h4').html(artist);
         $('#card' + cardNumber + ' .card-body .album').html(' ' + album);
+        $('#card' + cardNumber + ' .card-body .album_details_link').attr('href', '/albumdetails/' + albumNumber);
         $('#card' + cardNumber + ' .card-body .label').html(' ' + label);
         $('#card' + cardNumber + ' .card-body .release').html(' ' + release);
         $('#card' + cardNumber + ' img').attr("src", cover);

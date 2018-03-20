@@ -10,6 +10,7 @@ var thisweek = require('./routes/thisweek.rout');
 var search = require('./routes/search.rout');
 var albumdetails = require('./routes/albumdetails.rout');
 var update = require('./routes/update.rout');
+var alltags = require('./routes/alltags.rout');
 
 // Connecting my database
 var mongo = require('mongodb');
@@ -47,6 +48,7 @@ app.use('/thisweek', thisweek);
 app.use('/search', search);
 app.use('/albumdetails', albumdetails);
 app.use('/update', update);
+app.use('/alltags', alltags);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
