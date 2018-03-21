@@ -96,7 +96,7 @@ function updateTags() {
             $(".warning_label").text('')
         } 
         else {
-            $(".warning_label").text("This tag is already assigned to this album.")
+            $(".warning_label").text("That tag is already assigned to this album.")
         };
         
     
@@ -108,7 +108,7 @@ function updateTags() {
             data: JSON.stringify({"tags" : currentTags})
         })
     } else {
-        $(".warning_label").text("Enter a non-empty tag")
+        $(".warning_label").text("Please enter a non-empty tag.")
     } 
     populateTags(albumId);
     $('#new_tag').val('');

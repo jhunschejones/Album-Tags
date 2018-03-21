@@ -1,12 +1,12 @@
 console.log('The custom script for the "this week" page is running')
 
-$(document).ready(function() {
+// $(document).ready(function() {
     populateCard(1, 1293987105);
     populateCard(2, 1342391131);
     populateCard(3, 1241403727);
     populateCard(4, 1261052928);
     populateCard(5, 271951016);
-});
+// });
 
 function populateCard(cardNumber, albumNumber){
     var cardContent = ''
