@@ -78,12 +78,17 @@ function toTitleCase(str) {
     return str.replace(/\b\w+/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+// removes accidental double spaces
+function removeExtraSpace(str) {
+    return str.replace(/\s\s+/g, ' ');
+}
+
 function updateTags() {
 
     event.preventDefault();
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
-        newTag = toTitleCase(newTag);
+        newTag = removeExtraSpace(toTitleCase(newTag)).trim();
 
         // checking for duplicates
         if (currentTags.indexOf(newTag) == -1) {
