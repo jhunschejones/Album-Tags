@@ -12,16 +12,16 @@ selectedTags.forEach(element => {
 function populateTagSearchResults() {
     // this is pulling data from url and checking the database
     $.getJSON ( '/search/tags/database/' + cleanSelectedTags, function(rawData) {
+        
+        cleanSelectedTags.forEach(tagElement => {
+            $('.tags_searched').append(`<span class="badge badge-primary">${tagElement}</span>  `);
+        }); 
 
         if (typeof(rawData[0]) != "undefined") {           
             // iterate over results array
             rawData.forEach(element => {
                 matchingAlbums.push(element.albumId);             
             });
-
-            cleanSelectedTags.forEach(tagElement => {
-                $('.tags_searched').append(`<span class="badge badge-primary">${tagElement}</span>  `);
-            }); 
 
             matchingAlbums.forEach(element => {
                 $.getJSON ( '/albumdetails/json/' + element, function(rawData) {
@@ -32,8 +32,13 @@ function populateTagSearchResults() {
                     $('.album_results').append(`${album} <span class="text-secondary font-italic">${artist}, ${release}</span> : <a href="/albumdetails/${element}">Album Details</a> <br>`);
                 });
             });
-        };
+        }
+        else {
+            $('.album_results').append("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
+        }
     });
 };
 
-populateTagSearchResults();
+$( document ).ready(function() {
+    populateTagSearchResults();
+});

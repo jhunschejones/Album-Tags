@@ -72,10 +72,19 @@ function populateTags(albumNumber) {
     });
 };
 
+// using regular expression to make first letter of each
+// word upper case, even if it is seperated with a "-"
+function toTitleCase(str) {
+    return str.replace(/\b\w+/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 function updateTags() {
 
+    event.preventDefault();
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
+        newTag = toTitleCase(newTag);
+
         // checking for duplicates
         if (currentTags.indexOf(newTag) == -1) {
             currentTags.push(newTag);
@@ -132,7 +141,18 @@ function postTags() {
     })
 };
 
+// long functions called here, waiting for page to load before calling
+// the api and database calls
+$( document ).ready( function() {
+    populateTable(albumId);
+    populateTags(albumId);
+})
 
-populateTable(albumId);
-populateTags(albumId);
+// event listener called when enter is pressed with value in text form
+$("form").submit(function (e) {
+    e.preventDefault();
+    updateTags();
+});
+
+// event listener for clicking delete link
 $('#tags_table tbody').on('click', 'td a.deletetaglink', deleteTag);
