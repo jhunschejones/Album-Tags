@@ -23,11 +23,17 @@ function populateCard(cardNumber, albumNumber){
         var release = rawData.data[0].attributes.copyright.slice(0, 6);
         var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 350).replace('{h}', 350);
         
+        $('#card' + cardNumber + ' img').attr("src", cover);
         $('#card' + cardNumber + ' .card-body h4').html(artist);
         $('#card' + cardNumber + ' .card-body .album').html(' ' + album);
         $('#card' + cardNumber + ' .card-body .album_details_link').attr('href', '/albumdetails/' + albumNumber);
         $('#card' + cardNumber + ' .card-body .label').html(' ' + label);
         $('#card' + cardNumber + ' .card-body .release').html(' ' + release);
-        $('#card' + cardNumber + ' img').attr("src", cover);
+        
+        setTimeout(clearWaitMessage, 2500);
     })
+}
+
+function clearWaitMessage() {
+    $('.wait_message').html('');
 }

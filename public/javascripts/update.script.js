@@ -183,3 +183,11 @@ $( document ).click(function () {
     setTimeout(populateTags, 500);
     setTimeout(populateTags, 2000);
 });
+
+// runs update table twice when enter key is pressed
+$( document ).keypress(function(e) {
+    if(e.which == 13) {
+        setTimeout(populateTags, 500);
+        setTimeout(populateTags, 2000);
+    }
+});

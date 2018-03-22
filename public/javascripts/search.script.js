@@ -23,6 +23,7 @@ function populateSearchResults(pageReloaded) {
     // dealing with blank results catagories
     if (mySearch != '') {
         $('.warning_label').html('');
+        $('.wait_message').html('<br/>Please wait for results to load...<br />');
         // this is pulling data from url and populating cards
         $.getJSON ( '/search/' + mySearch, function(rawData) {
 
@@ -64,6 +65,7 @@ function populateSearchResults(pageReloaded) {
                     console.log(err);
                 }
             }
+            setTimeout(clearWaitMessage, 4000);   
         })
     } else {
         $('.warning_label').append('<p>Enter an album or band name to search.</p>');
@@ -119,7 +121,7 @@ function showArtistAlbums(event) {
             for (let index = 0; index < 5; index++) {
                 
                 $(`#i${thisArtistId}`).append(`<li>${thisArtistAlbums[index].attributes.name} : <span class="text-secondary">${thisArtistAlbums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${thisArtistAlbums[index].id}">Details</a></li>`);  
-            };   
+            };
         }
     })
 }
@@ -140,3 +142,16 @@ $( document ).ready(function() {
         console.log("Page loaded with no search criteria");
     }
 });
+
+function clearWaitMessage() {
+    $('.wait_message').html('');
+}
+
+// event listener called when enter is pressed with value in text form
+// doesn't appear to be needed
+//
+// $("form").submit(function (e) {
+//     e.preventDefault();
+//     pageReloaded = false;
+//     populateSearchResults(pageReloaded);
+// });

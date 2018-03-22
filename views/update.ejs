@@ -12,7 +12,7 @@
         <!-- START PAGE CONTENT -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="row container-fluid">
                         <div class="albumdetails_details">
                             <h1 class="albumdetails_artist"></h1> 
@@ -21,18 +21,18 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row">
-                        <form class="form-inline">
-                            <div class="form-group mx-sm-3 mb-2 artist_search">
+                    <div class="row container-fluid">
+                        <form class="form-inline add_tag_form">
+                            <div class="form-group mx-sm-3 mb-2 add_tag">
                                 <!-- for continuous search, add oninput="populateSearchResults()" to input field -->
-                                <input type="text" class="form-control" id="new_tag" placeholder="Add a Tag!">
+                                <input type="text" class="form-control add_tag_field" id="new_tag" placeholder="Add a Tag!">
                             </div>
-                            <button type="button" onclick="updateTags()" class="btn btn-primary mb-2">Add</button>
+                            <button type="button" onclick="updateTags()" class="btn btn-primary mb-2 add_tag_button">Add</button>
                             <span class="warning_label text-danger"></span>
                         </form>   
                     </div>
                 </div>
-                <div class="col-sm-8 container-fluid">
+                <div class="col-sm-7 container-fluid">
                     <table class="table table-bordered" id="tags_table">
                         <thead class="bg-light">
                             <tr>

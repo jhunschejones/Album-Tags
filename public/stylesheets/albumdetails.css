@@ -21,3 +21,11 @@
 .tag_search_button {
     margin-top: 15px;
 }
+
+.add_tag {
+    margin-left: 0px !important;
+}
+
+.add_tag_form {
+    margin-bottom: 10px;
+}
