@@ -5,15 +5,17 @@ var cleanSelectedTags = [];
 var matchingAlbums = [];
 
 selectedTags.forEach(element => {
-    element = element.trim();
+    element = element.trim().replace(/\//g, '_');
     cleanSelectedTags.push(element);
 });
 
 function populateTagSearchResults() {
+
     // this is pulling data from url and checking the database
     $.getJSON ( '/search/tags/database/' + cleanSelectedTags, function(rawData) {
         
         cleanSelectedTags.forEach(tagElement => {
+            tagElement = tagElement.replace(/_/g, "/")
             $('.tags_searched').append(`<span class="badge badge-primary">${tagElement}</span>  `);
         }); 
 
@@ -23,6 +25,7 @@ function populateTagSearchResults() {
                 matchingAlbums.push(element.albumId);             
             });
 
+            $('.album_results').html('');
             matchingAlbums.forEach(element => {
                 $.getJSON ( '/albumdetails/json/' + element, function(rawData) {
                     var artist = rawData.data[0].attributes.artistName;
@@ -34,6 +37,7 @@ function populateTagSearchResults() {
             });
         }
         else {
+            $('.album_results').html('');
             $('.album_results').append("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
         }
     });

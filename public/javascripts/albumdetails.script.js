@@ -56,12 +56,12 @@ function populateTags(albumNumber) {
 
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
-                // then using a regular expression to remove all spaces in each tag
+                // then using a regular expression to remove all spaces and special characters in each tag
                 if (parseInt(element)) {
                     var addLetters = "tag_";
-                    var tagName = addLetters.concat(element).replace(/\s/g,'');
+                    var tagName = addLetters.concat(element).replace(/[^A-Z0-9]+/ig,'');
                 } else {                  
-                    var tagName = element.replace(/\s/g,'');
+                    var tagName = element.replace(/[^A-Z0-9]+/ig,'');
                 }
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique

@@ -29,26 +29,40 @@ function populateSearchResults(pageReloaded) {
             if (typeof(rawData.results.artists) != "undefined") {
                 // this stores an array
                 artists = rawData.results.artists.data;
-                // add the label if there are artists
-                $('.artists_label').text("Artists:")
-                // iterate over artist results array
-                for (let index = 0; index < 5; index++) {
-                    $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]}</span> <br>`);
+                
+
+                try {
+                    // add the label if there are artists
+                    $('.artists_label').text("Artists:")
+                    // iterate over artist results array
+                    for (let index = 0; index < 5; index++) {
+                        $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]}</span> <br>`);
+                    }
+                    $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandArtistResults(event)">More Artists</button> <br>`);   
                 }
-                $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandArtistResults(event)">More Artists</button> <br>`);   
+                catch(err) {
+                    console.log(err);
+                }
             }
 
             if (typeof(rawData.results.albums) != "undefined") {
                 // this stores an array
                 albums = rawData.results.albums.data;
-                // add the label if there are albums
-                $('.albums_label').text("Albums:")                
-                // iterate over album results array
-                
-                for (let index = 0; index < 5; index++) {
-                    $('.album_results').append(`${albums[index].attributes.name} : <span class="text-secondary">${albums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${albums[index].id}">Details</a> <br>`);  
-                };
-                $('.album_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandAlbumResults(event)">More Albums</button> <br>`);           
+
+
+                try {
+                    // add the label if there are albums
+                    $('.albums_label').text("Albums:")                
+                    // iterate over album results array
+                    
+                    for (let index = 0; index < 5; index++) {
+                        $('.album_results').append(`${albums[index].attributes.name} : <span class="text-secondary">${albums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${albums[index].id}">Details</a> <br>`);  
+                    };
+                    $('.album_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandAlbumResults(event)">More Albums</button> <br>`);    
+                }
+                catch(err) {
+                    console.log(err);
+                }
             }
         })
     } else {

@@ -12,8 +12,10 @@ Finally, I worked to build my express router and global.js files up so they coul
 
 ## Updates
 
+While this app is under construction, I will do my best to log a history of update descriptions below. I will clean this up when the final version is deployed.
+  
 #### Update 1:
-As I look to the future features I would like to bring to this app, I decided I would benefit from a different view engine and some of the features it offers. I converted the app from jade to ejs, and in the process took the oportunity to upgrade the bootstrap from v4 Alpha to the current stable 4.x now that v4 aplha is depreciated.
+As I look to the future features I would like to bring to this app, I decided I would benefit from a different view engine and some of the features it offers. I converted the app from jade to ejs, and in the process took the opportunity to upgrade the bootstrap from v4 Alpha to the current stable 4.x now that v4 alpha is depreciated.
 
 I really enjoy how easy it is to work with partials in ejs. It helped DRY up my code quite a bit and gives me a fast way to build more new views yet maintain content easily throughout the app.
 
@@ -23,11 +25,14 @@ I have pushed a few small updates over the past week, but the culmination of the
 #### Update 3:
 Over the last two commits I added an "update" page which allows a user to add and delete tags from an album in the database. The tags are stored as an array value in an album's document in the MongoDB database. Because of this, the update functionality had to be written as a PUT request, not just a POST request. I use two different functions in the page script file--one to add tags to an array and one to remove them, then the array is used in the final PUT request. Once this put functionality was in place, I also added a POST functionality that is used when the album is not in the tags database. This is necessary because the actual album details are called from Apple's API, so there are many more albums viewable in the app than are in the tags database.
 
-### Update 4:
+#### Update 4:
 The app search has been greatly expanded, offering up to 25 results for both albums and artists as well as an "albums" link to show the top five albums by a specific artist returned in the results. Navigation was added to every page and several bugs were fixed, including simplifying the error page, preventing duplicate tag entries, and reloading search results when the search page is navigated to using the "back" button.
 
-### Update 5:
+#### Update 5:
 An "all tags" page has been added, completing the list of main functions the site requires. This page allows a user to see all available tags in the database and search by any combination of one or more tags. The layout has been slightly tweaked as well to be more usable on a mobile screen, and "album details" links have been added to the "music this week" page to further link the app's functionality together. I trouble-shot some bugs like adding a function to standardize tag capitalization through the update page and an event listener to process "enter" hits when the page is expecting a "submit" button click.
+
+#### Update 6:
+Several bugs have been addressed. Due to a lag in the database on mLab, I used a timer to wait and update the table in the update page. I added a user information message to the all tags search results page which sometimes takes a little while to load multiple albums with more complex searches. I added several instances of string manipulation to allow tags to be named using the "/" character. Normally this would result in an invalid URI when searching, but by changing it out for a "_" for searching and "/" for display, it is able to be stored in the database properly and retrieved properly to use in urls. Finally, the main search results page was throwing unhandled errors when it returned less than 5 results, so I added some try-catch error handling to allow the rest of the page to load.
 
 ## Outcome
 To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.

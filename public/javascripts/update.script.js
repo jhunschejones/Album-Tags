@@ -6,8 +6,9 @@ var albumId = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
 var currentTags = [];
 
-function populateTable(albumNumber) {
-    $.getJSON ( '/albumdetails/json/' + albumNumber, function(rawData) {
+
+function populateTable() {
+    $.getJSON ( '/albumdetails/json/' + albumId, function(rawData) {
         var artist = rawData.data[0].attributes.artistName;
         var album = rawData.data[0].attributes.name;
         var label = rawData.data[0].attributes.recordLabel;
@@ -41,15 +42,17 @@ function makeNiceDate(uglyDate) {
 
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
-function populateTags(albumNumber) {
-    $.getJSON ( '/albumdetails/database/' + albumNumber, function(rawData) {
+function populateTags() {
+    $.getJSON ( '/albumdetails/database/' + albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             $('.tag_results').text('');
             currentTags = [];
             var tags = rawData[0].tags;
 
             tags.forEach(element => {
-                
+
+                element = replaceUnderscoreWithBackSlash(element);
+
                 currentTags.push(element);
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
@@ -63,7 +66,8 @@ function populateTags(albumNumber) {
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<tr><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);               
+                $('.tag_results').append(`<tr><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
+                console.log(element)             
             });
         } else {
             // create database entry if none exists
@@ -83,12 +87,21 @@ function removeExtraSpace(str) {
     return str.replace(/\s\s+/g, ' ');
 }
 
+// replaces back slash with underscore
+function replaceBackSlashWithUnderscore(str) {
+    return str.replace(/\//g, '_');
+}
+
+function replaceUnderscoreWithBackSlash(str) {
+    return str.replace(/_/g, "/");
+};
+
 function updateTags() {
 
     event.preventDefault();
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
-        newTag = removeExtraSpace(toTitleCase(newTag)).trim();
+        newTag = removeExtraSpace(toTitleCase(replaceBackSlashWithUnderscore(newTag))).trim();
 
         // checking for duplicates
         if (currentTags.indexOf(newTag) == -1) {
@@ -110,7 +123,8 @@ function updateTags() {
     } else {
         $(".warning_label").text("Please enter a non-empty tag.")
     } 
-    populateTags(albumId);
+
+    populateTags();
     $('#new_tag').val('');
 };
 
@@ -129,8 +143,9 @@ function deleteTag(event) {
             processData: false,
             data: JSON.stringify({"tags" : currentTags})
         })
+
+        populateTags();
     }
-    populateTags(albumId);
 };
 
 
@@ -149,8 +164,8 @@ function postTags() {
 // long functions called here, waiting for page to load before calling
 // the api and database calls
 $( document ).ready( function() {
-    populateTable(albumId);
-    populateTags(albumId);
+    populateTable();
+    populateTags();
 })
 
 // event listener called when enter is pressed with value in text form
@@ -161,3 +176,10 @@ $("form").submit(function (e) {
 
 // event listener for clicking delete link
 $('#tags_table tbody').on('click', 'td a.deletetaglink', deleteTag);
+
+// any time page is clicked, call populate tags at 500 and 2000ms
+// this accounts for lag in database and makes sure table is updated
+$( document ).click(function () {
+    setTimeout(populateTags, 500);
+    setTimeout(populateTags, 2000);
+});
