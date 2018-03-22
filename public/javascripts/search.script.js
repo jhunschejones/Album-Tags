@@ -36,7 +36,7 @@ function populateSearchResults(pageReloaded) {
                     $('.artists_label').text("Artists:")
                     // iterate over artist results array
                     for (let index = 0; index < 5; index++) {
-                        $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]}</span> <br>`);
+                        $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]} </span> <a href="" rel='${artists[index].attributes.name},, ${artists[index].id}' class="morealbumslink">Albums</a> <span id="i${artists[index].id}"></span> <br />`);
                     }
                     $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandArtistResults(event)">More Artists</button> <br>`);   
                 }

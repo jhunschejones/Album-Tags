@@ -40,8 +40,13 @@ function populateTagSearchResults() {
             $('.album_results').html('');
             $('.album_results').append("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
         }
+        setTimeout(clearWaitMessage, 2500);
     });
 };
+
+function clearWaitMessage() {
+    $('.wait_message').html('');
+}
 
 $( document ).ready(function() {
     populateTagSearchResults();
