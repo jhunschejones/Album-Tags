@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require("helmet"); 
+var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
 var index = require('./routes/index.rout');
 var thisweek = require('./routes/thisweek.rout');
@@ -37,6 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(helmet());  
+app.use(redirectToHTTPS([/localhost:(\d{4})/]));
 
 // Making my DB accessable to the router
 app.use(function(req,res,next){
