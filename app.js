@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 // security
 var helmet = require('helmet'); 
 var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
-var csp = require('express-csp-header');
+// var csp = require('express-csp-header');
 
 var index = require('./routes/index.rout');
 var thisweek = require('./routes/thisweek.rout');
@@ -44,16 +44,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // security
 app.use(helmet());  
 app.use(redirectToHTTPS([/localhost:(\d{4})/]));
-app.use(csp({
-  policies: {
-      'default-src': [csp.SELF],
-      'script-src': [csp.SELF, csp.INLINE, 'somehost.com'],
-      'style-src': [csp.SELF, 'mystyles.net'],
-      'img-src': ['data:', 'images.com'],
-      'worker-src': [csp.NONE],
-      'block-all-mixed-content': true
-  }
-}));
+// app.use(csp({
+//   policies: {
+//       'default-src': [csp.SELF],
+//       'script-src': [csp.SELF, csp.INLINE, 'somehost.com'],
+//       'style-src': [csp.SELF, 'mystyles.net'],
+//       'img-src': ['data:', 'images.com'],
+//       'worker-src': [csp.NONE],
+//       'block-all-mixed-content': true
+//   }
+// }));
 
 // Making my DB accessable to the router
 app.use(function(req,res,next){
