@@ -19,10 +19,11 @@ function populateAlbumDetails(albumNumber){
         var applemusicurl = rawData.data[0].attributes.url;
         // calling my makeNiceDate function from below to format the date
         var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
-        
+
+        $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
         $('.albumdetails_album').append(album, '<br>');
-        $('.albumdetails_details img').attr("src", cover, '<br');
+
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
         $('.albumdetails_label').append(label, '<br>');

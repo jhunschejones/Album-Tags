@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var helmet = require('helmet'); 
 var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 // var csp = require('express-csp-header');
+var cors = require('cors');
 
 var index = require('./routes/index.rout');
 var thisweek = require('./routes/thisweek.rout');
@@ -41,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // security
 app.use(helmet());  
 app.use(redirectToHTTPS([/localhost:(\d{4})/]));
@@ -54,6 +56,8 @@ app.use(redirectToHTTPS([/localhost:(\d{4})/]));
 //       'block-all-mixed-content': true
 //   }
 // }));
+app.use(cors());
+
 
 // Making my DB accessable to the router
 app.use(function(req,res,next){

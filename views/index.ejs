@@ -9,10 +9,80 @@
         <% include partials/templates/navbar_basic.ejs %>
 
         <div class='container-fluid'>
-            <h1>Welcome to Josh's Music Tag Cloud App</h1>
+            <h1>Welcome to The Music Tag-Cloud App</h1>
             <p>Take a look around, things are still under construction but much of the app is already functional.</p>
-            <p>The <a href="/search/">search</a> is a great place to start, or you can check out <a href="/thisweek">what albums</a> I'm listening to this week.</p>
-        </div>     
+            <p>The <a href="/search/">search</a> is a great place to start, or you can check out <a href="/thisweek">what albums</a> we're listening to this week. Below are some videos showing some features of the app.</p>
+        </div>
+    
+
+
+		<div class='container-fluid' id="accordion">
+			<div class="card">
+				<div class="card-header" id="headingFour">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+							Artist or Album Search
+						</button>
+					</h5>
+				</div>
+				<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+					<div class="card-body">
+						<!-- artist search -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418306?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingTwo">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							Search Tags From Album Details
+						</button>
+					</h5>
+				</div>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+					<div class="card-body">
+						<!-- search from album tags -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418298?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingOne">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+							Search From All Tags
+						</button>
+					</h5>
+				</div>
+
+				<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+					<div class="card-body">
+						<!-- search from all tags -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418274?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>						
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingThree">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+							Get to Album Details from "This Week"
+						</button>
+					</h5>
+				</div>
+				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					<div class="card-body">
+						<!-- album details from this week page -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418287?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+		</div>	         
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>

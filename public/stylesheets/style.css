@@ -88,3 +88,15 @@ hr {
   color: lightgray !important;
   margin-top: 0px;
 }
+
+
+/* ======= styling for home page ======= */
+#accordion button {
+  text-decoration: none;
+  padding: 0px;
+}
+
+iframe {
+  max-width: 100%;
+  height: auto;
+}
