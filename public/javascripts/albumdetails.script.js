@@ -42,6 +42,9 @@ function makeNiceDate(uglyDate) {
     return(`${niceMonth} ${day}, ${year}`);
 };
 
+function replaceUnderscoreWithBackSlash(str) {
+    return str.replace(/_/g, "/");
+};
 
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
@@ -54,7 +57,7 @@ function populateTags(albumNumber) {
             var tags = rawData[0].tags;
 
             tags.forEach(element => {
-
+                element = replaceUnderscoreWithBackSlash(element)
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
                 // then using a regular expression to remove all spaces and special characters in each tag
@@ -110,11 +113,11 @@ function addToTagArray(tag) {
 
 // waiting for the page to be ready before filling content
 // decide if this looks better than just calling functions
-$( document ).ready(function(){
+// $( document ).ready(function(){
     // calling populateAlbumDetails and populateTags to fill the page
     populateAlbumDetails(albumId);
     populateTags(albumId);
-});
+// });
 
 // called by the search button on tags card
 function tagSearch() {

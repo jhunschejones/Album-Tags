@@ -60,8 +60,8 @@ function populateCard(albumNumber, results, cardNumber) {
         'href', `/albumdetails/${albumNumber}`);
 }
 
-getAlbumInfo(1293987105, 1)
-getAlbumInfo(1342391131, 2);
-getAlbumInfo(1241403727, 3);
-getAlbumInfo(1261052928, 4);
-getAlbumInfo(271952751, 5);
+getAlbumInfo(1343868318, 1)
+getAlbumInfo(1344892854, 2);
+getAlbumInfo(1360464516, 3);
+getAlbumInfo(1356512057, 4);
+getAlbumInfo(1329027665, 5);
