@@ -9,41 +9,6 @@ selectedTags.forEach(element => {
     cleanSelectedTags.push(element);
 });
 
-// function populateTagSearchResults() {
-
-//     // this is pulling data from url and checking the database
-//     $.getJSON ( '/search/tags/database/' + cleanSelectedTags, function(rawData) {
-        
-//         cleanSelectedTags.forEach(tagElement => {
-//             tagElement = tagElement.replace(/_/g, "/")
-//             $('.tags_searched').append(`<span class="badge badge-primary">${tagElement}</span>  `);
-//         }); 
-
-//         if (typeof(rawData[0]) != "undefined") {           
-//             // iterate over results array
-//             rawData.forEach(element => {
-//                 matchingAlbums.push(element.albumId);             
-//             });
-
-//             $('.album_results').html('');
-//             matchingAlbums.forEach(element => {
-//                 $.getJSON ( '/albumdetails/json/' + element, function(rawData) {
-//                     var artist = rawData.data[0].attributes.artistName;
-//                     var album = rawData.data[0].attributes.name;
-//                     var release = rawData.data[0].attributes.copyright.slice(2, 6);
-                    
-//                     $('.album_results').append(`${album} <span class="text-secondary font-italic">${artist}, ${release}</span> : <a href="/albumdetails/${element}">Album Details</a> <br>`);
-//                 });
-//             });
-//         }
-//         else {
-//             $('.album_results').html('');
-//             $('.album_results').append("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
-//         }
-//         setTimeout(clearWaitMessage, 3000);
-//     });
-// };
-
 function populateTags() {
    
     cleanSelectedTags.forEach(tagElement => {
@@ -65,13 +30,11 @@ function getTagedAlbums() {
             })
         }
         else {
-            $('.album_results').html('');
-            $('.album_results').append("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
+            $('.album_results').html("<p class='text-danger'>There are no albums that match this combination of tags.</p>");
         }
         getAlbumsInfo()
     });
 }
-
 
 function getAlbumsInfo() {
 
@@ -82,7 +45,6 @@ function getAlbumsInfo() {
     });
 }
 
-
 function displayAlbum(thisAlbum, albumId) {
 
     let artist = thisAlbum.artistName;
@@ -92,12 +54,5 @@ function displayAlbum(thisAlbum, albumId) {
     $('.album_results').append(`${album} <span class="text-secondary font-italic">${artist}, ${release}</span> : <a href="/albumdetails/${albumId}">Album Details</a> <br>`);
 }
         
-
-// function clearWaitMessage() {
-//     $('.wait_message').html('');
-// }
-
-// clearWaitMessage()
-
 populateTags();
 getTagedAlbums()
