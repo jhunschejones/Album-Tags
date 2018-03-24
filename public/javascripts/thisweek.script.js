@@ -30,12 +30,6 @@ console.log('The custom script for the "this week" page is running')
 //     })
 // }
 
-function clearWaitMessage() {
-    $('.wait_message').html('');
-}
-
-clearWaitMessage();
-
 
 function getAlbumInfo(albumNumber, cardNumber) {
     
