@@ -9,12 +9,8 @@ $(document).ready(function() {
 });
 
 function populateCard(cardNumber, albumNumber){
-    // var cardContent = '';
-    // this is populating the URL
-    // current search logic does not need this
-    // $.ajax({
-    //     type: 'GET',
-    //     url: '/thisweek/album/' + albumNumber})
+
+    
     // this is pulling data from url and populating cards
     $.getJSON ( '/thisweek/album/' + albumNumber, function(rawData) {
         var artist = rawData.data[0].attributes.artistName;
@@ -23,12 +19,12 @@ function populateCard(cardNumber, albumNumber){
         var release = rawData.data[0].attributes.copyright.slice(0, 6);
         var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 350).replace('{h}', 350);
         
-        $('#card' + cardNumber + ' img').attr("src", cover);
         $('#card' + cardNumber + ' .card-body h4').html(artist);
-        $('#card' + cardNumber + ' .card-body .album').html(' ' + album);
-        $('#card' + cardNumber + ' .card-body .album_details_link').attr('href', '/albumdetails/' + albumNumber);
+        $('#card' + cardNumber + ' .card-body .album').html(' ' + album);        
         $('#card' + cardNumber + ' .card-body .label').html(' ' + label);
         $('#card' + cardNumber + ' .card-body .release').html(' ' + release);
+        $('#card' + cardNumber + ' img').attr("src", cover);
+        $('#card' + cardNumber + ' .card-body .album_details_link').attr('href', '/albumdetails/' + albumNumber);
         
         setTimeout(clearWaitMessage, 2500);
     })
