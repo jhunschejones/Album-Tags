@@ -1,4 +1,4 @@
-# Music This Week
+# Music Tag Cloud
 
 ## Objective
 This is a fun little app I built to access the Apple Music API and display some information.
@@ -34,5 +34,8 @@ An "all tags" page has been added, completing the list of main functions the sit
 #### Update 6:
 Several bugs have been addressed. Due to a lag in the database on mLab, I used a timer to wait and update the table in the update page. I added a user information message to the all tags search results page which sometimes takes a little while to load multiple albums with more complex searches. I added several instances of string manipulation to allow tags to be named using the "/" character. Normally this would result in an invalid URI when searching, but by changing it out for a "_" for searching and "/" for display, it is able to be stored in the database properly and retrieved properly to use in urls. Finally, the main search results page was throwing unhandled errors when it returned less than 5 results, so I added some try-catch error handling to allow the rest of the page to load.
 
+#### Update 7:
+The app is currently returning long TTFB times from Heroku so I am working on troubleshooting the performance and code quality. So far I have refactored several of the scripts populating each page of the app, implemented clarified security and enabled some basic text compression. I think there is still something I am missing so I will continue to work on this issue.
+
 ## Outcome
-To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to add features to this application.
+To take a look at the final product, click [here](https://music-this-week.herokuapp.com/)! I'm hosting the app on Heroku for the added experience of deploying and maintaining a live application. I'm really proud of how this turned out and I'm excited to continue to improve the application.
