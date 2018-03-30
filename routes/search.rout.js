@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router(); 
-const request = require("request"); 
+var request = require('request'); 
 
 /* GET search page. */
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
     res.render('search', {
         pageTitle: ': Album Search',
         subTitle: 'Search By Album or Artist'
@@ -12,8 +12,8 @@ router.get('/', function(req, res) {
 
 
 /* GET artist info. */
-router.get('/:search', function(req, res) {
-    const jwtToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik05OVpGUEMyR1UifQ.eyJpYXQiOjE1MjAyODgwNDQsImV4cCI6MTUzNTg0MDA0NCwiaXNzIjoiUzJaUDI1NlBQSyJ9.aHYYWnOKFNxP-l5gXFq8SUurmtDuGvf_ZklQfFXgT-IlPrlXtXUIvHLDUz_psHQNyVwQeN8SxdEcgzMNR2x9Kg"
+router.get('/:search', function(req, res, next) {
+    var jwtToken = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik05OVpGUEMyR1UifQ.eyJpYXQiOjE1MjAyODgwNDQsImV4cCI6MTUzNTg0MDA0NCwiaXNzIjoiUzJaUDI1NlBQSyJ9.aHYYWnOKFNxP-l5gXFq8SUurmtDuGvf_ZklQfFXgT-IlPrlXtXUIvHLDUz_psHQNyVwQeN8SxdEcgzMNR2x9Kg';
     var thisSearch = req.params.search;
     request.get(  
     {  
@@ -23,7 +23,7 @@ router.get('/:search', function(req, res) {
         },  
         json: true  
     },  
-    (err, httpResponse, body) => {  
+    (err, response, body) => {  
         if (err) {  
             console.error(err);  
         } else { 
@@ -34,7 +34,7 @@ router.get('/:search', function(req, res) {
 
 
 /* GET tags-search page. */
-router.get('/tags/:selectedtags', function(req, res) {
+router.get('/tags/:selectedtags', function(req, res, next) {
     res.render('tagsearch', {
         pageTitle: ': Tag Search',
         subTitle: 'Tag Search Results',
@@ -42,7 +42,7 @@ router.get('/tags/:selectedtags', function(req, res) {
     });
 });
 
-router.get('/tags/database/:selectedtags', function(req, res) {
+router.get('/tags/database/:selectedtags', function(req, res, next) {
     var db = req.db;
     var collection = db.get('musictags');
     var selectedTags = req.params.selectedtags;

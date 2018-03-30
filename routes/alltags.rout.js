@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router(); 
-const request = require("request"); 
+var request = require('request'); 
 
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
     res.render('alltags', {
         pageTitle: ': All Tags',
-        subTitle: 'All Tags',
+        subTitle: 'Search From All Tags',
     });
 });
 
-router.get('/database', function(req, res) {
+router.get('/database', function(req, res, next) {
     var db = req.db;
     var collection = db.get('musictags');
     collection.find({}, {}, function(e,docs){

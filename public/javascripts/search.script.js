@@ -23,7 +23,7 @@ function populateSearchResults(pageReloaded) {
     // dealing with blank results catagories
     if (mySearch != '') {
         $('.warning_label').html('');
-        $('.wait_message').html('<br/>Please wait for results to load...<br />');
+        // $('.wait_message').html('<br/>Please wait for results to load...<br />');
         // this is pulling data from url and populating cards
         $.getJSON ( '/search/' + mySearch, function(rawData) {
 
@@ -113,22 +113,27 @@ function showArtistAlbums(event) {
     $.getJSON ( '/search/' + thisArtistName, function(rawData) {
 
         if (typeof(rawData.results.albums) != "undefined") {
-            // this stores an array
-            var thisArtistAlbums = rawData.results.albums.data;
-            $(`#i${thisArtistId}`).html('');
-                  
-            // iterate over album results array
-            for (let index = 0; index < 5; index++) {
-                
-                $(`#i${thisArtistId}`).append(`<li>${thisArtistAlbums[index].attributes.name} : <span class="text-secondary">${thisArtistAlbums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${thisArtistAlbums[index].id}">Details</a></li>`);  
-            };
+
+            try {
+                // this stores an array
+                var thisArtistAlbums = rawData.results.albums.data;
+                $(`#i${thisArtistId}`).html('');
+                    
+                // iterate over album results array
+                for (let index = 0; index < 5; index++) {
+                    
+                    $(`#i${thisArtistId}`).append(`<li>${thisArtistAlbums[index].attributes.name} : <span class="text-secondary">${thisArtistAlbums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${thisArtistAlbums[index].id}">Details</a></li>`);  
+                }
+            }
+            catch(err) {
+                console.log(err);
+            }
         }
     })
-}
+};
 
 
 $('.artist_results').on('click', 'a.morealbumslink', showArtistAlbums);
-
 
 
 // this happy little function reloads the search when someone gets to the page

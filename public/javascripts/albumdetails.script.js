@@ -15,7 +15,7 @@ function populateAlbumDetails(albumNumber){
         var album = rawData.data[0].attributes.name;
         var label = rawData.data[0].attributes.recordLabel;
         // the replaceing at the end here is setting the width and height of the image
-        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 500).replace('{h}', 500);
+        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 450).replace('{h}', 450);
         var applemusicurl = rawData.data[0].attributes.url;
         // calling my makeNiceDate function from below to format the date
         var release = makeNiceDate(rawData.data[0].attributes.releaseDate);

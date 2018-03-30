@@ -1,10 +1,10 @@
-console.log("The custom script for the home page is running")
+console.log("The custom script for the home page is running");
 
 // Find all Vimeo videos
-var $allVideos = $("iframe"),
+var $allVideos = $("iframe");
 
-    // The element that is fluid width
-    $fluidEl = $("body");
+// The element that is fluid width
+$fluidEl = $("body");
 
 // Figure out and save aspect ratio for each video
 $allVideos.each(function() {
@@ -15,7 +15,6 @@ $allVideos.each(function() {
     // and remove the hard coded width/height
     .removeAttr('height')
     .removeAttr('width');
-
 });
 
 // When the window is resized
@@ -30,7 +29,6 @@ $(window).resize(function() {
     $el
       .width(newWidth)
       .height(newWidth * $el.data('aspectRatio'));
-
   });
 
 // Kick off one resize to fix all videos on page load

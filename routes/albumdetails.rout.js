@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router(); 
-const request = require("request"); 
+var request = require('request'); 
 
 
 /* GET album details page. */
-router.get('/:albumId', function(req, res) {
+router.get('/:albumId', function(req, res, next) {
     res.render('albumdetails', {
         pageTitle: ': Album Details',
         subTitle: 'Album Details',
@@ -13,8 +13,8 @@ router.get('/:albumId', function(req, res) {
 });
 
 
-router.get('/json/:albumId', function(req, res) {
-    const jwtToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik05OVpGUEMyR1UifQ.eyJpYXQiOjE1MjAyODgwNDQsImV4cCI6MTUzNTg0MDA0NCwiaXNzIjoiUzJaUDI1NlBQSyJ9.aHYYWnOKFNxP-l5gXFq8SUurmtDuGvf_ZklQfFXgT-IlPrlXtXUIvHLDUz_psHQNyVwQeN8SxdEcgzMNR2x9Kg"
+router.get('/json/:albumId', function(req, res, next) {
+    const jwtToken = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik05OVpGUEMyR1UifQ.eyJpYXQiOjE1MjAyODgwNDQsImV4cCI6MTUzNTg0MDA0NCwiaXNzIjoiUzJaUDI1NlBQSyJ9.aHYYWnOKFNxP-l5gXFq8SUurmtDuGvf_ZklQfFXgT-IlPrlXtXUIvHLDUz_psHQNyVwQeN8SxdEcgzMNR2x9Kg';
     var thisAlbum = req.params.albumId;
     request.get(  
       {  
@@ -24,16 +24,16 @@ router.get('/json/:albumId', function(req, res) {
         },  
         json: true  
     },  
-    (err, httpResponse, body) => {  
+    (err, response, body) => {  
         if (err) {  
-            console.error(err);  
+            console.log(err);  
         } else { 
             res.json(body);
         }  
     })
 });
 
-router.get('/database/:albumId', function(req, res) {
+router.get('/database/:albumId', function(req, res, next) {
     var db = req.db;
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
