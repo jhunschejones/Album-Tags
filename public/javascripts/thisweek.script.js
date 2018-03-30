@@ -3,12 +3,23 @@ console.log('The custom script for the "this week" page is running');
 function getAlbumInfo(albumNumber, cardNumber) {
     console.log('getAlbumInfo called for card ', cardNumber);
     
-    $.getJSON ( '/thisweek/album/' + albumNumber).then(function(rawData) {
-        console.log('json returned for card ', cardNumber);
-        // send album info to populateCard
-        populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
-    });   
+    $.getJSON( '/thisweek/album/' + albumNumber)
+
+    .done(function(rawData) {
+    console.log('json returned for card ', cardNumber);
+    // send album info to populateCard
+    populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
+
+    // Ben's Suggestions:
+    // try fetch
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    // note: make sure to handle successful case and rejected case
+    })
+    .fail(function() { 
+        console.log("error");
+    });
 };
+
 
 function populateCard(albumNumber, results, cardNumber) {
     
