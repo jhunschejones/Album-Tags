@@ -5,7 +5,7 @@ var request = require('request');
 router.get('/', function(req, res, next) {
     res.render('alltags', {
         pageTitle: ': All Tags',
-        subTitle: 'Search From All Tags',
+        subTitle: 'Search All Tags',
     });
 });
 

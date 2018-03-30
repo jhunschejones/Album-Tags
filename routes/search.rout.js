@@ -5,7 +5,7 @@ var request = require('request');
 /* GET search page. */
 router.get('/', function(req, res, next) {
     res.render('search', {
-        pageTitle: ': Album Search',
+        pageTitle: ': Search',
         subTitle: 'Search By Album or Artist'
     });
 });

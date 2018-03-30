@@ -6,7 +6,7 @@ var request = require('request');
 /* GET album details page. */
 router.get('/:albumId', function(req, res, next) {
     res.render('albumdetails', {
-        pageTitle: ': Album Details',
+        pageTitle: ': Details',
         subTitle: 'Album Details',
         albumId: req.params.albumId
     });

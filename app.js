@@ -25,9 +25,9 @@ var monk = require('monk');
 var db = monk('mongodb://joshua:roofuzz@ds263948.mlab.com:63948/music-tags');
 
 // Use this to see when the database is connected
-// db.then(() => {
-//   console.log('Connected correctly to database server')
-// })
+db.then(() => {
+  console.log('Connected correctly to database server')
+})
 
 var app = express();
 
