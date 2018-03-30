@@ -1,4 +1,4 @@
-# Music Tag Cloud
+# Album Tags
 
 ## Objective
 Create a web app with a user-friendly interface that allows the user to access music data from the Apple Music API and add their own tags. The user should be able to search by album or artist, view album details, search by the tags associated with one album, or view all tags and search by any combination of tags.
