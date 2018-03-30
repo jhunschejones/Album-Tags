@@ -3,6 +3,7 @@ console.log('The custom script for the "this week" page is running')
 function getAlbumInfo(albumNumber, cardNumber) {
     
     $.getJSON ( '/thisweek/album/' + albumNumber).then(function(rawData) {
+        console.log('json returned for card ', cardNumber);
         // send album info to populateCard
         populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
     });
@@ -29,7 +30,7 @@ function populateCard(albumNumber, results, cardNumber) {
         'href', `/albumdetails/${albumNumber}`);
 }
 
-getAlbumInfo(1343868318, 1)
+getAlbumInfo(1343868318, 1);
 getAlbumInfo(1344892854, 2);
 getAlbumInfo(1360464516, 3);
 getAlbumInfo(1356512057, 4);
