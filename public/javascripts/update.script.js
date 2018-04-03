@@ -67,7 +67,7 @@ function populateTags() {
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
                 $('.tag_results').append(`<tr><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
-                console.log(element)             
+                // console.log(element)             
             });
         } else {
             // create database entry if none exists

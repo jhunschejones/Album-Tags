@@ -28,6 +28,10 @@
   padding-right: 0px;
 }
 
+#login_container {
+  display: none;
+}
+
 /* ======= styling for warnings ========= */
 .warning_label {
   margin-left: 16px;

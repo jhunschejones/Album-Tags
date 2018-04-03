@@ -29,3 +29,7 @@
 .add_tag_form {
     margin-bottom: 10px;
 }
+
+#update_button_container a {
+    margin-top: 10px;
+}
