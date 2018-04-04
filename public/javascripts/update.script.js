@@ -3,8 +3,10 @@ console.log('The custom script for the updte page is running');
 // element. It comes in as a string so I'm converting it to a number to use in
 // my logic below
 var albumId = $(".heres_the_album_id").text();
+var currentUser = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
 var currentTags = [];
+var currentAuthors = [];
 
 
 function populateTable() {
@@ -47,13 +49,27 @@ function populateTags() {
         if (typeof(rawData[0]) != "undefined") {
             $('.tag_results').text('');
             currentTags = [];
+            currentAuthors = [];
             var tags = rawData[0].tags;
+            var authors = rawData[0].createdBy;
 
-            tags.forEach(element => {
+            for (let index = 0; index < tags.length; index++) {
+                var element = tags[index];
+                var author;
+
+                try {
+                    author = authors[index];
+                    if (author == "") {
+                        author = "Joshua Jones";
+                    }
+                } catch (error) {
+                    author = "Joshua Jones";
+                }
 
                 element = replaceUnderscoreWithBackSlash(element);
-
                 currentTags.push(element);
+                currentAuthors.push(author);
+
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
                 // then using a regular expression to remove all spaces in each tag
@@ -66,9 +82,9 @@ function populateTags() {
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<tr><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
+                $('.tag_results').append(`<tr><td data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
                 // console.log(element)             
-            });
+            };
         } else {
             // create database entry if none exists
             postTags(); 
@@ -102,24 +118,26 @@ function updateTags() {
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
         newTag = removeExtraSpace(toTitleCase(replaceBackSlashWithUnderscore(newTag))).trim();
+        var newAuthor = userName;
 
         // checking for duplicates
         if (currentTags.indexOf(newTag) == -1) {
             currentTags.push(newTag);
+            currentAuthors.push(newAuthor);
             $(".warning_label").text('')
         } 
         else {
             $(".warning_label").text("That tag is already assigned to this album.")
         };
         
-    
         // Use AJAX to put the new tag in the database   
         $.ajax(`database/${albumId}`, {
             method: 'PUT',
             contentType: 'application/json',
             processData: false,
-            data: JSON.stringify({"tags" : currentTags})
+            data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
         })
+
     } else {
         $(".warning_label").text("Please enter a non-empty tag.")
     } 
@@ -135,13 +153,13 @@ function deleteTag(event) {
     if (confirmation === true) {
         var index = currentTags.indexOf($(this).attr('rel'))
         currentTags.splice(index, 1);
-        // currentTags.filter(e => e !== $(this).attr('rel'));
+        currentAuthors.splice(index, 1);
 
         $.ajax(`database/${albumId}`, {
             method: 'PUT',
             contentType: 'application/json',
             processData: false,
-            data: JSON.stringify({"tags" : currentTags})
+            data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
         })
 
         populateTags();
@@ -157,7 +175,7 @@ function postTags() {
         contentType: 'application/json',
         processData: false,
         // have to convert albumId to string so it works with the rest of app logic
-        data: JSON.stringify({"albumId" : albumId.toString(), "tags" : []})
+        data: JSON.stringify({"albumId" : albumId.toString(), "tags" : [], "createdBy" : []})
     })
 };
 
@@ -192,4 +210,7 @@ $( document ).keypress(function(e) {
     }
 });
 
-
+// activate tooltips
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

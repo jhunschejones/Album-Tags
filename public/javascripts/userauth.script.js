@@ -16,6 +16,7 @@ var loginButton = document.getElementById("login_button");
 var updateTagsPage = document.getElementById("all_the_things");
 var logInMessage = document.getElementById("log_in_message");
 var userEmail = "";
+var userName = "";
 var user = firebase.auth().currentUser;
 
 // checking if user is logged in or logs in during session
@@ -24,6 +25,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         loginButton.style.display = "none";
         userEmail = user.email;
+        userName = user.displayName;
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has permissions
             tagUpdatePermissionsGranted();

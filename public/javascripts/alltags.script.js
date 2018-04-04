@@ -25,6 +25,7 @@ function populateTags() {
             
             allTags.sort();
             // populating page from array without duplicates
+            
             allTags.forEach(element => {
 
                 element = element.replace(/_/g, "/");

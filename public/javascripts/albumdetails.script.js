@@ -55,8 +55,21 @@ function populateTags(albumNumber) {
             $(".tag_results").text('');
             $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button">Search by Selected Tags</a>');
             var tags = rawData[0].tags;
+            var authors = rawData[0].createdBy;
 
-            tags.forEach(element => {
+            for (let index = 0; index < tags.length; index++) {
+                var element = tags[index];
+                var author;
+
+                try {
+                    author = authors[index];
+                    if (author == "") {
+                        author = "Joshua Jones";
+                    }
+                } catch (error) {
+                    author = "Joshua Jones";
+                }
+         
                 element = replaceUnderscoreWithBackSlash(element)
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
@@ -70,8 +83,8 @@ function populateTags(albumNumber) {
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light">${element}</a>  `);               
-            });
+                $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light" data-delay='{"show":"300", "hide":"100"}' data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</a>  `);               
+            };
         };
     });
 };
@@ -130,3 +143,8 @@ function tagSearch() {
         $('.warning_label').text('Select one or more tags to preform a tag-search.');
     }
 };
+
+// activate tooltips
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
