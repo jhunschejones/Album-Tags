@@ -49,7 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   frameguard: false
 // }))
 // app.use(redirectToHTTPS([/localhost:(\d{4})/]));
-// app.use(cors());
+app.use(cors());
 
 
 // Making my DB accessable to the router
