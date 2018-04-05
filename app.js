@@ -25,9 +25,9 @@ var monk = require('monk');
 var db = monk('mongodb://joshua:roofuzz@ds263948.mlab.com:63948/music-tags');
 
 // Use this to see when the database is connected
-db.then(() => {
-  console.log('Connected correctly to database server')
-})
+// db.then(() => {
+//   console.log('Connected correctly to database server')
+// })
 
 var app = express();
 
@@ -45,21 +45,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // security
-app.use(helmet({
-  frameguard: false
-}))
-app.use(redirectToHTTPS([/localhost:(\d{4})/]));
-// app.use(csp({
-//   policies: {
-//       'default-src': [csp.SELF],
-//       'script-src': [csp.SELF, csp.INLINE, 'somehost.com'],
-//       'style-src': [csp.SELF, 'mystyles.net'],
-//       'img-src': ['data:', 'images.com'],
-//       'worker-src': [csp.NONE],
-//       'block-all-mixed-content': true
-//   }
-// }));
-app.use(cors());
+// app.use(helmet({
+//   frameguard: false
+// }))
+// app.use(redirectToHTTPS([/localhost:(\d{4})/]));
+// app.use(cors());
 
 
 // Making my DB accessable to the router
