@@ -45,7 +45,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // security
-app.use(helmet());  
+app.use(helmet({
+  frameguard: false
+}))
 app.use(redirectToHTTPS([/localhost:(\d{4})/]));
 // app.use(csp({
 //   policies: {
