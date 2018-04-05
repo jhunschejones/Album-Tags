@@ -45,9 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // security
-app.use(helmet({
-  frameguard: false
-}))
+app.use(helmet());
 app.use(redirectToHTTPS([/localhost:(\d{4})/]));
 app.use(cors());
 
