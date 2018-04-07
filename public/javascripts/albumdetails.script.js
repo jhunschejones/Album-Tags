@@ -19,6 +19,14 @@ function populateAlbumDetails(albumNumber){
         var applemusicurl = rawData.data[0].attributes.url;
         // calling my makeNiceDate function from below to format the date
         var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
+        
+        var songObjectArray = rawData.data[0].relationships.tracks.data;
+        var songNames = [];
+
+        for (let index = 0; index < songObjectArray.length; index++) {
+            let element = songObjectArray[index];
+            songNames.push(element.attributes.name);
+        }
 
         $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
@@ -28,6 +36,11 @@ function populateAlbumDetails(albumNumber){
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
         $('.albumdetails_label').append(label, '<br>');
         $('.albumdetails_release').append(release, '<br>');
+        
+        songNames.forEach(element => {
+            $('.song_names').append(`<li>${element}</li>`);
+        });
+        
     });
 };
 
@@ -140,7 +153,7 @@ function tagSearch() {
         var win = window.location = (`/search/tags/${selectedTags}`);
     }  else {
         $('.warning_label').text('');
-        $('.warning_label').text('Select one or more tags to preform a tag-search.');
+        $('.warning_label').html('<br/><br/>Select one or more tags to preform a tag-search.');
     }
 };
 

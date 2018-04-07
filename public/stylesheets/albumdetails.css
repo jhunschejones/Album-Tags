@@ -7,6 +7,7 @@
     margin-top: 8px;
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
+    margin-bottom: 10px;
 }
 
 .details_card {
@@ -31,5 +32,5 @@
 }
 
 #update_button_container a {
-    margin-top: 10px;
+    margin-top: 16px;
 }

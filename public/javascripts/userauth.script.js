@@ -47,17 +47,17 @@ function noTagUpdatePermissions() {
         loginButton.style.display = "block";
         logInMessage.innerHTML = '<div class="container-fluid"><p class="text-danger">Please sign in to update</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }  
 }
 
 function tagUpdatePermissionsGranted() {
     try {
-        $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Tags</a>');
+        $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-primary update_button">Update Tags</a>');
         updateTagsPage.style.display = "block";
         logInMessage.innerHTML = "";
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
