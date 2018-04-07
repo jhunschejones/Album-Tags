@@ -152,8 +152,8 @@ function tagSearch() {
     if (selectedTags.length > 0) {
         var win = window.location = (`/search/tags/${selectedTags}`);
     }  else {
-        $('.warning_label').text('');
-        $('.warning_label').html('<br/><br/>Select one or more tags to preform a tag-search.');
+        $('.warning_label').html('');
+        $('.warning_label').html('<br/>Select one or more tags to preform a tag-search.');
     }
 };
 

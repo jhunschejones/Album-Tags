@@ -10,35 +10,44 @@
     margin-bottom: 10px;
 }
 
-.details_card {
+/* .details_card {
     margin-top: 15px !important;
     margin-left: 16px !important;
+} */
+
+.details_body {
+    padding: 0px;
+    margin: 0px 0px 5px 0px;
+}
+
+.song_names {
+    margin: 0px;
+}
+
+.tags_card {
+    margin: 5px;
 }
 
 #tag_card_header {
     padding: 7px 0px 7px 15px;
 }
 
-.tags_card {
-    margin-left: 16px !important;
+.tags_body {
+    padding: 10px;
 }
 
 .tag_search_button {
     margin-top: 15px;
 }
 
-.applemusicurl {
-    margin-left: 7px;
-}
-
-.add_tag {
-    margin-left: 0px !important;
-}
-
-.add_tag_form {
-    margin-bottom: 10px;
-}
-
 #update_button_container a {
     margin-top: 16px;
+}
+
+.warning_label {
+    margin: 5px 0px 0px 0px;
+}
+
+.applemusicurl {
+    margin-left: 7px;
 }

@@ -3,7 +3,6 @@
     <head>
         <% include partials/templates/head_tags.ejs %>
         <link rel="stylesheet" href="/stylesheets/albumdetails.css">
-        <link rel="stylesheet" href="/stylesheets/cards.css">
     </head>
     <body>
 
@@ -29,9 +28,9 @@
                 <div class="col">
                     <!-- <div class="card details_card"> -->
                         <!-- <h6 class="card-header">Details</h6> -->
-                        <div class="card-body">
+                        <div class="card-body details_body">
                             <span class="card-text"><strong>Tracks:</strong></span>
-                            <ol class="card-text song_names"></ol>
+                            <ol class="card-text text-secondary song_names"></ol>
                             <span class="card-text"><strong>Record Label: </strong><span class="albumdetails_label"></span></span>
                             <span class="card-text"><strong>Released: </strong><span class="albumdetails_release"></span></span>
                         </div>
@@ -43,7 +42,7 @@
                     <div class="card tags_card">
                         <!-- style="width: 18rem;" -->
                         <h6 id="tag_card_header" class="card-header">Tags</h6>
-                        <div id="tag_pile" class="card-body">
+                        <div id="tag_pile" class="card-body tags_body">
                             <div class="tag_results"><small>There are currently no tags for this album!</small></div>
                             <span class="tag_search_button"></span>
                             <span id="update_button_container"></span>

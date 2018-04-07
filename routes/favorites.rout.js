@@ -4,9 +4,9 @@ var request = require('request');
 
 /* GET "this week" page. */
 router.get('/', function(req, res, next) {
-    res.render('thisweek', { 
+    res.render('favorites', { 
       pageTitle: '',
-      subTitle: 'What are we listening to this week?'
+      subTitle: 'Our Favorite Heavy Albums of 2018'
   });
 });
 

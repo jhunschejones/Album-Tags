@@ -1,0 +1,10 @@
+/* ======= styling for home page ======= */
+#accordion button {
+    text-decoration: none;
+    padding: 0px;
+}
+
+iframe {
+    max-width: 100%;
+    height: auto;
+}

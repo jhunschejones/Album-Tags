@@ -13,7 +13,7 @@ var redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 var cors = require('cors');
 
 var index = require('./routes/index.rout');
-var thisweek = require('./routes/thisweek.rout');
+var favorites = require('./routes/favorites.rout');
 var search = require('./routes/search.rout');
 var albumdetails = require('./routes/albumdetails.rout');
 var update = require('./routes/update.rout');
@@ -60,7 +60,7 @@ app.use(function(req,res,next){
 app.use(compression())
 
 app.use('/', index);
-app.use('/thisweek', thisweek);
+app.use('/favorites', favorites);
 app.use('/search', search);
 app.use('/albumdetails', albumdetails);
 app.use('/update', update);

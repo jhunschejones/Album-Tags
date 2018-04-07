@@ -1,7 +1,33 @@
 /* ====== custom styling for cards ======= */
-.card-deck {
-    margin: 15px;
-    margin-bottom: 50px;
+#all_cards {
+  margin: 0px 8px 0px 8px;
+  padding: 0px;
+}
+
+#all_cards .card {
+  width: 16rem;
+}
+
+.album_list {
+  display: none;
+  padding-left: 0px;
+}
+
+.album_list_instruction {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  #all_cards .card {
+    width: 10.8rem;
+    /* display: none; */
+  }
+  /* .album_list {
+    display: block;
+  }
+  .album_list_instruction {
+    display: block;
+  } */
 }
   
 .card {
@@ -25,16 +51,17 @@
   font-style: italic;
 }
 
-.label, .release {
+.release_and_label {
+  line-height: normal;
   color: gray;
 }
 
-.card-footer {
+/* .card-footer {
   padding: 5px;
   text-align: center;
   font-size: 0.7em;
-}
+} */
 
-.card-footer small {
+/* .card-footer small {
   color: #d3d3d3 !important;
-}
+} */

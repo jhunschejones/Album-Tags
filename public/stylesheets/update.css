@@ -1,0 +1,19 @@
+.albumdetails_artist {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.albumdetails_cover {
+    margin-top: 8px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+    margin-bottom: 10px;
+}
+
+.add_tag_form {
+    margin-bottom: 10px;
+}
+
+.add_tag_text_input {
+    margin-left: 0px !important;
+}
