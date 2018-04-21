@@ -1,7 +1,9 @@
 # Album Tags
 
+*Read about the project below, or go straight to the [live site](https://www.albumtags.com/)!*
+
 ## Objective
-Create a web app with a user-friendly interface that allows the user to access music data from the Apple Music API and add their own tags. The user should be able to search by album or artist, view album details, search by the tags associated with one album, or view all tags and search by any combination of tags.
+Create a web app with a user-friendly interface that allows the user to access music data from the Apple Music API and add their own tags. The user should be able to search by album or artist, view album details, search by the tags associated with one album, or view all tags and search by any combination of tags.  
 
 ## Steps Taken
 The first challenge in building this app was the actual process of accessing the Apple Music API. I read the full documentation handbook on JWT's along with the full documentation on Apple's music api to figure out how to create the token I would need and how to include it in my api calls. The JSON that comes back from Apple takes a little bit of work to dig into, so I used Postman to view the results of a call and figure out how to access to the properties of the object that I needed.
