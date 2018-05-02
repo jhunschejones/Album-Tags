@@ -46,7 +46,9 @@ function populateCard(albumNumber, results, cardNumber) {
         'href', `/albumdetails/${albumNumber}`);
 };
 
-var albums = [1343868318, 1338961464, 1334753255, 1314637017, 1324396794, 1296409535, 1348607884, 1344892854, 1318043781, 1303824307];
+var albums = [1343868318, 1338961464, 1334753255, 1314637017, 1324396794, 1296409535, 
+              1348607884, 1344892854, 1318043781, 1303824307, 1316167917, 1351982641, 
+              1369092265];
 
 for (let index = 0; index < albums.length; index++) {
     let album = albums[index];
