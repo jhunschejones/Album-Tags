@@ -30,6 +30,8 @@ function populateAlbumDetails(albumNumber){
 
         $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
+        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         $('.albumdetails_album').append(album, '<br>');
 
         // adding path to apple music to button
@@ -76,7 +78,7 @@ function populateTags(albumNumber) {
 
                 try {
                     author = authors[index];
-                    if (author == "") {
+                    if (author == "" || "Unknown") {
                         author = "Joshua Jones";
                     }
                 } catch (error) {
@@ -135,6 +137,48 @@ function addToTagArray(tag) {
         selectedTags.splice(index, 1);
     };
 };
+
+// This section handles favorite albums functionality
+var myFavoriteAlbums;
+
+function updateFavoriteAlbums() {
+    dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
+    dbRefrence.on('value', snap => {
+        myFavoriteAlbums = snap.val();
+        checkForDuplicates();
+    });
+}
+
+function checkForDuplicates() {  
+    if (myFavoriteAlbums.indexOf(albumId) == -1) {
+        remove_from_favorites.style.display = "none";
+        add_to_favorites.style.display = "inline";
+    } else {
+        add_to_favorites.style.display = "none";
+        remove_from_favorites.style.display = "inline";
+    }
+}
+
+function addToFavoriteAlbums(newAlbum) {
+    // console.log("adding ", newAlbum)
+    myFavoriteAlbums.push(newAlbum);
+    updateDatabase();
+    checkForDuplicates();
+}
+
+function removeFromFavorites(newAlbum) {
+    let index = myFavoriteAlbums.indexOf(newAlbum);
+    myFavoriteAlbums.splice(index, 1);
+    updateDatabase();
+    checkForDuplicates();
+}
+
+function updateDatabase() {
+    firebase.database().ref(userID).set({
+        "My Favorites": myFavoriteAlbums
+    });
+}
+
 
 
 // waiting for the page to be ready before filling content

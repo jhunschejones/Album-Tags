@@ -1,4 +1,3 @@
-require('newrelic');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -15,6 +14,7 @@ var cors = require('cors');
 
 var index = require('./routes/index.rout');
 var favorites = require('./routes/favorites.rout');
+var myfavorites = require('./routes/myfavorites.rout')
 var search = require('./routes/search.rout');
 var albumdetails = require('./routes/albumdetails.rout');
 var update = require('./routes/update.rout');
@@ -62,6 +62,7 @@ app.use(compression())
 
 app.use('/', index);
 app.use('/favorites', favorites);
+app.use('/myfavorites', myfavorites);
 app.use('/search', search);
 app.use('/albumdetails', albumdetails);
 app.use('/update', update);

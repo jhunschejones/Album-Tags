@@ -4,7 +4,13 @@
         <% include partials/templates/head_tags.ejs %>
         <link rel="stylesheet" href="/stylesheets/cards.css">
         <style>
-            .loader {
+            .please_log_in {
+            margin: 40px 0px 60px 0px;
+            text-align: center;
+            }
+            
+            #loader {
+            position: block;
             margin: 20px auto 20px auto;
             z-index: 1;
             border: 16px solid #f3f3f3;
@@ -35,8 +41,10 @@
 
         <!-- BEGIN ALBUM CARDS -->
         <div id="all_cards" class="row container-fluid">
-            <div class="loader"></div>
+            <div id="loader"></div>
         </div>
+        
+        <span id="log_in_message"></span>
 
         <div class="container-fluid album_list_instruction">
             <!-- <span class="text-secondary">Click an Album for More Details</span> -->
@@ -48,6 +56,6 @@
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>
-        <script src="/javascripts/favorites.script.js"></script>
+        <script src="/javascripts/myfavorites.script.js"></script>
     </body>
 </html>

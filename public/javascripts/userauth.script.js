@@ -18,6 +18,8 @@ var logInMessage = document.getElementById("log_in_message");
 var userEmail = "";
 var userName = "";
 var user = firebase.auth().currentUser;
+var userID;
+var dbRefrence;
 
 // checking if user is logged in or logs in during session
 firebase.auth().onAuthStateChanged(function(user) {
@@ -26,12 +28,23 @@ firebase.auth().onAuthStateChanged(function(user) {
         loginButton.style.display = "none";
         userEmail = user.email;
         userName = user.displayName;
+        userID = user.uid;
+        try {
+            updateFavoriteAlbums();
+        }
+        catch (error) {
+            //
+        }
+
+
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has permissions
+            updateFavoriteAlbums();
             tagUpdatePermissionsGranted();
         } 
         else {
             // user is signed in but does not have permissions
+            updateFavoriteAlbums();
             noTagUpdatePermissions();
             console.log('This user is not authorized to update tags.');
         }
@@ -43,12 +56,17 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 function noTagUpdatePermissions() {
     try {
-        updateTagsPage.style.display = "none";
         loginButton.style.display = "block";
-        logInMessage.innerHTML = '<div class="container-fluid"><p class="text-danger">Please sign in to update</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
+        logInMessage.innerHTML = '<div class="container-fluid please_log_in"><p class="text-danger">Sign in to access this feature</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
+        updateTagsPage.style.display = "none";
     } catch (error) {
         // console.log(error);
     }  
+    try {
+        loader.style.display = "none";
+    } catch (error) {
+        // console.log(error)
+    }
 }
 
 function tagUpdatePermissionsGranted() {

@@ -44,27 +44,30 @@ function populateCard(albumNumber, results, cardNumber) {
         'href', `/albumdetails/${albumNumber}`);
 };
 
-var favoriteAlbums;
+var myFavoriteAlbums;
 
-dbRefrence = firebase.database().ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
-dbRefrence.on('value', snap => {
-    favoriteAlbums = snap.val();
-    startFavoritesPage();
-});
+// [1343868318, 1338961464, 1334753255, 1314637017, 1324396794, 1296409535, 1348607884, 1344892854, 1318043781, 1303824307, 1316167917, 1351982641, 1369092265, 1362852732, 1356521195]
+// Ol5d5mjWi9eQ7HoANLhM4OFBnso2
 
+function updateFavoriteAlbums() {
+    dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
+    dbRefrence.on('value', snap => {
+        myFavoriteAlbums = snap.val();
+        startFavoritesPage();
+    });
+}
 
 function startFavoritesPage() {
     $('#all_cards').html("");
-    for (let index = 0; index < favoriteAlbums.length; index++) {
-        let album = favoriteAlbums[index];
+    $('#log_in_message').html("");
+    for (let index = 0; index < myFavoriteAlbums.length; index++) {
+        let album = myFavoriteAlbums[index];
         let card = (index + 1);
         
         createCard(card)
         getAlbumInfo(album, card) 
     }
 };
-
-
 
 
 // build a unordered list of albums for smaller screens
