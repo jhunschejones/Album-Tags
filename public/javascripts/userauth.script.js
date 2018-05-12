@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
+var loginDivider = document.getElementById("login_divider");
 var updateTagsPage = document.getElementById("all_the_things");
 var logInMessage = document.getElementById("log_in_message");
 var userEmail = "";
@@ -26,6 +27,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     // returns true if user is not null
     if (user) {
         loginButton.style.display = "none";
+        loginDivider.style.display = "none";
         userEmail = user.email;
         userName = user.displayName;
         userID = user.uid;
@@ -57,6 +59,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 function noTagUpdatePermissions() {
     try {
         loginButton.style.display = "block";
+        loginDivider.style.display = "block";
         logInMessage.innerHTML = '<div class="container-fluid please_log_in"><p class="text-danger">Sign in to access this feature</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
         updateTagsPage.style.display = "none";
     } catch (error) {
