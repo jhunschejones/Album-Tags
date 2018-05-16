@@ -20,14 +20,7 @@
 @media screen and (max-width: 800px) {
   #all_cards .card {
     width: 10.8rem;
-    /* display: none; */
   }
-  /* .album_list {
-    display: block;
-  }
-  .album_list_instruction {
-    display: block;
-  } */
 }
   
 .card {
@@ -56,12 +49,7 @@
   color: gray;
 }
 
-/* .card-footer {
-  padding: 5px;
+.please_log_in {
+  margin: 40px 0px 60px 0px;
   text-align: center;
-  font-size: 0.7em;
-} */
-
-/* .card-footer small {
-  color: #d3d3d3 !important;
-} */
+}

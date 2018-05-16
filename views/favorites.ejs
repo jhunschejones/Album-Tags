@@ -3,30 +3,7 @@
     <head>
         <% include partials/templates/head_tags.ejs %>
         <link rel="stylesheet" href="/stylesheets/cards.css">
-        <style>
-            .loader {
-            margin: 20px auto 20px auto;
-            z-index: 1;
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite; /* Safari */
-            animation: spin 2s linear infinite;
-            }
-
-            /* Safari */
-            @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
-            }
-
-            @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-            }
-        </style>
+        <link rel="stylesheet" href="/stylesheets/spinner.css">
     </head>
     <body>
 
@@ -35,7 +12,7 @@
 
         <!-- BEGIN ALBUM CARDS -->
         <div id="all_cards" class="row container-fluid">
-            <div class="loader"></div>
+            <div id="loader"></div>
         </div>
 
         <div class="container-fluid album_list_instruction">

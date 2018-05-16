@@ -5,6 +5,7 @@ var pageReloaded = false;
 
 // populate search results
 function populateSearchResults(pageReloaded) {
+    loader.style.display = "block";
     
     // stop button from reloading page
 
@@ -42,7 +43,7 @@ function populateSearchResults(pageReloaded) {
                     $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandArtistResults(event)">More Artists</button> <br>`);   
                 }
                 catch(err) {
-                    console.log(err);
+                    // console.log("There are less than 5 albums for one of these artists");
                 }
             }
 

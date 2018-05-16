@@ -1,4 +1,4 @@
-console.log('The custom script for the favorites page is running');
+console.log('The custom script for the myfavorites page is running');
 
 function getAlbumInfo(albumNumber, cardNumber) {
     
@@ -52,14 +52,21 @@ var myFavoriteAlbums;
 function updateFavoriteAlbums() {
     dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
     dbRefrence.on('value', snap => {
-        myFavoriteAlbums = snap.val();
+        myFavoriteAlbums = snap.val() || [];
         startFavoritesPage();
     });
 }
 
 function startFavoritesPage() {
+
     $('#all_cards').html("");
-    $('#log_in_message').html("");
+
+    if (myFavoriteAlbums.length == 0) {
+        $('#log_in_message').html("<div style='text-align:center;margin: 20px 0px 50px 0px;'><p>Looks like you don't have any favorites yet!</p><p><a href='/search'>Search</a> for albums and use the <img src='../images/heart-unliked.png' height='30' width='auto'> icon to add them to your favorites.</p></div>");
+    } else {
+        $('#log_in_message').html("");
+    }
+
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
         let album = myFavoriteAlbums[index];
         let card = (index + 1);

@@ -1,4 +1,4 @@
-console.log('userauth script is running');
+console.log('The custom script for the userauth page is running');
 
 // Initialize Firebase
 var config = {
@@ -16,6 +16,7 @@ var loginButton = document.getElementById("login_button");
 var loginDivider = document.getElementById("login_divider");
 var updateTagsPage = document.getElementById("all_the_things");
 var logInMessage = document.getElementById("log_in_message");
+var loader = document.getElementById("loader");
 var userEmail = "";
 var userName = "";
 var user = firebase.auth().currentUser;
@@ -26,37 +27,40 @@ var dbRefrence;
 firebase.auth().onAuthStateChanged(function(user) {
     // returns true if user is not null
     if (user) {
+
+        // remove login button
         loginButton.style.display = "none";
         loginDivider.style.display = "none";
+
+        // set our variables with this user's info
         userEmail = user.email;
         userName = user.displayName;
         userID = user.uid;
+
+        // update favorite albums if page uses this functionality
         try {
             updateFavoriteAlbums();
         }
         catch (error) {
-            //
+            // we're not on the my favorites page
         }
 
 
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has permissions
-            updateFavoriteAlbums();
             tagUpdatePermissionsGranted();
         } 
         else {
             // user is signed in but does not have permissions
-            updateFavoriteAlbums();
-            noTagUpdatePermissions();
             console.log('This user is not authorized to update tags.');
         }
     } else {
         // No user is signed in.    
-        noTagUpdatePermissions();
+        noUserSignedIn();
     }
 });
 
-function noTagUpdatePermissions() {
+function noUserSignedIn() {
     try {
         loginButton.style.display = "block";
         loginDivider.style.display = "block";
@@ -65,6 +69,8 @@ function noTagUpdatePermissions() {
     } catch (error) {
         // console.log(error);
     }  
+
+    // hide spinner
     try {
         loader.style.display = "none";
     } catch (error) {

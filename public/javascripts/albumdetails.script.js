@@ -144,7 +144,8 @@ var myFavoriteAlbums;
 function updateFavoriteAlbums() {
     dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
     dbRefrence.on('value', snap => {
-        myFavoriteAlbums = snap.val();
+        // if value is null, this makes myFavoriteAlbums an empty string
+        myFavoriteAlbums = snap.val() || [];
         checkForDuplicates();
     });
 }
@@ -160,8 +161,10 @@ function checkForDuplicates() {
 }
 
 function addToFavoriteAlbums(newAlbum) {
-    // console.log("adding ", newAlbum)
-    myFavoriteAlbums.push(newAlbum);
+
+        myFavoriteAlbums.push(newAlbum);
+
+
     updateDatabase();
     checkForDuplicates();
 }

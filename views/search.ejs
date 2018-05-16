@@ -3,6 +3,7 @@
     <head>
         <% include partials/templates/head_tags.ejs %>
         <link rel="stylesheet" href="/stylesheets/search.css">
+        <link rel="stylesheet" href="/stylesheets/spinner.css">
     </head>
     <body>
 
@@ -21,7 +22,7 @@
             <span class="warning_label text-danger"></span>
             <span class='wait_message text-primary font-italic'></span>
             <br />
-            <h4 class="artists_label"></h4>
+            <h4 class="artists_label"><div id="loader" style="display:none;"></div></h4>
             <span class="artist_results"></span>
             <br />
             <h4 class="albums_label"></h4>
