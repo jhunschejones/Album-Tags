@@ -30,8 +30,8 @@ function populateAlbumDetails(albumNumber){
 
         $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
-        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
-        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         $('.albumdetails_album').append(album, '<br>');
 
         // adding path to apple music to button

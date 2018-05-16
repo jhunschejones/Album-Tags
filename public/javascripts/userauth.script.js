@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
+var logoutButton = document.getElementById("logout_button");
 var loginDivider = document.getElementById("login_divider");
 var updateTagsPage = document.getElementById("all_the_things");
 var logInMessage = document.getElementById("log_in_message");
@@ -30,7 +31,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
         // remove login button
         loginButton.style.display = "none";
-        loginDivider.style.display = "none";
+        logoutButton.style.display = "block";
+        // loginDivider.style.display = "none";
 
         // set our variables with this user's info
         userEmail = user.email;
@@ -88,9 +90,6 @@ function tagUpdatePermissionsGranted() {
     }
 }
 
-// add event listener to log in button 
-loginButton.addEventListener("click", logIn);
-
 // log user in using google auth
 function logIn() {
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -124,3 +123,19 @@ function goToUpdatePage() {
     url = url.replace("albumdetails", "update");
     window.location = url;
 };
+
+function logOut() {
+    firebase.auth().signOut().then(function() {
+        logoutButton.style.display = "none";
+        remove_from_favorites.style.display = "none";
+        add_to_favorites.style.display = "none";
+    // Sign-out successful.
+    }).catch(function(error) {
+    // An error happened.
+    });
+
+}
+
+// add event listener to log in and out buttons
+loginButton.addEventListener("click", logIn);
+logoutButton.addEventListener("click", logOut);
