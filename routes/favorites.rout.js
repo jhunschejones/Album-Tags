@@ -6,7 +6,7 @@ var request = require('request');
 router.get('/', function(req, res, next) {
     res.render('favorites', { 
       pageTitle: '',
-      subTitle: 'Our Favorite Heavy Albums of 2018'
+      subTitle: `Our Favorite Albums of ${(new Date()).getFullYear()}`
   });
 });
 

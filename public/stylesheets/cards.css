@@ -33,15 +33,21 @@
 }
 
 .card-title {
-  margin-bottom: 0px;
+  margin-bottom: 3px;
+  font-size: 1.1rem;
+  line-height: 1.1;
 }
 
 .card-body {
-  padding: 10px;
+  padding: 5px 9px 6px 9px;
+  line-height: 1.1;
 }
 
 .album {
-  font-style: italic;
+  /* font-style: italic; */
+  font-size: .9rem;
+  color: #6c757d;
+  font-weight: 100;
 }
 
 .release_and_label {
