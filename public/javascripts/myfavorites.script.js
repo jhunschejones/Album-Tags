@@ -1,4 +1,23 @@
+// ------- START UTILITIES SECTION ----------
 console.log("The custom script for the 'myfavorites' page is running.");
+
+function hideDOMelement(element) {
+    try {
+        element.style.display = "none";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+
+function showDOMelement(element) {
+    try {
+        element.style.display = "block";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+// ------- END UTILITIES SECTION ----------
+
 
 function getAlbumInfo(albumNumber, cardNumber) {
     
@@ -113,9 +132,11 @@ $(document).on( 'scroll', function(){
 function startFavoritesPage() {
     // clear any warnings
     $('#all_cards').html("");
-    // display warning if no favorites exist for this user
+    // display instructions if no favorites exist for this user
     if (myFavoriteAlbums.length == 0) {
         $('#log_in_message').html("<div style='text-align:center;margin: 20px 0px 50px 0px;'><p>Looks like you don't have any favorites yet!</p><p><a href='/search'>Search</a> for albums and use the <img src='../images/heart-unliked.png' height='30' width='auto'> icon to add them to your favorites.</p></div>");
+        hideDOMelement(document.getElementById("filter_by_year_dropdown_button"));
+        hideDOMelement(document.getElementById("clear_filters_button"));
     } else {
         $('#log_in_message').html("");
     }

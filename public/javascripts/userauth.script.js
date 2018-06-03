@@ -16,6 +16,8 @@ var loginButton = document.getElementById("login_button");
 var logoutButton = document.getElementById("logout_button");
 var loginDivider = document.getElementById("login_divider");
 var updateTagsPage = document.getElementById("all_the_things");
+var clearFiltersButton = document.getElementById("clear_filters_button");
+var filter_by_year_dropdown_button = document.getElementById("filter_by_year_dropdown_button");
 var logInMessage = document.getElementById("log_in_message");
 var loader = document.getElementById("loader");
 var userEmail = "";
@@ -64,19 +66,32 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 function noUserSignedIn() {
     try {
-        loginButton.style.display = "block";
-        loginDivider.style.display = "block";
         logInMessage.innerHTML = '<div class="container-fluid please_log_in"><p class="text-danger">Sign in to access this feature</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
-        updateTagsPage.style.display = "none";
     } catch (error) {
-        // console.log(error);
+        // no login message container on this page
     }  
-
+    showDOMelement(loginButton);
+    showDOMelement(loginDivider);
+    hideDOMelement(clearFiltersButton);
+    hideDOMelement(filter_by_year_dropdown_button);
+    hideDOMelement(updateTagsPage);   
     // hide spinner
+    hideDOMelement(loader);
+}
+
+function hideDOMelement(element) {
     try {
-        loader.style.display = "none";
+        element.style.display = "none";
     } catch (error) {
-        // console.log(error)
+        // this element does not exist yere
+    }
+}
+
+function showDOMelement(element) {
+    try {
+        element.style.display = "block";
+    } catch (error) {
+        // this element does not exist yere
     }
 }
 
