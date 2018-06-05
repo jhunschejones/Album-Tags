@@ -1,4 +1,22 @@
+// --------- START UTILITIES --------
 console.log('The custom script for the userauth page is running');
+
+function hideDOMelement(element) {
+    try {
+        element.style.display = "none";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+
+function showDOMelement(element) {
+    try {
+        element.style.display = "block";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+// --------- END UTILITIES --------
 
 // Initialize Firebase
 var config = {
@@ -34,7 +52,9 @@ firebase.auth().onAuthStateChanged(function(user) {
         // remove login button
         loginButton.style.display = "none";
         logoutButton.style.display = "block";
-        // loginDivider.style.display = "none";
+        showDOMelement(document.getElementById("filter_by_year_dropdown_button"))
+        showDOMelement(document.getElementById("filter_by_genre_dropdown_button"))
+        showDOMelement(document.getElementById("clear_filters_button"))
 
         // set our variables with this user's info
         userEmail = user.email;
@@ -74,25 +94,10 @@ function noUserSignedIn() {
     showDOMelement(loginDivider);
     hideDOMelement(clearFiltersButton);
     hideDOMelement(filter_by_year_dropdown_button);
+    hideDOMelement(document.getElementById("filter_by_genre_dropdown_button"));
     hideDOMelement(updateTagsPage);   
     // hide spinner
     hideDOMelement(loader);
-}
-
-function hideDOMelement(element) {
-    try {
-        element.style.display = "none";
-    } catch (error) {
-        // this element does not exist yere
-    }
-}
-
-function showDOMelement(element) {
-    try {
-        element.style.display = "block";
-    } catch (error) {
-        // this element does not exist yere
-    }
 }
 
 function tagUpdatePermissionsGranted() {

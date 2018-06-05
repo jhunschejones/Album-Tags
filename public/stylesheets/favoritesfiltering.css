@@ -6,12 +6,12 @@
     margin: 2px 0px 0px 0px;
 }
 
-.year_to_filter_by {
+.year_to_filter_by, .genre_to_filter_by {
     margin: 0px 2px 0px 2px;
     padding: 3px 5px 3px 5px !important;
 }
 
-#year_filter_menu {
+#year_filter_menu, #genre_filter_menu {
     padding: 1px 0px 4px 4px;
 }
 

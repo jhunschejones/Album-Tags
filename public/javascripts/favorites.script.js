@@ -52,7 +52,8 @@ var favoriteAlbums;
 dbRefrence = firebase.database().ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
 dbRefrence.on('value', snap => {
     favoriteAlbums = snap.val();
-    // now that favorites are obtained, start loading the page
+    // now that favorites are obtained, sort and load the page
+    favoriteAlbums.sort();
     startFavoritesPage();
 });
 // ----- END FIREBASE FAVORITES SECTION ------
