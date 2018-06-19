@@ -34,16 +34,16 @@
             </form>
 
             <span id="warning_label" class="text-danger"></span>
+            <div id="loader" style="display:none;"></div>  
 
-            <div id="results_returned">
-                <div id="loader" style="display:none;"></div>             
+            <div id="results_returned">           
                 <h4 id="artists_label" class="artists_label"></h4>
-                <span class="artist_results"></span>
-                <!--br /-->
+                <span id="artist_results" class="artist_results"></span>
                 <h4 id="albums_label" class="albums_label"></h4>
-                <span class="album_results"></span>
+                <span id="album_results" class="album_results"></span>
             </div>
-        </div>           
+        </div>  
+        
 
         <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
         <% include partials/templates/footer.ejs %>

@@ -1,5 +1,4 @@
 #background_image_container {
-    background-image: url("../images/people-2596753_1920.jpg");
     background-position: top;
     background-repeat: no-repeat;
     background-size: cover;
@@ -10,9 +9,9 @@
 
 #absolute_content {
     position: absolute;
-    top: 15.5%;
     left: 0%;
-}
+}    
+
 
 .artist_search {
     margin-left: 0px !important;
@@ -43,11 +42,51 @@
     max-height: 71vh;
 }
 
+
+
 /* -------- ADJUSTED FOOTER STYLES --------- */
 hr {
-    margin-top: 8px;
+    margin-top: 7px;
 }
 
 .my_footer a {
-    padding: 4px 12px 0px 2px;
+    padding: 2px 9px 0px 2px;
+    margin-bottom: 10px;
+}
+
+/* Manipulating background and absolute search bar position by screen size */
+@media screen and (max-height: 800px) {
+    #absolute_content {
+        top: 17%;
+    }
+    #background_image_container {
+        background-image: url("../images/train-sm.jpg");
+    }
+}
+
+@media screen and (min-height: 800px) and (max-height: 1000px) {
+    #absolute_content {
+        top: 14%;
+    }
+    #background_image_container {
+        background-image: url("../images/train-md.jpg");
+    }
+}
+
+@media screen and (min-height: 1000px) and (max-height: 1280px) {
+    #absolute_content {
+        top: 12%;
+    }
+    #background_image_container {
+        background-image: url("../images/train-md.jpg");
+    }
+}
+
+@media screen and (min-height: 1280px) {
+    #absolute_content {
+        top: 10%;
+    }
+    #background_image_container {
+        background-image: url("../images/train-lg.jpg");
+    }
 }

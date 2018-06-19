@@ -29,8 +29,11 @@ var emptyAlbums = false;
 // populate search results
 function populateSearchResults(pageReloaded) {    
     showDOMelement("loader");
-    hideDOMelement("artists_label");
-    hideDOMelement("albums_label");
+    hideDOMelement("results_returned");
+    // hideDOMelement("artists_label");
+    // hideDOMelement("albums_label");
+    // hideDOMelement("artist_results");
+    // hideDOMelement("album_results");
     
     // stop button from reloading page
     if (pageReloaded == false) {
@@ -40,7 +43,6 @@ function populateSearchResults(pageReloaded) {
     var mySearch = $('#search_box').val();
 
     // reset the results spans
-
     $('.artist_results').html('');
     $('.album_results').html('');
     $('#warning_label').html('');
@@ -51,26 +53,24 @@ function populateSearchResults(pageReloaded) {
     if (mySearch != '') {
         $('#warning_label').html('');
         hideDOMelement("warning_label");
-        showDOMelement("results_returned");
 
         // this is pulling data from url and populating cards
         $.getJSON ( '/search/' + mySearch, function(rawData) {
 
-            if (typeof(rawData.results.artists) != "undefined") {
-                showDOMelement("artists_label");
+            if (typeof(rawData.results.artists) != "undefined") {  
                 // this stores an array
                 artists = rawData.results.artists.data;
-                emptyArtists = false;                
+                emptyArtists = false;              
                 populateArtistResults();
 
             } else {
                 emptyArtists = true;
+                hideDOMelement("artists_label");
                 showDOMelement("warning_label");
-                $('#warning_label').append('<p>No artists match this search</p>');
+                $('#warning_label').append('<p style="margin:0px;">No artists match this search</p>');
             }
 
             if (typeof(rawData.results.albums) != "undefined") {
-                showDOMelement("albums_label");
                 // this stores an array
                 albums = rawData.results.albums.data;
                 emptyAlbums = false;
@@ -78,8 +78,9 @@ function populateSearchResults(pageReloaded) {
 
             } else {
                 emptyAlbums = true;
+                hideDOMelement("albums_label");
                 showDOMelement("warning_label");
-                $('#warning_label').append('<p>No albums match this search</p>');
+                $('#warning_label').append('<p style="margin:0px;">No albums match this search</p>');
             }
 
             hideDOMelement("loader");
@@ -113,6 +114,8 @@ function populateArtistResults() {
     catch(err) {
         // console.log("There are less than 5 albums for one of these artists");
     }
+    showDOMelement("artists_label");
+    showDOMelement("artist_results");
 }
 
 function populateAlbumResults() {
@@ -131,6 +134,8 @@ function populateAlbumResults() {
     catch(err) {
         console.log(err);
     }
+    showDOMelement("albums_label");
+    showDOMelement("album_results");
 }
 
 function expandArtistResults(event) {

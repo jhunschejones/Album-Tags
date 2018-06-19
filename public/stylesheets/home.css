@@ -21,9 +21,35 @@
 
 /* -------- ADJUSTED FOOTER STYLES --------- */
 hr {
-    margin-top: 8px;
+    margin-top: 7px;
 }
 
 .my_footer a {
-    padding: 4px 12px 0px 2px;
+    padding: 2px 9px 0px 2px;
+    margin-bottom: 10px;
+}
+
+/* Manipulating background by screen size */
+@media screen and (max-height: 800px) {
+    #background_image_container {
+        background-image: url("../images/window-sm.jpg");
+    }
+}
+
+@media screen and (min-height: 800px) and (max-height: 1000px) {
+    #background_image_container {
+        background-image: url("../images/window-md.jpg");
+    }
+}
+
+@media screen and (min-height: 1000px) and (max-height: 1280px) {
+    #background_image_container {
+        background-image: url("../images/window-md.jpg");
+    }
+}
+
+@media screen and (min-height: 1280px) {
+    #background_image_container {
+        background-image: url("../images/window-lg.jpg");
+    }
 }
