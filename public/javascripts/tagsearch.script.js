@@ -1,4 +1,5 @@
-console.log("The custom script for the tag search page is running")
+console.log("The custom script for the tag search page is running");
+
 
 var selectedTags = $(".heres_the_selected_tags").text().split(",");
 var cleanSelectedTags = [];
