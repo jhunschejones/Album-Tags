@@ -1,9 +1,53 @@
+#background_image_container {
+    background-image: url("../images/people-2596753_1920.jpg");
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 80vh;
+    opacity: 0.75;
+    box-shadow: inset 0 0 5px 2px #fff;
+}
+
+#absolute_content {
+    position: absolute;
+    top: 15.5%;
+    left: 0%;
+}
+
 .artist_search {
     margin-left: 0px !important;
 }
 
+	/* This overrides bootstrap's style for the text input
+	 box so that it will display the 'x' in chrome */
+    input[type=search]::-webkit-search-cancel-button {
+		-webkit-appearance: searchfield-cancel-button;
+    }
+    
 .btn_xsm {
     padding-top: 0px;
     padding-bottom: 0px;
     margin-top: 5px;
+}
+
+#albums_label {
+    margin-top: 15px;
+}
+
+#results_returned {
+    background-color: rgba(255, 255, 255, 0.75);
+    display:inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    overflow: auto;
+    max-height: 71vh;
+}
+
+/* -------- ADJUSTED FOOTER STYLES --------- */
+hr {
+    margin-top: 8px;
+}
+
+.my_footer a {
+    padding: 4px 12px 0px 2px;
 }

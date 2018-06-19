@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <% include partials/templates/head_tags.ejs %>
+		<link rel="stylesheet" href="/stylesheets/about.css">
+    </head>
+    <body>
+
+        <!-- BASIC NAVBAR TEMPLATE -->
+        <% include partials/templates/navbar_basic.ejs %>
+
+        <div class='container-fluid'>
+            <h1>Welcome, Music Fan.</h1>
+			<br />
+            <h4 class="text-secondary">Lets start with this: we <strong class="text-danger">LOVE</strong> music.</h4>
+			
+			<p>In fact, just like you, we can go into seemingly endless detail about what we love on our favorite records. As streaming has become a larger part of the music industry, we started to find it harder and harder to keep track of all the music in our libraries. We also noticed we were missing out on opportunities to share records we liked with our friends.</p>
+
+			<h4 class="text-secondary">Our solution?</h4>
+			<p>To address this problem, we built an app where you can <a href="/search/">search</a> for some music and find exactly what we love about it. We added tags to our favorite albums and you can use them to find more music with similar qualities.</p>
+			<p>Not sure where to start? Check out our <a href="/favorites">favorite albums</a> of 2018 so far. Want to try some other features? Poke around using the 'Site Navigation' menu above, or look at the videos below showing some features of this app.</p>
+        </div>
+    
+
+		<div class='container-fluid'>
+			<h3>App Features:</h3>
+		</div>
+
+		<div class='container-fluid' id="accordion">
+			<div class="card">
+				<div class="card-header" id="headingFour">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+							Artist or Album Search
+						</button>
+					</h5>
+				</div>
+				<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+					<div class="card-body">
+						<!-- artist search -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418306?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingTwo">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							Search Tags From Album Details
+						</button>
+					</h5>
+				</div>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+					<div class="card-body">
+						<!-- search from album tags -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418298?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingOne">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+							Search From All Tags
+						</button>
+					</h5>
+				</div>
+
+				<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+					<div class="card-body">
+						<!-- search from all tags -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418274?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>						
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header" id="headingThree">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+							Get to Album Details from "This Week"
+						</button>
+					</h5>
+				</div>
+				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					<div class="card-body">
+						<!-- album details from this week page -->
+						<iframe allowFullScreen frameborder="0" height="564" mozallowfullscreen src="https://player.vimeo.com/video/261418287?autoplay=1&loop=1&autopause=0" webkitAllowFullScreen width="640"></iframe>
+					</div>
+				</div>
+			</div>
+
+		</div>	         
+
+        <!-- BASIC FOOTER TEMPLATE + JavaScript Tags -->
+        <% include partials/templates/footer.ejs %>
+        <script src="/javascripts/about.script.js"></script>
+    </body>
+</html>
