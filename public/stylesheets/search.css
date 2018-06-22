@@ -49,7 +49,7 @@ hr {
     margin-top: 7px;
 }
 
-.my_footer a {
+.my_footer a, .nav_seperator {
     padding: 2px 9px 0px 2px;
     margin-bottom: 10px;
 }

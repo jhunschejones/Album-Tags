@@ -69,6 +69,12 @@ firebase.auth().onAuthStateChanged(function(user) {
             // we're not on the my favorites page
         }
 
+        try {
+            populateUserData();
+        } catch (error) {
+            // we're not on contact page
+        }
+
 
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has permissions
