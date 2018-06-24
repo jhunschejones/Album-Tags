@@ -1,5 +1,5 @@
 // --------- START UTILITIES --------
-console.log('The custom script for connection albums is running');
+console.log('The custom script for album connections is running');
 
 function hideDOMelement(elementId) {
     try {
@@ -66,7 +66,7 @@ function populateConnections() {
                 let element = connection[index];
                 if (element != albumId) {
                     $.getJSON ( '/albumdetails/json/' + parseInt(element), function(rawData) {
-                        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 150).replace('{h}', 150);
+                        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 105).replace('{h}', 105);
                         $('.connection_results').append(`<a href="/albumdetails/${element}"><img class="small_cover" src="${cover}"></a>`)
                     });
                 }

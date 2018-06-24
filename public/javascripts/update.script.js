@@ -1,4 +1,11 @@
 console.log('The custom script for the updte page is running');
+
+function scrollToTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+
 // This is really messy, but the album Id is stored in the ejs file in a hidden 
 // element. It comes in as a string so I'm converting it to a number to use in
 // my logic below

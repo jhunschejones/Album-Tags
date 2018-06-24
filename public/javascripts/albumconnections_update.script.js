@@ -1,5 +1,5 @@
 // --------- START UTILITIES --------
-console.log('The custom script for album connections update is running');
+console.log('The custom script for album connections update page is running');
 
 function hideDOMelement(elementId) {
     try {
@@ -145,6 +145,7 @@ function letsAddAConnection() {
         let newAlbumId = parseInt($('#new_connection').val());
         isDelete = false;
         createConnection(newAlbumId, isDelete);
+        $('#new_connection').val('');
     } else {
         console.log("Field is blank")
     }
@@ -152,8 +153,11 @@ function letsAddAConnection() {
 
 function deleteConnection(connectedAlbum) {
     event.preventDefault()
-    isDelete = true;
-    createConnection(connectedAlbum, isDelete)
+    var confirmation = confirm('Are you sure you want to delete a connection?');
+    if (confirmation === true) {
+        isDelete = true;
+        createConnection(connectedAlbum, isDelete);
+    }
 }
 
 function createConnection(newAlbumId, isDelete) {

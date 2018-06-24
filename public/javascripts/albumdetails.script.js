@@ -1,4 +1,24 @@
+// -------- START UTILITIES SECTION --------
+
 console.log("The custom script for the album details page is running")
+
+
+function copyToClipboard(text){
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+}
+
+function scrollToTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+// -------- END UTILITIES SECTION --------
+
 
 // This is really messy, but the album Id is stored in the ejs file in a hidden 
 // element. It comes in as a string so I'm converting it to a number to use in
@@ -32,7 +52,8 @@ function populateAlbumDetails(albumNumber){
         $('.albumdetails_artist').append(artist);
         $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
         $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
-        $('.albumdetails_album').append(album, '<br>');
+        // $('.albumdetails_album').append(album, '<br/>');
+        $('.albumdetails_album').append(`<a href="#" onclick="copyToClipboard(${albumNumber})">${album}</a><br>`);
 
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');

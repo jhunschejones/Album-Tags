@@ -38,8 +38,14 @@
     padding: 7px 0px 7px 15px;
 }
 
-.tags_body, .connections_body {
+.tags_body {
     padding: 10px;
+}
+
+.connections_body {
+    padding: 10px 10px 0px 10px;
+    max-height: 240px;
+    overflow: auto;
 }
 
 .tag_search_button {
@@ -50,6 +56,7 @@
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
     margin-right: 8px;
+    margin-bottom: 10px;
 }
 
 #update_button_container a {
@@ -62,4 +69,11 @@
 
 .applemusicurl {
     margin-left: 7px;
+}
+
+.albumdetails_album a, 
+.albumdetails_album a:hover {
+    text-decoration: none;
+    color: #212529;
+    cursor: default;
 }

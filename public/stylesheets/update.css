@@ -21,3 +21,9 @@
 td {
     padding: 5px 0px 5px 10px !important;
 }
+
+/* currently this scrolling table body doesnt work */
+#table_overflow {
+    max-height: 258px;
+    overflow: auto;
+}
