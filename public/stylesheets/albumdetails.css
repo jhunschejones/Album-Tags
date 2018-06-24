@@ -30,20 +30,26 @@
     margin: 0px;
 }
 
-.tags_card {
+.tags_card, .connections_card {
     margin: 5px;
 }
 
-#tag_card_header {
+#tag_card_header, #connections_card_header {
     padding: 7px 0px 7px 15px;
 }
 
-.tags_body {
+.tags_body, .connections_body {
     padding: 10px;
 }
 
 .tag_search_button {
     margin-top: 15px;
+}
+
+.small_cover {
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px grey;
+    margin-right: 8px;
 }
 
 #update_button_container a {

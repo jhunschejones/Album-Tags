@@ -22,12 +22,21 @@ function showDOMelement(element) {
 var config = {
     apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
     authDomain: "album-tag-auth.firebaseapp.com",
-    databaseURL: "https://album-tag-auth.firebaseio.com",
+    databaseURL: "https://album-tag-favorites.firebaseio.com/",
     projectId: "album-tag-auth",
     storageBucket: "album-tag-auth.appspot.com",
     messagingSenderId: "1048555394172"
 };
-firebase.initializeApp(config);
+const app1 = firebase.initializeApp(config);
+
+const app2 = firebase.initializeApp({
+    apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
+    databaseURL: "https://album-tag-connections.firebaseio.com/",
+    projectId: "album-tag-auth"
+}, 'app2');
+
+// Get a database instance for app2
+var database1 = firebase.database(app2);
 
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
@@ -67,6 +76,12 @@ firebase.auth().onAuthStateChanged(function(user) {
         }
         catch (error) {
             // we're not on the my favorites page
+        }
+
+        try {
+            updateConnectedAlbums()
+        } catch (error) {
+            // we're not on a connected albums page
         }
 
         try {

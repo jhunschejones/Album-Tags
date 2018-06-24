@@ -49,6 +49,15 @@
                             <span class="warning_label text-danger"></span>
                         </div>
                     </div>
+
+
+                    <div id="connections_card" class="card connections_card" style="display:none";>
+                        <h6 id="connections_card_header" class="card-header">Connected Albums</h6>
+                        <div id="tag_pile" class="card-body connections_body">
+                            <div class="connection_results"><small>There are currently no connections for this album!</small></div>
+                        </div>
+                    </div>
+
                     <br />
                     <!-- there is intentionally no href here, it is set in albumdetails.js -->
                     <a href="" target="_blank" class="btn btn-sm btn-outline-secondary applemusicurl">Listen on Apple Music</a>
@@ -67,5 +76,6 @@
         <% include partials/templates/footer.ejs %>
 
         <script src="/javascripts/albumdetails.script.js"></script>
+        <script src="/javascripts/albumconnections.script.js"></script>
     </body>
 </html>

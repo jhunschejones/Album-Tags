@@ -29,6 +29,12 @@
                             </div>
                             <button type="button" onclick="updateTags()" class="btn btn-primary mb-2 add_tag_button">Add</button>
                             <span class="warning_label text-danger"></span>
+
+                            <div class="form-group mx-sm-3 mb-2 add_connection_text_input">
+                                <!-- for continuous search, add oninput="populateSearchResults()" to input field -->
+                                <input type="text" class="form-control add_connection_field" id="new_connection" placeholder="Add a Connection!">
+                            </div>
+                            <button type="button" onclick="letsAddAConnection()" class="btn btn-primary mb-2 add_connection_button">Add</button>
                         </form>   
                     </div>
                 </div>
@@ -41,6 +47,19 @@
                             </tr>
                         </thead>
                         <tbody class="tag_results">                           
+                        </tbody>
+                    </table>
+
+                    <table class="table table-bordered" id="connections_table">
+                        <thead class="bg-light">
+                            <tr>
+                            <th scope="col">Connection</th>
+                            <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                            <div id="table_overflow">
+                                <tbody class="connection_results">  
+                            </div>                         
                         </tbody>
                     </table>
                 </div>
@@ -63,5 +82,6 @@
         <% include partials/templates/footer.ejs %>
 
         <script src="/javascripts/update.script.js"></script>
+        <script src="/javascripts/albumconnections_update.script.js"></script>
     </body>
 </html>
