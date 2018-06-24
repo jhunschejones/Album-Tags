@@ -108,24 +108,11 @@ function createConnection(newAlbumId) {
 function addConnection(newConnection) {
     connectedAlbums.push(newConnection);
 
-    updateDatabase();
+    updateConnectionDatabase();
 }
 
-// function removeFromFavorites(newAlbum) {
-//     let index = myFavoriteAlbums.indexOf(newAlbum);
-//     myFavoriteAlbums.splice(index, 1);
-//     updateDatabase();
-//     checkForDuplicates();
-// }
-
-function updateDatabase() {
+function updateConnectionDatabase() {
     database1.ref().child(userID).set({
         "Connected Albums" : connectedAlbums
     });
 }
-
-// function updateDatabase() {
-//     database1.ref().child(userID).set({
-//         "Connected Albums" : connectedAlbums
-//     });
-// }

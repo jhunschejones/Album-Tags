@@ -179,7 +179,7 @@ function createConnection(newAlbumId, isDelete) {
 function addConnection(newConnection) {
     connectedAlbums.push(newConnection);
 
-    updateDatabase();
+    updateConnectionDatabase();
 }
 
 function removeConnection(connection) {
@@ -194,10 +194,10 @@ function removeConnection(connection) {
     }
 
     connectedAlbums.splice(index, 1);
-    updateDatabase();
+    updateConnectionDatabase();
 }
 
-function updateDatabase() {
+function updateConnectionDatabase() {
     database1.ref().child(userID).set({
         "Connected Albums" : connectedAlbums
     });

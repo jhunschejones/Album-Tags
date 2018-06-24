@@ -161,8 +161,9 @@ function checkForDuplicates() {
 }
 
 function addToFavoriteAlbums(newAlbum) {
+    console.log("add to favorite albums called")
 
-        myFavoriteAlbums.push(newAlbum);
+    myFavoriteAlbums.push(newAlbum);
 
 
     updateDatabase();
@@ -177,6 +178,7 @@ function removeFromFavorites(newAlbum) {
 }
 
 function updateDatabase() {
+    console.log("update database called")
     firebase.database().ref(userID).set({
         "My Favorites": myFavoriteAlbums
     });

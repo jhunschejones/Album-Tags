@@ -170,6 +170,7 @@ function logOut() {
         logoutButton.style.display = "none";
         remove_from_favorites.style.display = "none";
         add_to_favorites.style.display = "none";
+        loginButton.style.display = "block";
     // Sign-out successful.
     }).catch(function(error) {
     // An error happened.
