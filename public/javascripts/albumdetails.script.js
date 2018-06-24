@@ -53,7 +53,7 @@ function populateAlbumDetails(albumNumber){
         $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
         $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         // $('.albumdetails_album').append(album, '<br/>');
-        $('.albumdetails_album').append(`<a href="#" onclick="copyToClipboard(${albumNumber})">${album}</a><br>`);
+        $('.albumdetails_album').append(`<span onclick="copyToClipboard(${albumNumber})">${album}</span><br>`);
 
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
