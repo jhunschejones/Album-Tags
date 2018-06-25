@@ -3,18 +3,47 @@
 console.log("The custom script for the album details page is running")
 
 
-function copyToClipboard(text){
-    var dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = text;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-}
 
 function scrollToTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+function hideDOMelement(elementId) {
+    try {
+        let element = document.getElementById(elementId)
+        element.style.display = "none";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+
+function showDOMelement(elementId) {
+    try {
+        let element = document.getElementById(elementId)
+        element.style.display = "block";
+    } catch (error) {
+        // this element does not exist yere
+    }
+}
+
+
+function toggleDOMelement(elementId) {
+    // let element = document.getElementById(elementId)
+    let query = $(`#${elementId}`);
+    
+    // check if element is Visible
+    var isVisible = query.is(':visible');
+    
+    if (isVisible === true) {
+        // element is Visible
+        // element.style.display = "none"
+        query.hide();
+    } else {
+        // element is Hidden
+        // element.style.display = "block"
+        query.show();
+    }
 }
 
 // -------- END UTILITIES SECTION --------
@@ -53,7 +82,7 @@ function populateAlbumDetails(albumNumber){
         $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
         $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         // $('.albumdetails_album').append(album, '<br/>');
-        $('.albumdetails_album').append(`<span onclick="copyToClipboard(${albumNumber})">${album}</span><br>`);
+        $('.albumdetails_album').append(`<span id="the_album_name" onclick="showAlbumID()">${album}</span><span id="the_album_id" class="text-secondary" style="display:none;">${albumId}</span>`);
 
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
@@ -66,6 +95,17 @@ function populateAlbumDetails(albumNumber){
         
     });
 };
+
+function showAlbumID() {
+   showDOMelement("the_album_id")
+   hideDOMelement("the_album_name")
+   setTimeout(showAlbumName, 6000)
+}
+
+function showAlbumName() {
+    showDOMelement("the_album_name")
+    hideDOMelement("the_album_id")
+}
 
 // I'm using this variable and function to reformat the date provided in Apple's API
 // into a fully written-out and formated date
@@ -237,3 +277,15 @@ $('button').on('click', function () {
     var _this = this;
     setTimeout(function(){ $(_this).tooltip('hide'); }, 1500);  
 })
+
+$('#show_track_names').prop('checked', true);
+
+
+$('#show_track_names').change(function(){
+    if($(this).is(':checked')) {
+        hideDOMelement("song_names")
+    } else {
+        showDOMelement("song_names")
+    }
+});
+
