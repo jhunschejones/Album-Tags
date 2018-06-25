@@ -49,8 +49,8 @@ exports.config = {
       'response.headers.setCookie*',
       'response.headers.x*'
     ]
-  },
-  browser_monitoring : {
-    enable : true
   }
+  // browser_monitoring : {
+  //   enable : true
+  // }
 }

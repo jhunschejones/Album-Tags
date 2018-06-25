@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     res.render('index', { 
       pageTitle: "",
-      subTitle: "Find Something New"
+      subTitle: "Find Something New",
   });
 });
 
