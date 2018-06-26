@@ -24,7 +24,7 @@ function getAlbumInfo(albumNumber, cardNumber) {
 
 // creates the album card with loading message and no details
 function createCard(cardNumber) {
-    $('#all_cards').append(`<div id="card${cardNumber}" class="card albumCard"><a class="album_details_link" href=""><img class="card-img-top" src="" alt=""><a/><div class="card-body"><h4 class="card-title"></h4><span class="album"><span class="text-primary">Loading Album Details...</span></span></div></div>`);
+    $('#favorites_all_cards').append(`<div id="card${cardNumber}" class="card albumCard"><a class="album_details_link" href=""><img class="card-img-top" src="" alt=""><a/><div class="card-body"><h4 class="card-title"></h4><span class="album"><span class="text-primary">Loading Album Details...</span></span></div></div>`);
 }
 
 // populates the album card
@@ -61,7 +61,7 @@ dbRefrence.on('value', snap => {
 
 function startFavoritesPage() {
     // clear any warnings
-    $('#all_cards').html("");
+    $('#favorites_all_cards').html("");
     // create card and populate for each favorite album
     for (let index = 0; index < favoriteAlbums.length; index++) {
         let album = favoriteAlbums[index];
