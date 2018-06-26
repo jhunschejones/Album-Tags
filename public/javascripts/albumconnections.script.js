@@ -42,10 +42,13 @@ function findDirectConnections() {
     if (connectedAlbums.length != 0) {
          for (let index = 0; index < connectedAlbums.length; index++) {
             let connection = connectedAlbums[index];
-
-            for (let index = 0; index < connection.length; index++) {
-                let element = connection[index];
-                if (element == albumId) { directConnections.push(connection) }   
+            
+            // avoids js errors for undefined values
+            if (connection != undefined) {
+                for (let index = 0; index < connection.length; index++) {
+                    let element = connection[index];
+                    if (element == albumId) { directConnections.push(connection) }   
+                }
             }
         }
     }
@@ -73,46 +76,4 @@ function populateConnections() {
             }  
         }
     }
-}
-
-function letsAddAConnection() {
-    if ($('#new_connection').val() != ''){
-        let newAlbumId = parseInt($('#new_connection').val());
-        createConnection(newAlbumId);
-    } else {
-        console.log("Field is blank")
-    }
-}
-
-
-
-function createConnection(newAlbumId) {
-    let newConnection = [albumId, newAlbumId]
-    let duplicate = false
-
-    if (directConnections.length != 0) {
-        for (let index = 0; index < directConnections.length; index++) {
-           let connection = directConnections[index];
-
-           for (let index = 0; index < connection.length; index++) {
-               let element = connection[index];
-               if (element == newAlbumId) { duplicate = true }   
-           }
-       }
-   }
-
-    if (duplicate == false) { addConnection(newConnection) }
-    else {console.log("Duplicate")}
-}
-
-function addConnection(newConnection) {
-    connectedAlbums.push(newConnection);
-
-    updateConnectionDatabase();
-}
-
-function updateConnectionDatabase() {
-    database1.ref().child(userID).set({
-        "Connected Albums" : connectedAlbums
-    });
 }

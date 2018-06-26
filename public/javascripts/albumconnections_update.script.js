@@ -80,9 +80,9 @@ var isEqual = function (value, other) {
 	return true;
 };
 
-
-
 // --------- END UTILITIES --------
+
+
 
 // ----- START FIREBASE ALBUM CONNECTIONS SECTION ------
 var connectedAlbums = [];
@@ -104,12 +104,15 @@ function findDirectConnections() {
     directConnections = [];
     
     if (connectedAlbums.length != 0) {
-        for (let index = 0; index < connectedAlbums.length; index++) {
-        let connection = connectedAlbums[index];
-
-            for (let index = 0; index < connection.length; index++) {
-                let element = connection[index];
-                if (element == albumId) { directConnections.push(connection) }   
+         for (let index = 0; index < connectedAlbums.length; index++) {
+            let connection = connectedAlbums[index];
+            
+            // avoids js errors for undefined values
+            if (connection != undefined) {
+                for (let index = 0; index < connection.length; index++) {
+                    let element = connection[index];
+                    if (element == albumId) { directConnections.push(connection) }   
+                }
             }
         }
     }
@@ -138,16 +141,34 @@ function populateConnections() {
         }
     }
 }
+
 var isDelete = false;
 
-function letsAddAConnection() {
+function newConnection() {
     if ($('#new_connection').val() != ''){
         let newAlbumId = parseInt($('#new_connection').val());
         isDelete = false;
-        createConnection(newAlbumId, isDelete);
+
+        $.getJSON ( '/albumdetails/json/' + parseInt(newAlbumId), function(rawData) {
+            // check if this is a valid album id
+            // rawData.errors returns undefined if there are no errors
+            // rawData.data returns undefined if there are no albums
+            if (rawData.data) {
+                isValidAlbum = true
+            } else {
+                isValidAlbum = false
+            }
+        }).then(function(){
+            if (isValidAlbum) {
+                createConnection(newAlbumId, isDelete);
+            } else {
+                alert("Sorry, Apple says that's not an album ID.")
+            }
+        })
+
         $('#new_connection').val('');
     } else {
-        console.log("Field is blank")
+        // console.log("Connection field is blank")
     }
 }
 

@@ -27,22 +27,64 @@ function showDOMelement(elementId) {
     }
 }
 
-
-function toggleDOMelement(elementId) {
-    // let element = document.getElementById(elementId)
-    let query = $(`#${elementId}`);
+// takes a string thats an html element ID
+function toggleDOMelement(content) {
     
+    let query = $(`#${content}`); 
     // check if element is Visible
     var isVisible = query.is(':visible');
     
     if (isVisible === true) {
-        // element is Visible
-        // element.style.display = "none"
+        // element was Visible
         query.hide();
     } else {
-        // element is Hidden
-        // element.style.display = "block"
+        // element was Hidden
         query.show();
+    }
+}
+
+
+function toggleContentAndArrows(content, up, down) {
+    
+    let query = $(`#${content}`); 
+    let downArrow = $(`#${down}`); 
+    let upArrow = $(`#${up}`); 
+
+    // check if element is Visible
+    var isVisible = query.is(':visible');
+    
+    if (isVisible === true) {
+        // element was Visible
+        query.css( "display", "none" );
+        downArrow.css( "display", "block" );
+        upArrow.css( "display", "none" );
+    } else {
+        // element was Hidden
+        query.css( "display", "block" );
+        downArrow.css( "display", "none" );
+        upArrow.css( "display", "block" );
+    }
+}
+
+function toggleTracksAndArrows(content, up, down) {
+    
+    let query = $(`#${content}`); 
+    let downArrow = $(`#${down}`); 
+    let upArrow = $(`#${up}`); 
+
+    // check if element is Visible
+    var isVisible = query.is(':visible');
+    
+    if (isVisible === true) {
+        // element was Visible
+        query.css( "display", "none" );
+        downArrow.css( "display", "inline-block" );
+        upArrow.css( "display", "none" );
+    } else {
+        // element was Hidden
+        query.css( "display", "inline-block" );
+        downArrow.css( "display", "none" );
+        upArrow.css( "display", "inline-block" );
     }
 }
 
@@ -277,15 +319,3 @@ $('button').on('click', function () {
     var _this = this;
     setTimeout(function(){ $(_this).tooltip('hide'); }, 1500);  
 })
-
-$('#show_track_names').prop('checked', true);
-
-
-$('#show_track_names').change(function(){
-    if($(this).is(':checked')) {
-        hideDOMelement("song_names")
-    } else {
-        showDOMelement("song_names")
-    }
-});
-
