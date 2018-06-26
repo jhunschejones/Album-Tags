@@ -5,6 +5,7 @@ var request = require('request');
 
 /* GET album details page. */
 router.get('/:albumId', function(req, res, next) {
+    res.setHeader("Cache-Control", "private, max-age=600");
     res.render('albumdetails', {
         pageTitle: ': Details',
         subTitle: 'Album Details',
@@ -28,6 +29,7 @@ router.get('/json/:albumId', function(req, res, next) {
         if (err) {  
             console.log(err);  
         } else { 
+            res.setHeader("Cache-Control", "private, max-age=600");
             res.json(body);
         }  
     })
@@ -38,6 +40,7 @@ router.get('/database/:albumId', function(req, res, next) {
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
     collection.find({ "albumId" : thisAlbum }, function(e,docs){
+        res.setHeader("Cache-Control", "private, max-age=600");
         res.json(docs);
     })
 });

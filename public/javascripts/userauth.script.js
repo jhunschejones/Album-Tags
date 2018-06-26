@@ -1,21 +1,24 @@
 // --------- START UTILITIES --------
 console.log('The custom script for the userauth page is running');
 
-function hideDOMelement(element) {
+function hideDOMelement(elementId) {
     try {
+        let element = document.getElementById(elementId)
         element.style.display = "none";
     } catch (error) {
-        // this element does not exist yere
+        // this element does not exist here
     }
 }
 
-function showDOMelement(element) {
+function showDOMelement(elementId) {
     try {
+        let element = document.getElementById(elementId)
         element.style.display = "block";
     } catch (error) {
-        // this element does not exist yere
+        // this element does not exist here
     }
 }
+
 // --------- END UTILITIES --------
 
 // Initialize Firebase
@@ -53,17 +56,20 @@ var user = firebase.auth().currentUser;
 var userID;
 var dbRefrence;
 
+
+
 // checking if user is logged in or logs in during session
 firebase.auth().onAuthStateChanged(function(user) {
     // returns true if user is not null
     if (user) {
 
-        // remove login button
-        loginButton.style.display = "none";
-        logoutButton.style.display = "block";
-        showDOMelement(document.getElementById("filter_by_year_dropdown_button"))
-        showDOMelement(document.getElementById("filter_by_genre_dropdown_button"))
-        showDOMelement(document.getElementById("clear_filters_button"))
+        $("#all_cards").show();
+        hideDOMelement("login_button")
+        showDOMelement("logout_button")
+        showDOMelement("filter_by_year_dropdown_button")
+        showDOMelement("filter_by_genre_dropdown_button")
+        showDOMelement("clear_filters_button")
+        hideDOMelement("log_in_message")
 
         // set our variables with this user's info
         userEmail = user.email;
@@ -96,8 +102,9 @@ firebase.auth().onAuthStateChanged(function(user) {
             tagUpdatePermissionsGranted();
         } 
         else {
-            // user is signed in but does not have permissions
+            // user is signed in but does not have tag permissions
             console.log('This user is not authorized to update tags.');
+            connectionPermissionsGranted();
         }
     } else {
         // No user is signed in.    
@@ -107,24 +114,52 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 function noUserSignedIn() {
     try {
-        logInMessage.innerHTML = '<div class="container-fluid please_log_in"><p class="text-danger">Sign in to access this feature</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
+        logInMessage.innerHTML = '<div class="container-fluid please_log_in"><p class="text-danger">Please sign in to access this feature</p> <button onclick="logIn()" class="btn btn-danger" id="login_link">Log In</button></div>';
     } catch (error) {
         // no login message container on this page
     }  
-    showDOMelement(loginButton);
-    showDOMelement(loginDivider);
-    hideDOMelement(clearFiltersButton);
-    hideDOMelement(filter_by_year_dropdown_button);
-    hideDOMelement(document.getElementById("filter_by_genre_dropdown_button"));
-    hideDOMelement(updateTagsPage);   
+    hideDOMelement("all_the_things");   
+    showDOMelement("login_button");
+    hideDOMelement("logout_button")
+    showDOMelement("login_divider");
+    hideDOMelement("clear_filters_button");
+    hideDOMelement("filter_by_year_dropdown_button");
+    hideDOMelement("filter_by_genre_dropdown_button");
+    hideDOMelement("remove_from_favorites")
+    hideDOMelement("add_to_favorites")
     // hide spinner
-    hideDOMelement(loader);
+    hideDOMelement("loader");
+    $("#all_cards").hide();
+    hideDOMelement("")
+    $(".update_button").hide();
+    showDOMelement("log_in_message")
 }
 
 function tagUpdatePermissionsGranted() {
     try {
         $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-primary update_button">Update Tags</a>');
+        $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
         updateTagsPage.style.display = "block";
+        logInMessage.innerHTML = "";
+        $("#tags_table").show();
+        $(".add_tag_text_input").show();
+        $(".add_tag_button").show();
+        $(".warning_label").show();
+
+    } catch (error) {
+        // console.log(error)
+    }
+}
+
+function connectionPermissionsGranted() {
+    try {
+        $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
+        showDOMelement("all_the_things")
+        $('#tags_table').remove();
+        $('#new_tag').remove();
+        $('#add_tag_button').remove();
+        $('.warning_label').remove();
+        $('.add_tag_text_input').remove();_
         logInMessage.innerHTML = "";
     } catch (error) {
         // console.log(error)
@@ -167,10 +202,13 @@ function goToUpdatePage() {
 
 function logOut() {
     firebase.auth().signOut().then(function() {
-        logoutButton.style.display = "none";
-        remove_from_favorites.style.display = "none";
-        add_to_favorites.style.display = "none";
-        loginButton.style.display = "block";
+        noUserSignedIn();
+        // logoutButton.style.display = "none";
+        // remove_from_favorites.style.display = "none";
+        // add_to_favorites.style.display = "none";
+        // loginButton.style.display = "block";
+        // updateTagsPage.style.display = "none";
+        
     // Sign-out successful.
     }).catch(function(error) {
     // An error happened.

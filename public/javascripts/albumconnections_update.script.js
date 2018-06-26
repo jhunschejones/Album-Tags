@@ -134,7 +134,7 @@ function populateConnections() {
                 if (element != albumId) {
                     $.getJSON ( '/albumdetails/json/' + parseInt(element), function(rawData) {
                         var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 75).replace('{h}', 75);
-                        $('.connection_results').append(`<tr><td><img class="small_cover" src="${cover}"></td><td><a href="" onclick="deleteConnection(${element})">Delete</a></td></tr>`)
+                        $('.connection_results').append(`<tr><td><a href="/albumdetails/${element}"><img class="small_cover" src="${cover}"></a></td><td><a href="" onclick="deleteConnection(${element})">Delete</a></td></tr>`)
                     });
                 }
             }  

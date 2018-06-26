@@ -60,9 +60,10 @@
 
                     <br />
                     <!-- there is intentionally no href here, it is set in albumdetails.js -->
-                    <a href="" target="_blank" class="btn btn-sm btn-outline-secondary applemusicurl">Listen on Apple Music</a>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="scrollToTop()">To Top</button>
-                    <button class="btn btn-sm btn-secondary" onclick="window.history.back()">Go Back</button>
+                    <button class="btn btn-sm btn-light" onclick="window.history.back()"><img id="back_arrow" src="/images/back_arrow.png"><span class="button_text">Back</span></button>
+                    <button class="btn btn-sm btn-light" onclick="scrollToTop()"><img id="up_arrow" src="/images/up_arrow.png"><span class="button_text">Top</span></button>
+                    <a href="" target="_blank" class="btn btn-sm btn-light applemusicurl"><img id="earbuds" src="/images/earbuds.png"><span class="button_text">Apple Music</span></a>
+                    <span id="connection_button_container"></span>
                     <br />
                     <br />
                 </div>

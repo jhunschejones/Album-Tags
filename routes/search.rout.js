@@ -4,6 +4,7 @@ var request = require('request');
 
 /* GET search page. */
 router.get('/', function(req, res, next) {
+    res.setHeader("Cache-Control", "private, max-age=600");
     res.render('search', {
         pageTitle: ': Search',
         subTitle: 'Search By Album or Artist'
@@ -27,6 +28,7 @@ router.get('/:search', function(req, res, next) {
         if (err) {  
             console.error(err);  
         } else { 
+            res.setHeader("Cache-Control", "private, max-age=600");
             res.json(body);
         }  
     })

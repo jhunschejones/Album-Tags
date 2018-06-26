@@ -42,6 +42,9 @@
         #tracks_up_arrow {
             display: inline-block;
         }
+        .button_text {
+            display: inline;
+        }
     }
 
     @media screen and (max-width: 500px) {
@@ -57,6 +60,9 @@
         }
         #tracks_down_arrow {
             display: inline-block;
+        }
+        .button_text {
+            display: none;
         }
     }
 
@@ -75,12 +81,14 @@
     margin-left: 8px;
     margin-bottom: 2px;
     opacity: 0.5;
+    cursor: pointer;
 }
 
 .card_header_arrows {
     height:12px;
     margin-right:12px;
     margin-top:3px;
+    cursor: pointer;
 }
 
 .tags_card, .connections_card {
@@ -124,6 +132,18 @@
     margin: 5px 0px 0px 0px;
 }
 
-.applemusicurl {
-    margin-left: 7px;
+#earbuds {
+    height: 22px;
+    padding-left: 1px;
+    opacity: 0.8;
+}
+
+/* ======= navigation arrows ======== */
+#back_arrow {
+    height: 22px;
+    padding: 0px 6px 2px 3px;
+}
+#up_arrow {
+    height: 18px;
+    padding: 0px 4px 5px 4px;
 }

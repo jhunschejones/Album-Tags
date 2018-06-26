@@ -3,6 +3,7 @@ var router = express.Router();
 var request = require('request'); 
 
 router.get('/', function(req, res, next) {
+    // res.setHeader("Cache-Control", "private, max-age=600");
     res.render('alltags', {
         pageTitle: ': All Tags',
         subTitle: 'Search All Tags',
@@ -10,6 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/database', function(req, res, next) {
+    // res.setHeader("Cache-Control", "private, max-age=600");
     var db = req.db;
     var collection = db.get('musictags');
     collection.find({}, {}, function(e,docs){

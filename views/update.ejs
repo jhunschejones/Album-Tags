@@ -20,14 +20,14 @@
                             <img class="img-fluid albumdetails_cover" src="" alt="">
                         </div>
                     </div>
-                    <br />
+                    <br id="slim_br"/>
                     <div class="row container-fluid">
-                        <form class="form-inline add_tag_form">
+                        <!-- <form class="form-inline add_tag_form"> -->
                             <div class="form-group mx-sm-3 mb-2 add_tag_text_input">
                                 <!-- for continuous search, add oninput="populateSearchResults()" to input field -->
                                 <input type="text" class="form-control add_tag_field" id="new_tag" placeholder="Add a Tag!">
                             </div>
-                            <button type="button" onclick="updateTags()" class="btn btn-primary mb-2 add_tag_button">Add</button>
+                            <button type="button" onclick="updateTags()" id="add_tag_button" class="btn btn-primary mb-2 add_tag_button">Add</button>
                             <span class="warning_label text-danger"></span>
 
                             <div class="form-group mx-sm-3 mb-2 add_connection_text_input">
@@ -35,7 +35,7 @@
                                 <input type="text" class="form-control add_connection_field" id="new_connection" placeholder="Add a Connection!">
                             </div>
                             <button type="button" onclick="newConnection()" class="btn btn-primary mb-2 add_connection_button">Add</button>
-                        </form>   
+                        <!-- </form>   -->
                     </div>
                 </div>
                 <div class="col-sm-7 container-fluid">
@@ -65,8 +65,8 @@
             <div class="row">
                 <div class="col">
                 <br />
-                <button class="btn btn-sm btn-secondary" onclick="window.history.back()">Go Back</button>
-                <button class="btn btn-sm btn-outline-secondary" onclick="scrollToTop()">To Top</button>
+                <button class="btn btn-sm btn-light" onclick="window.history.back()"><img id="back_arrow" src="/images/back_arrow.png"><span class="button_text">Back</span></button>
+                <button class="btn btn-sm btn-light" onclick="scrollToTop()"><img id="up_arrow" src="/images/up_arrow.png"><span class="button_text">Top</span></button>
                 </div>
             </div>
         </div>

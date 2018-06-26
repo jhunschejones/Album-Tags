@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router(); 
 var request = require('request');  
 
-/* GET "this week" page. */
+/* GET "my favorites" page. */
 router.get('/', function(req, res, next) {
+    res.setHeader("Cache-Control", "private, max-age=600");
     res.render('myfavorites', { 
       pageTitle: '',
       subTitle: 'Your Favorited Albums'
@@ -26,6 +27,7 @@ router.get('/album/:albumId', function(req, res, next) {
       if (err) {  
         console.log(err);  
       } else { 
+        res.setHeader("Cache-Control", "private, max-age=600");
         res.json(body);
       }  
     }

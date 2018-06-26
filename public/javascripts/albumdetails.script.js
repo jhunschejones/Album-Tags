@@ -175,34 +175,39 @@ function populateTags(albumNumber) {
             var tags = rawData[0].tags;
             var authors = rawData[0].createdBy;
 
-            for (let index = 0; index < tags.length; index++) {
-                var element = tags[index];
-                var author;
-
-                try {
-                    author = authors[index];
-                    if (author == "" || "Unknown") {
+            // hide entire tags box if no tags exist
+            if (tags.length < 1) {
+                $('.tags_card').hide();
+            } else {
+                for (let index = 0; index < tags.length; index++) {
+                    var element = tags[index];
+                    var author;
+    
+                    try {
+                        author = authors[index];
+                        if (author == "" || "Unknown") {
+                            author = "Joshua Jones";
+                        }
+                    } catch (error) {
                         author = "Joshua Jones";
                     }
-                } catch (error) {
-                    author = "Joshua Jones";
-                }
-         
-                element = replaceUnderscoreWithBackSlash(element)
-                // creating a unique tag for each element, solving the problem of number tags not allowed
-                // by adding some letters to the start of any tag that can be converted to a number
-                // then using a regular expression to remove all spaces and special characters in each tag
-                if (parseInt(element)) {
-                    var addLetters = "tag_";
-                    var tagName = addLetters.concat(element).replace(/[^A-Z0-9]+/ig,'');
-                } else {                  
-                    var tagName = element.replace(/[^A-Z0-9]+/ig,'');
-                }
-
-                // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
-                // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light" data-delay='{"show":"300", "hide":"100"}' data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</a>  `);               
-            };
+             
+                    element = replaceUnderscoreWithBackSlash(element)
+                    // creating a unique tag for each element, solving the problem of number tags not allowed
+                    // by adding some letters to the start of any tag that can be converted to a number
+                    // then using a regular expression to remove all spaces and special characters in each tag
+                    if (parseInt(element)) {
+                        var addLetters = "tag_";
+                        var tagName = addLetters.concat(element).replace(/[^A-Z0-9]+/ig,'');
+                    } else {                  
+                        var tagName = element.replace(/[^A-Z0-9]+/ig,'');
+                    }
+    
+                    // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
+                    // tag to toggle a badge-success class name and change the color
+                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light" data-delay='{"show":"300", "hide":"100"}' data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</a>  `);               
+                };
+            }  
         };
     });
 };
