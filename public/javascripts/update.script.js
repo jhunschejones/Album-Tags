@@ -52,6 +52,7 @@ function makeNiceDate(uglyDate) {
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function populateTags() {
+    // console.log("populate tags called")
     $.getJSON ( '/albumdetails/database/' + albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             $('.tag_results').text('');

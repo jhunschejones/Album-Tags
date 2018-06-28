@@ -40,7 +40,7 @@ router.get('/database/:albumId', function(req, res, next) {
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
     collection.find({ "albumId" : thisAlbum }, function(e,docs){
-        res.setHeader("Cache-Control", "private, max-age=600");
+        // res.setHeader("Cache-Control", "private, max-age=600");
         res.json(docs);
     })
 });
