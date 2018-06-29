@@ -5,7 +5,7 @@ var request = require('request');
 
 /* GET album details page. */
 router.get('/:albumId', function(req, res, next) {
-    res.setHeader("Cache-Control", "private, max-age=600");
+    // res.setHeader("Cache-Control", "private, max-age=600");
     res.render('albumdetails', {
         pageTitle: ': Details',
         subTitle: 'Album Details',

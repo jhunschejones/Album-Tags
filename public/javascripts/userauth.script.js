@@ -100,11 +100,17 @@ firebase.auth().onAuthStateChanged(function(user) {
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has permissions
             tagUpdatePermissionsGranted();
+            filterDisplayedTags();
+            // can add admin functions here 
         } 
         else {
             // user is signed in but does not have tag permissions
-            console.log('This user is not authorized to update tags.');
-            connectionPermissionsGranted();
+            // console.log('This user is not authorized to update tags.');
+            // connectionPermissionsGranted();
+            // filterDisplayedTags();
+            // user is signed in and has permissions
+            tagUpdatePermissionsGranted();
+            filterDisplayedTags();
         }
     } else {
         // No user is signed in.    
@@ -163,6 +169,26 @@ function connectionPermissionsGranted() {
         logInMessage.innerHTML = "";
     } catch (error) {
         // console.log(error)
+    }
+}
+
+function filterDisplayedTags() {
+    try {
+        tagsForThisAlbum = $(".album_details_tags")
+        for (let index = 0; index < tagsForThisAlbum.length; index++) {
+            let thisTag = tagsForThisAlbum[index];
+    
+            if($(thisTag).hasClass(`author-${userID}`)) {
+                // console.log("tag belongs to this author")
+                $(thisTag).show()
+            } else {
+                // console.log("tag does not belong to this author")
+                $(thisTag).hide()
+            }
+        }
+        
+    } catch (error) {
+        // not on album details
     }
 }
 

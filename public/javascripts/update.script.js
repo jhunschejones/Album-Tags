@@ -14,6 +14,7 @@ var currentUser = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
 var currentTags = [];
 var currentAuthors = [];
+var tagsForThisAlbum
 
 
 function populateTable() {
@@ -52,6 +53,7 @@ function makeNiceDate(uglyDate) {
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function populateTags() {
+    var noAuthors = false
     // console.log("populate tags called")
     $.getJSON ( '/albumdetails/database/' + albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
@@ -65,13 +67,18 @@ function populateTags() {
                 var element = tags[index];
                 var author;
 
+                // correcting for old authors structure
                 try {
                     author = authors[index];
-                    if (author == "") {
-                        author = "Joshua Jones";
+                    if (author == "Joshua Jones") {
+                        author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
                     }
                 } catch (error) {
-                    author = "Joshua Jones";
+                    // error should only fire on older structures where there is no author field
+                    // these tags were all added by me origionally when the data structure was 
+                    // simpler
+                    author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                    noAuthors = true
                 }
 
                 element = replaceUnderscoreWithBackSlash(element);
@@ -90,14 +97,31 @@ function populateTags() {
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<tr><td data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
+                $('.tag_results').append(`<tr class="album_details_tags update_tags author-${author}"><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
                 // console.log(element)             
-            };
+            }
+            $(".update_tags").hide();
         } else {
             // create database entry if none exists
             postTags(); 
         };
-    });
+    }).then(function(){
+        if (noAuthors == true) {
+            correctAuthors();
+        }
+        tagsForThisAlbum = $(".update_tags")
+        for (let index = 0; index < tagsForThisAlbum.length; index++) {
+            let thisTag = tagsForThisAlbum[index];
+    
+            if($(thisTag).hasClass(`author-${userID}`)) {
+                // console.log("tag belongs to this author")
+                $(thisTag).show()
+            } else {
+                // console.log("tag does not belong to this author")
+                $(thisTag).hide()
+            }
+        }
+    })
 };
 
 // using regular expression to make first letter of each
@@ -120,13 +144,37 @@ function replaceUnderscoreWithBackSlash(str) {
     return str.replace(/_/g, "/");
 };
 
+function correctAuthors() {
+    currentAuthors = []
+    for (let index = 0; index < currentTags.length; index++) {
+
+        currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
+    }
+
+    // Use AJAX to put the new tag in the database   
+    $.ajax(`database/${albumId}`, {
+        method: 'PUT',
+        contentType: 'application/json',
+        processData: false,
+        data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+    })
+}
+
 function updateTags() {
 
     event.preventDefault();
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
         newTag = removeExtraSpace(toTitleCase(replaceBackSlashWithUnderscore(newTag))).trim();
-        var newAuthor = userName;
+        var newAuthor = userID;
+
+        // correcting for old authors structure
+        for (let index = 0; index < currentAuthors.length; index++) {
+            let a = currentAuthors[index];
+            if (a == "Joshua Jones") {
+                currentAuthors[index] = 'Ol5d5mjWi9eQ7HoANLhM4OFBnso2'
+            }
+        }
 
         // checking for duplicates
         if (currentTags.indexOf(newTag) == -1) {
@@ -203,20 +251,22 @@ $("form").submit(function (e) {
 // event listener for clicking delete link
 $('#tags_table tbody').on('click', 'td a.deletetaglink', deleteTag);
 
+
 // any time page is clicked, call populate tags at 500 and 2000ms
 // this accounts for lag in database and makes sure table is updated
-$( document ).click(function () {
-    setTimeout(populateTags, 500);
-    setTimeout(populateTags, 2000);
-});
+
+// $( document ).click(function () {
+//     setTimeout(populateTags, 500);
+//     setTimeout(populateTags, 2000);
+// });
 
 // runs update table twice when enter key is pressed
-$( document ).keypress(function(e) {
-    if(e.which == 13) {
-        setTimeout(populateTags, 500);
-        setTimeout(populateTags, 2000);
-    }
-});
+// $( document ).keypress(function(e) {
+//     if(e.which == 13) {
+//         setTimeout(populateTags, 500);
+//         setTimeout(populateTags, 2000);
+//     }
+// });
 
 // activate tooltips
 $(function () {

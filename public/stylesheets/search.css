@@ -42,6 +42,11 @@
     max-height: 71vh;
 }
 
+#albums_arrow {
+    height: 10px;
+    padding-bottom: 2px;
+    opacity: 0.4;
+}
 
 
 /* -------- ADJUSTED FOOTER STYLES --------- */

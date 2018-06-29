@@ -96,6 +96,7 @@ function toggleTracksAndArrows(content, up, down) {
 // my logic below
 var albumId = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
+var tagsForThisAlbum;
 
 
 // this populates the page with all the details
@@ -167,6 +168,8 @@ function replaceUnderscoreWithBackSlash(str) {
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function populateTags(albumNumber) {
+    var noAuthors = false
+
     $.getJSON ( '/albumdetails/database/' + albumNumber, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
@@ -185,11 +188,13 @@ function populateTags(albumNumber) {
     
                     try {
                         author = authors[index];
-                        if (author == "" || "Unknown") {
-                            author = "Joshua Jones";
+                        if (author == "Joshua Jones") {
+                            author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
                         }
                     } catch (error) {
-                        author = "Joshua Jones";
+                        // error should only fire on older structures where there is no author field
+                        author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                        // correctAuthors();
                     }
              
                     element = replaceUnderscoreWithBackSlash(element)
@@ -205,12 +210,30 @@ function populateTags(albumNumber) {
     
                     // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                     // tag to toggle a badge-success class name and change the color
-                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light" data-delay='{"show":"300", "hide":"100"}' data-toggle="tooltip" data-placement="top" title="Added by ${author}">${element}</a>  `);               
-                };
+                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${element}</a>  `);               
+                }
+                $('.album_details_tags').hide();
             }  
-        };
+        }
     });
 };
+
+function correctAuthors() {
+    currentAuthors = []
+    for (let index = 0; index < currentTags.length; index++) {
+
+        currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
+    }
+
+    // Use AJAX to put the new tag in the database   
+    // $.ajax(`database/${albumId}`, {
+    //     method: 'PUT',
+    //     contentType: 'application/json',
+    //     processData: false,
+    //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+    // })
+}
+
 
 
 // this function is avaiable onclick for all the tags it will toggle
@@ -269,7 +292,7 @@ function checkForDuplicates() {
 }
 
 function addToFavoriteAlbums(newAlbum) {
-    console.log("add to favorite albums called")
+    // console.log("add to favorite albums called")
 
     myFavoriteAlbums.push(newAlbum);
 
@@ -286,7 +309,7 @@ function removeFromFavorites(newAlbum) {
 }
 
 function updateDatabase() {
-    console.log("update database called")
+    // console.log("update database called")
     firebase.database().ref(userID).set({
         "My Favorites": myFavoriteAlbums
     });
@@ -300,6 +323,7 @@ function updateDatabase() {
     // calling populateAlbumDetails and populateTags to fill the page
     populateAlbumDetails(albumId);
     populateTags(albumId);
+    // populate our list of dom elements for filtering 
 // });
 
 // called by the search button on tags card

@@ -107,7 +107,7 @@ function populateArtistResults() {
         $('.artists_label').text("Artists:")
         // iterate over artist results array
         for (let index = 0; index < 5; index++) {
-            $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]} </span> <a href="" rel='${artists[index].attributes.name},, ${artists[index].id}' class="morealbumslink">Albums</a> <span id="i${artists[index].id}"></span> <br />`);
+            $('.artist_results').append(`${artists[index].attributes.name} : <span class="text-secondary">${artists[index].attributes.genreNames[0]} </span> <a href="" rel='${artists[index].attributes.name},, ${artists[index].id}' class="morealbumslink"><img id="albums_arrow" src="/images/down_arrow.png"></a> <span id="i${artists[index].id}"></span> <br />`);
         }
         $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandArtistResults(event)">More Artists</button> <br>`);   
     }
@@ -127,7 +127,7 @@ function populateAlbumResults() {
         // iterate over album results array
         
         for (let index = 0; index < 5; index++) {
-            $('.album_results').append(`${albums[index].attributes.name} : <span class="text-secondary">${albums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${albums[index].id}">Details</a> <br>`);  
+            $('.album_results').append(`<a href="/albumdetails/${albums[index].id}">${albums[index].attributes.name}</a> : <span class="text-secondary">${albums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span><br>`);  
         };
         $('.album_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="expandAlbumResults(event)">More Albums</button> <br>`);    
     }
@@ -145,7 +145,7 @@ function expandArtistResults(event) {
 
     // iterate over artist results array
     artists.forEach(element => {
-        $('.artist_results').append(`${element.attributes.name} : <span class="text-secondary">${element.attributes.genreNames[0]} </span> <a href="" rel='${element.attributes.name},, ${element.id}' class="morealbumslink">Albums</a> <span id="i${element.id}"></span> <br />`);
+        $('.artist_results').append(`${element.attributes.name} : <span class="text-secondary">${element.attributes.genreNames[0]} </span> <a href="" rel='${element.attributes.name},, ${element.id}' class="morealbumslink"><img id="albums_arrow" src="/images/down_arrow.png"></a> <span id="i${element.id}"></span> <br />`);
     });
     $('.artist_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="populateArtistResults()">Less Artists</button> <br>`);   
 };
@@ -158,7 +158,7 @@ function expandAlbumResults(event) {
              
     // iterate over album results array
     albums.forEach(element => {
-        $('.album_results').append(`${element.attributes.name} : <span class="text-secondary">${element.attributes.artistName} (${element.attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${element.id}">Details</a> <br>`);
+        $('.album_results').append(`<a href="/albumdetails/${element.id}">${element.attributes.name}</a> : <span class="text-secondary">${element.attributes.artistName} (${element.attributes.releaseDate.slice(0, 4)})</span><br>`);
     });   
     $('.album_results').append(`<button class="btn btn-outline-primary btn-sm btn_xsm" onClick="populateAlbumResults()">Less Albums</button> <br>`);         
 };
@@ -186,7 +186,7 @@ function showArtistAlbums(event) {
                 // iterate over album results array
                 for (let index = 0; index < 5; index++) {
                     
-                    $(`#i${thisArtistId}`).append(`<li>${thisArtistAlbums[index].attributes.name} : <span class="text-secondary">${thisArtistAlbums[index].attributes.artistName} (${albums[index].attributes.releaseDate.slice(0, 4)})</span> <a href="/albumdetails/${thisArtistAlbums[index].id}">Details</a></li>`);  
+                    $(`#i${thisArtistId}`).append(`<li><a href="/albumdetails/${thisArtistAlbums[index].id}">${thisArtistAlbums[index].attributes.name}</a> <span class="text-secondary">(${albums[index].attributes.releaseDate.slice(0, 4)})</span> </li>`);  
                 }
                 hideDOMelement("loader");
             }
