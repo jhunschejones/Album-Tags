@@ -1,6 +1,12 @@
 // ------- START UTILITIES SECTION ----------
 console.log("The custom script for the 'myfavorites' page is running.");
 
+
+function scrollToTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
 function hideDOMelement(elementId) {
     try {
         let element = document.getElementById(elementId)
@@ -90,6 +96,9 @@ function populateCard(albumNumber, results, cardNumber) {
         ' ' + results.name); 
     // add release year to card div as a class: year-YYYY
     $(`#card${cardNumber}`).addClass(`year-${results.releaseDate.slice(0,4)}`);
+    // add artist to card div as: artist-NAME
+    $(`#card${cardNumber}`).addClass(`artist-${results.artistName}`);
+
     
     for (let index = 0; index < results.genreNames.length; index++) {
         let appleGenre = results.genreNames[index];
@@ -109,6 +118,7 @@ function populateCard(albumNumber, results, cardNumber) {
     // add to list of years to filter by 
     yearsList.push(`${results.releaseDate.slice(0,4)}`);
     appleGenreList.push(results.genreNames);
+    artistsList.push(results.artistName);
 };
 
 // ----- START FIREBASE FAVORITES SECTION ------
@@ -129,10 +139,12 @@ function updateFavoriteAlbums() {
 // ----------- START FILTERING FUNCTIONALITY --------------
 var filterYear ='none';
 var filterGenre ='none';
+var filterArtist = 'none';
 var albumCardsList;
 var yearsList = [];
 var appleGenreList = [];
 var yearsOnPage = [];
+var artistsList = [];
 
 // this populates the years the user can filter by in the dropdown
 function buildYearFilters() {
@@ -162,6 +174,7 @@ function filterByYear(year) {
     restoreCards();
     masterFilter(filterGenre);
     masterFilter(filterYear);
+    masterFilter(filterArtist);
 };
 
 function masterFilter(classToFilter) {
@@ -182,12 +195,15 @@ function restoreCards() {
 function clearFilters() {
     filterYear = 'none';
     filterGenre = 'none';
+    filterArtist = 'none';
     restoreCards();
 }
 
-// closes year filter dropdown menu when page is scrolling
+// closes filter dropdown menu's when page is scrolling
 $(document).on( 'scroll', function(){
     $('#year_filter_menu').removeClass('show');
+    $('#genre_filter_menu').removeClass('show');
+    // $('#artist_filter_menu').removeClass('show');
 });
 
 // ---------------------------
@@ -265,6 +281,7 @@ function filterByGenre(genre){
     restoreCards();
     masterFilter(filterGenre);
     masterFilter(filterYear);
+    masterFilter(filterArtist);
 }
 
 function startTags() {
@@ -280,6 +297,38 @@ function startTags() {
 // ---------------------------
 // -------- TAGS END ---------
 // ---------------------------
+
+function buildArtistFilters() {
+    artistsList = removeDuplicates(artistsList);
+    artistsList.sort();
+
+    // clear everythig in list
+    $('#artist_filter_menu').html("");
+    // add each artist to list
+    for (let index = 0; index < artistsList.length; index++) {
+        let artist = artistsList[index];
+        if(filterArtist == `artist-${artist}`){
+            $('#artist_filter_menu').append(`<a id="artist-${artist}" class="badge badge-primary artist_to_filter_by" href="#" onclick="filterByArtist('${artist}')">${artist}</a>`)
+        } else {
+            $('#artist_filter_menu').append(`<a id="artist-${artist}" class="badge badge-light artist_to_filter_by" href="#" onclick="filterByArtist('${artist}')">${artist}</a>`)
+        }
+    }  
+};
+
+function filterByArtist(artist) {
+    if(document.getElementById(`artist-${artist}`).classList.contains("badge-primary")){
+        filterArtist = 'none';
+    } else {
+        filterArtist = `artist-${artist}`;
+    }
+    
+    restoreCards();
+    masterFilter(filterGenre);
+    masterFilter(filterYear);
+    masterFilter(filterArtist);
+};
+
+
 
 // ----------- END FILTERING FUNCTIONALITY --------------
 
