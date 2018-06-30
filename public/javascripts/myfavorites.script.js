@@ -29,6 +29,10 @@ function replaceUnderscoreWithBackSlash(str) {
     return str.replace(/_/g, "/");
 };
 
+function replaceSepecialCharacters(str) {
+    return str.replace(/[^\w\s]/gi, '');
+}
+
 function isGenre(str) {
     if(str == 'Metalcore') {
         return true
@@ -69,8 +73,6 @@ function getAlbumInfo(albumNumber, cardNumber) {
     .done(function(rawData) {     
     // send album info to populateCard
     populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
-    // Commented out list functionality:
-    // populateList(albumNumber, rawData.data[0].attributes);
 
     // Ben's Suggestions if performance is still lagging:
     // try fetch, https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -97,7 +99,7 @@ function populateCard(albumNumber, results, cardNumber) {
     // add release year to card div as a class: year-YYYY
     $(`#card${cardNumber}`).addClass(`year-${results.releaseDate.slice(0,4)}`);
     // add artist to card div as: artist-NAME
-    $(`#card${cardNumber}`).addClass(`artist-${results.artistName}`);
+    $(`#card${cardNumber}`).addClass(`artist-${replaceSepecialCharacters(results.artistName)}`);
 
     
     for (let index = 0; index < results.genreNames.length; index++) {
@@ -140,11 +142,48 @@ function updateFavoriteAlbums() {
 var filterYear ='none';
 var filterGenre ='none';
 var filterArtist = 'none';
+var filterTopTen = false;
 var albumCardsList;
 var yearsList = [];
 var appleGenreList = [];
 var yearsOnPage = [];
 var artistsList = [];
+
+function masterFilter(classToFilter) {
+    if(classToFilter != 'none') {
+        for (let index = 0; index < albumCardsList.length; index++) {
+            let thisCard = albumCardsList[index];
+            if(!$(thisCard).hasClass(classToFilter)) { thisCard.style.display = "none"; }
+        }
+    }
+}
+
+function restoreCards() {
+    for (let index = 0; index < albumCardsList.length; index++) {
+        albumCardsList[index].style.display = "inline";
+    }
+}
+
+function clearFilters() {
+    filterYear = 'none';
+    filterGenre = 'none';
+    filterArtist = 'none';
+    if (filterTopTen == true) {
+        toggleStar();
+    }
+    restoreCards();
+}
+
+// closes filter dropdown menu's when page is scrolling
+$(document).on( 'scroll', function(){
+    $('#year_filter_menu').removeClass('show');
+    $('#genre_filter_menu').removeClass('show');
+    // $('#artist_filter_menu').removeClass('show');
+});
+
+
+
+// ------------------ START YEARS FILTERS --------------------
 
 // this populates the years the user can filter by in the dropdown
 function buildYearFilters() {
@@ -175,47 +214,13 @@ function filterByYear(year) {
     masterFilter(filterGenre);
     masterFilter(filterYear);
     masterFilter(filterArtist);
+    filterByTopTen(filterTopTen)
 };
+// ------------------ END YEARS FILTERS --------------------
 
-function masterFilter(classToFilter) {
-    if(classToFilter != 'none') {
-        for (let index = 0; index < albumCardsList.length; index++) {
-            let thisCard = albumCardsList[index];
-            if(!$(thisCard).hasClass(classToFilter)) { thisCard.style.display = "none"; }
-        }
-    }
-}
 
-function restoreCards() {
-    for (let index = 0; index < albumCardsList.length; index++) {
-        albumCardsList[index].style.display = "inline";
-    }
-}
 
-function clearFilters() {
-    filterYear = 'none';
-    filterGenre = 'none';
-    filterArtist = 'none';
-    restoreCards();
-}
-
-// closes filter dropdown menu's when page is scrolling
-$(document).on( 'scroll', function(){
-    $('#year_filter_menu').removeClass('show');
-    $('#genre_filter_menu').removeClass('show');
-    // $('#artist_filter_menu').removeClass('show');
-});
-
-// ---------------------------
-// ------- TAGS START --------
-// ---------------------------
-
-function changeClass(elementId) {
-    let tag = document.getElementById(elementId);
-    tag.classList.toggle("badge-primary");
-    tag.classList.toggle("badge-light");
-};
-
+// ------------------ START GENRE FILTERS --------------------
 var genresList = [];
 
 // this populates the Tags card with any tags stored in the mongodb database
@@ -236,6 +241,10 @@ function getGenreTags(albumNumber, cardNumber) {
                     // add genre as a class on the card
                     $(`#card${cardNumber}`).addClass(`genre-${tag}`);
                     genresList.push(tag);
+                } else if (tag == "Top 10") {
+                    // using for top 10 functionality later
+                    $("#top_10_button").show();
+                    $(`#card${cardNumber}`).addClass("Top 10");
                 } else {
                     // none of these tags are genres
                 }
@@ -282,6 +291,7 @@ function filterByGenre(genre){
     masterFilter(filterGenre);
     masterFilter(filterYear);
     masterFilter(filterArtist);
+    filterByTopTen(filterTopTen)
 }
 
 function startTags() {
@@ -293,11 +303,10 @@ function startTags() {
         }
     }    
 }
+// ------------------ END GENRE FILTERS --------------------
 
-// ---------------------------
-// -------- TAGS END ---------
-// ---------------------------
 
+// ------------------ START ARTIST FILTERS --------------------
 function buildArtistFilters() {
     artistsList = removeDuplicates(artistsList);
     artistsList.sort();
@@ -307,30 +316,70 @@ function buildArtistFilters() {
     // add each artist to list
     for (let index = 0; index < artistsList.length; index++) {
         let artist = artistsList[index];
-        if(filterArtist == `artist-${artist}`){
-            $('#artist_filter_menu').append(`<a id="artist-${artist}" class="badge badge-primary artist_to_filter_by" href="#" onclick="filterByArtist('${artist}')">${artist}</a>`)
+        let cleanArtist = replaceSepecialCharacters(artist);
+
+        if(filterArtist == `artist-${cleanArtist}`){
+            $('#artist_filter_menu').append(`<a id="artist-${cleanArtist}" class="badge badge-primary artist_to_filter_by" href="#" onclick="filterByArtist('${cleanArtist}')">${artist}</a>`)
         } else {
-            $('#artist_filter_menu').append(`<a id="artist-${artist}" class="badge badge-light artist_to_filter_by" href="#" onclick="filterByArtist('${artist}')">${artist}</a>`)
+            $('#artist_filter_menu').append(`<a id="artist-${cleanArtist}" class="badge badge-light artist_to_filter_by" href="#" onclick="filterByArtist('${cleanArtist}')">${artist}</a>`)
         }
     }  
 };
 
 function filterByArtist(artist) {
-    if(document.getElementById(`artist-${artist}`).classList.contains("badge-primary")){
+    let cleanArtist = replaceSepecialCharacters(artist);
+
+    if(document.getElementById(`artist-${cleanArtist}`).classList.contains("badge-primary")){
         filterArtist = 'none';
     } else {
-        filterArtist = `artist-${artist}`;
+        filterArtist = `artist-${cleanArtist}`;
     }
     
     restoreCards();
     masterFilter(filterGenre);
     masterFilter(filterYear);
     masterFilter(filterArtist);
+    filterByTopTen(filterTopTen)
 };
+// ------------------ END ARTIST FILTERS --------------------
 
 
+// ------------------ START TOP 10 FILTERS --------------------
+$("#top_star_full").hide()
+function toggleStar() {
+    if($("#top_star_full").is(":visible")){
+        $("#top_star_full").hide()
+        $("#top_star_empty").show()
+        filterTopTen = false
+    } else {
+        $("#top_star_full").show()
+        $("#top_star_empty").hide() 
+        filterTopTen = true
+    }
+}
+
+function selectTopTen() {
+    toggleStar();
+
+    restoreCards();
+    masterFilter(filterGenre);
+    masterFilter(filterYear);
+    masterFilter(filterArtist);
+    filterByTopTen(filterTopTen)
+}
+
+function filterByTopTen(classToFilter) {
+    if(classToFilter != false) {
+        for (let index = 0; index < albumCardsList.length; index++) {
+            let thisCard = albumCardsList[index];
+            if(!$(thisCard).hasClass("Top 10")) { thisCard.style.display = "none"; }
+        }
+    }
+};
+// ------------------ END TOP 10 FILTERS --------------------
 
 // ----------- END FILTERING FUNCTIONALITY --------------
+
 
 
 function startFavoritesPage() {
@@ -357,9 +406,3 @@ function startFavoritesPage() {
     albumCardsList = $(".albumCard");
     startTags();
 };
-
-// an unordered list of albums, for smaller screens or longer lists.
-// this works, I'm just not using it right now
-// function populateList(albumNumber, results) {
-//     $('.album_list').append(`<li><a href="/albumdetails/${albumNumber}"><img src="${results.artwork.url.replace('{w}', 30).replace('{h}', 30)}">&nbsp; ${results.name}</a> <span class="text-secondary font-italic">- ${results.artistName}</span></li>`);
-// };

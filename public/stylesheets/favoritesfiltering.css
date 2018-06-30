@@ -59,3 +59,10 @@
 .to_top_button_container {
     margin-top: 2px;
 }
+
+#top_star_full,
+#top_star_empty {
+    height: 18px;
+    margin-right: 2px;
+    padding-top: 0px;
+}
