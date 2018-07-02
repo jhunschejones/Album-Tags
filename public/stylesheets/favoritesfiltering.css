@@ -60,9 +60,11 @@
     margin-top: 2px;
 }
 
+#top_10_button {
+    padding: 2px 5px 6px 6px;
+}
+
 #top_star_full,
 #top_star_empty {
     height: 18px;
-    margin-right: 2px;
-    padding-top: 0px;
 }
