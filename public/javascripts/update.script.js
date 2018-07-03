@@ -1,20 +1,54 @@
-console.log('The custom script for the updte page is running');
+// ---------- BEGIN UTILITIES ------------
+console.log('The custom script for the update page is running');
 
 function scrollToTop() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 
+// using regular expression to make first letter of each
+// word upper case, even if it is seperated with a "-"
+function toTitleCase(str) {
+    return str.replace(/\b\w+/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+// removes accidental double spaces
+function removeExtraSpace(str) {
+    return str.replace(/\s\s+/g, ' ');
+}
+
+// replaces back slash with underscore
+function replaceBackSlashWithUnderscore(str) {
+    return str.replace(/\//g, '_');
+}
+
+function replaceUnderscoreWithBackSlash(str) {
+    return str.replace(/_/g, "/");
+};
+
+// I'm using this variable and function to reformat the date provided in Apple's API
+// into a fully written-out and formated date
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+function makeNiceDate(uglyDate) {
+    let year = uglyDate.slice(0, 4);
+    let day = uglyDate.slice(8, 10);
+    let uglyMonth = uglyDate.slice(5, 7); 
+    let niceMonth = months[uglyMonth-1];
+    return(`${niceMonth} ${day}, ${year}`);
+};
+
+// ---------------- END UTILITIES ---------------
+
 
 // This is really messy, but the album Id is stored in the ejs file in a hidden 
 // element. It comes in as a string so I'm converting it to a number to use in
 // my logic below
 var albumId = $(".heres_the_album_id").text();
-var currentUser = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
 var currentTags = [];
 var currentAuthors = [];
 var tagsForThisAlbum
+var totalAuthors
 
 
 function populateTable() {
@@ -38,22 +72,12 @@ function populateTable() {
     });
 };
 
-// I'm using this variable and function to reformat the date provided in Apple's API
-// into a fully written-out and formated date
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-function makeNiceDate(uglyDate) {
-    let year = uglyDate.slice(0, 4);
-    let day = uglyDate.slice(8, 10);
-    let uglyMonth = uglyDate.slice(5, 7); 
-    let niceMonth = months[uglyMonth-1];
-    return(`${niceMonth} ${day}, ${year}`);
-};
-
 
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
-function populateTags() {
+function populateTags(reason) {
     var noAuthors = false
+
     // console.log("populate tags called")
     $.getJSON ( '/albumdetails/database/' + albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
@@ -121,28 +145,19 @@ function populateTags() {
                 $(thisTag).hide()
             }
         }
+    }).then(function() {
+        if (reason == "add" & currentAuthors.length != (totalAuthors + 1)){
+            // console.log("Repeating function to add")
+            populateTags("add");
+        } else if (reason == "delete" & currentAuthors.length != (totalAuthors - 1)){
+            // console.log("Repeating function to delete")
+            populateTags("delete");
+        } else {
+            // this is not a request to update or delete a tag, do not re-run the function
+        }
     })
 };
 
-// using regular expression to make first letter of each
-// word upper case, even if it is seperated with a "-"
-function toTitleCase(str) {
-    return str.replace(/\b\w+/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
-// removes accidental double spaces
-function removeExtraSpace(str) {
-    return str.replace(/\s\s+/g, ' ');
-}
-
-// replaces back slash with underscore
-function replaceBackSlashWithUnderscore(str) {
-    return str.replace(/\//g, '_');
-}
-
-function replaceUnderscoreWithBackSlash(str) {
-    return str.replace(/_/g, "/");
-};
 
 function correctAuthors() {
     currentAuthors = []
@@ -160,9 +175,10 @@ function correctAuthors() {
     })
 }
 
-function updateTags() {
-
+function addTag() {
     event.preventDefault();
+    totalAuthors = currentAuthors.length
+
     if ($('#new_tag').val()) {
         var newTag = $('#new_tag').val();
         newTag = removeExtraSpace(toTitleCase(replaceBackSlashWithUnderscore(newTag))).trim();
@@ -192,13 +208,11 @@ function updateTags() {
             contentType: 'application/json',
             processData: false,
             data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
-        })
-
+        }).then(populateTags("add"))
     } else {
         $(".warning_label").text("Please enter a non-empty tag.")
     } 
 
-    populateTags();
     $('#new_tag').val('');
 };
 
@@ -207,6 +221,8 @@ function deleteTag(event) {
     var confirmation = confirm('Are you sure you want to delete a tag?');
 
     if (confirmation === true) {
+        totalAuthors = currentAuthors.length
+
         var index = currentTags.indexOf($(this).attr('rel'))
         currentTags.splice(index, 1);
         currentAuthors.splice(index, 1);
@@ -216,9 +232,7 @@ function deleteTag(event) {
             contentType: 'application/json',
             processData: false,
             data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
-        })
-
-        populateTags();
+        }).then(populateTags("delete"))
     }
 };
 
@@ -239,13 +253,13 @@ function postTags() {
 // the api and database calls
 $( document ).ready( function() {
     populateTable();
-    populateTags();
+    populateTags("start");
 })
 
 // event listener called when enter is pressed with value in text form
 $("form").submit(function (e) {
     e.preventDefault();
-    updateTags();
+    addTag();
 });
 
 // event listener for clicking delete link

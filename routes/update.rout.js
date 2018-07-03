@@ -26,9 +26,22 @@ router.put('/database/:albumId', function(req, res) {
     var db = req.db;
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
-    // console.log(Object.values(req.body)[1]);
-    collection.update({ "albumId" : thisAlbum }, {$set: { "tags" : Object.values(req.body)[0]}});
-    collection.update({ "albumId" : thisAlbum }, {$set: { "createdBy" : Object.values(req.body)[1]}});
+
+    // ------ previous functionality ---------
+    // collection.update({ "albumId" : thisAlbum }, {$set: { "tags" : Object.values(req.body)[0]}});
+    // collection.update({ "albumId" : thisAlbum }, {$set: { "createdBy" : Object.values(req.body)[1]}});
+
+    // ------- new functionality 07/02/18 --------
+    collection.update(
+        { "albumId" : thisAlbum }, 
+        // https://docs.mongodb.com/manual/reference/operator/update/set/
+        { $set: 
+            { 
+                "tags" : Object.values(req.body)[0],
+                "createdBy" : Object.values(req.body)[1]
+            }
+        }
+    );
     res.sendStatus(200)   
 });
 

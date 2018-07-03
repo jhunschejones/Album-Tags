@@ -412,7 +412,18 @@ function startFavoritesPage() {
     startTags();
 };
 
+// ------------- start tooltips section -----------
+var isTouchDevice = false
 
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    if ("ontouchstart" in document.documentElement) {
+        isTouchDevice = true
+    }
+    
+    if(isTouchDevice == false) {
+        $('[data-toggle="tooltip"]').tooltip()
+    }
 })
+// combine with data-trigger="hover" in html element 
+// for desired behavior
+// -------------- end tooltips section --------------

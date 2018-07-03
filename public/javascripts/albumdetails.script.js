@@ -337,14 +337,3 @@ function tagSearch() {
         $('.warning_label').html('<br/>Select one or more tags to preform a tag-search.');
     }
 };
-
-// activate tooltips
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-})
-
-// hide tooltips after click, addresses bug on touch screen
-$('button').on('click', function () {
-    var _this = this;
-    setTimeout(function(){ $(_this).tooltip('hide'); }, 1500);  
-})
