@@ -392,10 +392,13 @@ function startFavoritesPage() {
     $('#all_cards').html("");
     // display instructions if no favorites exist for this user
     if (myFavoriteAlbums.length == 0) {
+        showDOMelement("log_in_message")
         $('#log_in_message').html("<div style='text-align:center;margin: 20px 0px 50px 0px;'><p>Looks like you don't have any favorites yet!</p><p><a href='/search'>Search</a> for albums and use the <img src='../images/heart-unliked.png' height='30' width='auto'> icon to add them to your favorites.</p></div>");
         hideDOMelement("filter_by_genre_dropdown_button");
         hideDOMelement("filter_by_year_dropdown_button");
+        hideDOMelement("filter_by_artist_dropdown_button");
         hideDOMelement("clear_filters_button");
+        hideDOMelement("to_top_button");
     } else {
         $('#log_in_message').html("");
     }

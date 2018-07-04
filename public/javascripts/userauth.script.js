@@ -68,6 +68,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         showDOMelement("logout_button")
         showDOMelement("filter_by_year_dropdown_button")
         showDOMelement("filter_by_genre_dropdown_button")
+        showDOMelement("filter_by_artist_dropdown_button")
+        showDOMelement("to_top_button")
         showDOMelement("clear_filters_button")
         hideDOMelement("log_in_message")
 
@@ -131,6 +133,8 @@ function noUserSignedIn() {
     hideDOMelement("clear_filters_button");
     hideDOMelement("filter_by_year_dropdown_button");
     hideDOMelement("filter_by_genre_dropdown_button");
+    hideDOMelement("filter_by_artist_dropdown_button")
+    hideDOMelement("to_top_button")
     hideDOMelement("remove_from_favorites")
     hideDOMelement("add_to_favorites")
     // hide spinner
@@ -138,6 +142,7 @@ function noUserSignedIn() {
     $("#all_cards").hide();
     hideDOMelement("")
     $(".update_button").hide();
+    $(".tag_search_button").hide()
     showDOMelement("log_in_message")
 }
 
@@ -174,6 +179,7 @@ function connectionPermissionsGranted() {
 
 function filterDisplayedTags() {
     try {
+        let anyTagsOnPage = false
         tagsForThisAlbum = $(".album_details_tags")
         for (let index = 0; index < tagsForThisAlbum.length; index++) {
             let thisTag = tagsForThisAlbum[index];
@@ -181,12 +187,18 @@ function filterDisplayedTags() {
             if($(thisTag).hasClass(`author-${userID}`)) {
                 // console.log("tag belongs to this author")
                 $(thisTag).show()
+                anyTagsOnPage = true
             } else {
                 // console.log("tag does not belong to this author")
                 $(thisTag).hide()
             }
+        }  
+        if (anyTagsOnPage == true) {
+            $(".tag_search_button").show() 
+        } else {
+            $(".tag_search_button").hide()
+            $('#tag_results').html('<small class="text-primary">You currently have no tags for this album!</small>'); 
         }
-        
     } catch (error) {
         // not on album details
     }

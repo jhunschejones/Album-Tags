@@ -125,7 +125,7 @@ function populateAlbumDetails(albumNumber){
         $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
         $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         // $('.albumdetails_album').append(album, '<br/>');
-        $('.albumdetails_album').append(`<span id="the_album_name" onclick="showAlbumID()">${album}</span><span id="the_album_id" class="text-secondary" style="display:none;">${albumId}</span>`);
+        $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
 
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
@@ -142,7 +142,7 @@ function populateAlbumDetails(albumNumber){
 function showAlbumID() {
    showDOMelement("the_album_id")
    hideDOMelement("the_album_name")
-   setTimeout(showAlbumName, 6000)
+   setTimeout(showAlbumName, 7000)
 }
 
 function showAlbumName() {
@@ -174,7 +174,7 @@ function populateTags(albumNumber) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
             $(".tag_results").text('');
-            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button">Search by Selected Tags</a>');
+            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button" style="display:none;">Search by Selected Tags</a>');
             var tags = rawData[0].tags;
             var authors = rawData[0].createdBy;
 
@@ -194,7 +194,6 @@ function populateTags(albumNumber) {
                     } catch (error) {
                         // error should only fire on older structures where there is no author field
                         author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                        // correctAuthors();
                     }
              
                     element = replaceUnderscoreWithBackSlash(element)
@@ -217,23 +216,6 @@ function populateTags(albumNumber) {
         }
     });
 };
-
-function correctAuthors() {
-    currentAuthors = []
-    for (let index = 0; index < currentTags.length; index++) {
-
-        currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
-    }
-
-    // Use AJAX to put the new tag in the database   
-    // $.ajax(`database/${albumId}`, {
-    //     method: 'PUT',
-    //     contentType: 'application/json',
-    //     processData: false,
-    //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
-    // })
-}
-
 
 
 // this function is avaiable onclick for all the tags it will toggle

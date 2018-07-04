@@ -63,7 +63,8 @@ function populateTable() {
         var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
         
         $('.albumdetails_artist').append(artist);
-        $('.albumdetails_album').append(album, '<br>');
+        // $('.albumdetails_album').append(album, '<br>');
+        $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
         $('.albumdetails_details img').attr("src", cover, '<br');
         // adding path to apple music to button
         $('.applemusicurl').attr("href", applemusicurl, '<br>');
@@ -216,6 +217,18 @@ function addTag() {
     $('#new_tag').val('');
 };
 
+function showAlbumID() {
+    showDOMelement("the_album_id")
+    hideDOMelement("the_album_name")
+    setTimeout(showAlbumName, 7000)
+ }
+ 
+ function showAlbumName() {
+     showDOMelement("the_album_name")
+     hideDOMelement("the_album_id")
+ }
+
+
 function deleteTag(event) {
     event.preventDefault();
     var confirmation = confirm('Are you sure you want to delete a tag?');
@@ -265,24 +278,18 @@ $("form").submit(function (e) {
 // event listener for clicking delete link
 $('#tags_table tbody').on('click', 'td a.deletetaglink', deleteTag);
 
+// ------------- start tooltips section -----------
+var isTouchDevice = false
 
-// any time page is clicked, call populate tags at 500 and 2000ms
-// this accounts for lag in database and makes sure table is updated
-
-// $( document ).click(function () {
-//     setTimeout(populateTags, 500);
-//     setTimeout(populateTags, 2000);
-// });
-
-// runs update table twice when enter key is pressed
-// $( document ).keypress(function(e) {
-//     if(e.which == 13) {
-//         setTimeout(populateTags, 500);
-//         setTimeout(populateTags, 2000);
-//     }
-// });
-
-// activate tooltips
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    if ("ontouchstart" in document.documentElement) {
+        isTouchDevice = true
+    }
+    
+    if(isTouchDevice == false) {
+        $('[data-toggle="tooltip"]').tooltip()
+    }
 })
+// combine with data-trigger="hover" in html element 
+// for desired behavior
+// -------------- end tooltips section --------------

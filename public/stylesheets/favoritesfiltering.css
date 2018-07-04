@@ -52,7 +52,7 @@
     padding: 0px 4px 5px 4px;
 }
 
-.to_top_button {
+#to_top_button {
     margin: 0px 0px 0px 3px;
 }
 
@@ -67,4 +67,9 @@
 #top_star_full,
 #top_star_empty {
     height: 18px;
+}
+
+#log_in_message {
+    margin-top: 100px;
+    margin-bottom: 100px;
 }
