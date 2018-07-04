@@ -68,3 +68,7 @@ hr {
   padding-right: 7px;
   padding-top: 7px;
 }
+
+.hide_me {
+  display: none;
+}

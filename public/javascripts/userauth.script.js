@@ -72,6 +72,11 @@ firebase.auth().onAuthStateChanged(function(user) {
         showDOMelement("to_top_button")
         showDOMelement("clear_filters_button")
         hideDOMelement("log_in_message")
+        showDOMelement("tags_card")
+
+        // new hide functionality
+        $('.hide_when_logged_in').addClass('hide_me');
+        $('.hide_when_logged_out').removeClass('hide_me');
 
         // set our variables with this user's info
         userEmail = user.email;
@@ -137,6 +142,7 @@ function noUserSignedIn() {
     hideDOMelement("to_top_button")
     hideDOMelement("remove_from_favorites")
     hideDOMelement("add_to_favorites")
+    hideDOMelement("tags_card")
     // hide spinner
     hideDOMelement("loader");
     $("#all_cards").hide();
