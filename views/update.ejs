@@ -10,7 +10,7 @@
         <% include partials/templates/navbar_basic.ejs %>
 
         <!-- START PAGE CONTENT -->
-        <div class="container-fluid" id="all_the_things">
+        <div id="all_the_things" class="container-fluid hide_when_logged_out">
             <div class="row">
                 <div class="col-sm-5">
                     <div class="row container-fluid">
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <span id="log_in_message"></span>
+        <span class="hide_when_logged_in" id="log_in_message"></span>
         <!-- END PAGE CONTENT -->    
 
         <!-- Messy way to pull album ID so I can get it in my javascript -->

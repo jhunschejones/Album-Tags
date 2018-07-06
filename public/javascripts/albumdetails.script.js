@@ -122,8 +122,8 @@ function populateAlbumDetails(albumNumber){
 
         $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
-        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
-        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         // $('.albumdetails_album').append(album, '<br/>');
         $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
 
@@ -174,7 +174,7 @@ function populateTags(albumNumber) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
             $(".tag_results").text('');
-            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button" style="display:none;">Search by Selected Tags</a>');
+            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button hide_when_logged_out" style="display:none;">Search by Selected Tags</a>');
             var tags = rawData[0].tags;
             var authors = rawData[0].createdBy;
 

@@ -44,10 +44,6 @@ var database1 = firebase.database(app2);
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
 var logoutButton = document.getElementById("logout_button");
-var loginDivider = document.getElementById("login_divider");
-var updateTagsPage = document.getElementById("all_the_things");
-var clearFiltersButton = document.getElementById("clear_filters_button");
-var filter_by_year_dropdown_button = document.getElementById("filter_by_year_dropdown_button");
 var logInMessage = document.getElementById("log_in_message");
 var loader = document.getElementById("loader");
 var userEmail = "";
@@ -57,22 +53,10 @@ var userID;
 var dbRefrence;
 
 
-
 // checking if user is logged in or logs in during session
 firebase.auth().onAuthStateChanged(function(user) {
     // returns true if user is not null
     if (user) {
-
-        $("#all_cards").show();
-        hideDOMelement("login_button")
-        showDOMelement("logout_button")
-        showDOMelement("filter_by_year_dropdown_button")
-        showDOMelement("filter_by_genre_dropdown_button")
-        showDOMelement("filter_by_artist_dropdown_button")
-        showDOMelement("to_top_button")
-        showDOMelement("clear_filters_button")
-        hideDOMelement("log_in_message")
-        showDOMelement("tags_card")
 
         // new hide functionality
         $('.hide_when_logged_in').addClass('hide_me');
@@ -131,57 +115,41 @@ function noUserSignedIn() {
     } catch (error) {
         // no login message container on this page
     }  
-    hideDOMelement("all_the_things");   
-    showDOMelement("login_button");
-    hideDOMelement("logout_button")
-    showDOMelement("login_divider");
-    hideDOMelement("clear_filters_button");
-    hideDOMelement("filter_by_year_dropdown_button");
-    hideDOMelement("filter_by_genre_dropdown_button");
-    hideDOMelement("filter_by_artist_dropdown_button")
-    hideDOMelement("to_top_button")
-    hideDOMelement("remove_from_favorites")
-    hideDOMelement("add_to_favorites")
-    hideDOMelement("tags_card")
     // hide spinner
     hideDOMelement("loader");
-    $("#all_cards").hide();
-    hideDOMelement("")
-    $(".update_button").hide();
-    $(".tag_search_button").hide()
-    showDOMelement("log_in_message")
+
+    // new hide functionality
+    $('.hide_when_logged_in').removeClass('hide_me');
+    $('.hide_when_logged_out').addClass('hide_me');
 }
 
 function tagUpdatePermissionsGranted() {
-    try {
-        $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-primary update_button">Update Tags</a>');
-        $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
-        updateTagsPage.style.display = "block";
-        logInMessage.innerHTML = "";
-        $("#tags_table").show();
-        $(".add_tag_text_input").show();
-        $(".add_tag_button").show();
-        $(".warning_label").show();
+    $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-primary update_button hide_when_logged_out">Update Tags</a>');
+    $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update Connections</a>');
 
-    } catch (error) {
-        // console.log(error)
-    }
-}
-
-function connectionPermissionsGranted() {
     try {
-        $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
-        showDOMelement("all_the_things")
-        $('#tags_table').remove();
-        $('#new_tag').remove();
-        $('#add_tag_button').remove();
-        $('.warning_label').remove();
-        $('.add_tag_text_input').remove();_
         logInMessage.innerHTML = "";
     } catch (error) {
         // console.log(error)
     }
 }
+
+// This is old functionality from when connections permissions was a lower set of permissions from tag permissions
+//
+// function connectionPermissionsGranted() {
+//     try {
+//         $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
+//         // Rmoving stuff the user should't have access to here
+//         $('#tags_table').remove();
+//         $('#new_tag').remove();
+//         $('#add_tag_button').remove();
+//         $('.warning_label').remove();
+//         $('.add_tag_text_input').remove();
+//         logInMessage.innerHTML = "";
+//     } catch (error) {
+//         // console.log(error)
+//     }
+// }
 
 function filterDisplayedTags() {
     try {
@@ -246,19 +214,12 @@ function goToUpdatePage() {
 
 function logOut() {
     firebase.auth().signOut().then(function() {
+        // Sign-out successful.        
         noUserSignedIn();
-        // logoutButton.style.display = "none";
-        // remove_from_favorites.style.display = "none";
-        // add_to_favorites.style.display = "none";
-        // loginButton.style.display = "block";
-        // updateTagsPage.style.display = "none";
-        
-    // Sign-out successful.
     }).catch(function(error) {
     // An error happened.
     });
-
-}
+};
 
 // add event listener to log in and out buttons
 loginButton.addEventListener("click", logIn);
