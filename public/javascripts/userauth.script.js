@@ -43,7 +43,9 @@ var database1 = firebase.database(app2);
 
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
+var loginButton2 = document.getElementById("full_menu_login_button")
 var logoutButton = document.getElementById("logout_button");
+var logoutButton2 = document.getElementById("full_menu_logout_button")
 var logInMessage = document.getElementById("log_in_message");
 var loader = document.getElementById("loader");
 var userEmail = "";
@@ -61,6 +63,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         // new hide functionality
         $('.hide_when_logged_in').addClass('hide_me');
         $('.hide_when_logged_out').removeClass('hide_me');
+
+        showDOMelement("full_menu_login_logout_container");
 
         // set our variables with this user's info
         userEmail = user.email;
@@ -121,6 +125,8 @@ function noUserSignedIn() {
     // new hide functionality
     $('.hide_when_logged_in').removeClass('hide_me');
     $('.hide_when_logged_out').addClass('hide_me');
+
+    showDOMelement("full_menu_login_logout_container");
 }
 
 function tagUpdatePermissionsGranted() {
@@ -223,4 +229,6 @@ function logOut() {
 
 // add event listener to log in and out buttons
 loginButton.addEventListener("click", logIn);
+loginButton2.addEventListener("click", logIn);
 logoutButton.addEventListener("click", logOut);
+logoutButton2.addEventListener("click", logOut);

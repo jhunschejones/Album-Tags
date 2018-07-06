@@ -6,7 +6,7 @@ var request = require('request');
 router.get('/', function(req, res, next) {
     res.setHeader("Cache-Control", "private, max-age=600");
     res.render('favorites', { 
-      pageTitle: '',
+      pageTitle: `: ${(new Date()).getFullYear()}`,
       subTitle: `Our Favorite Albums of ${(new Date()).getFullYear()}`
   });
 });
