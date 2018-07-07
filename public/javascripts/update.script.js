@@ -193,14 +193,22 @@ function addTag() {
             }
         }
 
-        // checking for duplicates
-        if (currentTags.indexOf(newTag) == -1) {
+        // isThisADuplicate will have a value of -1 if tag is not a duplicate 
+        // at all, otherwise will check if index matchs index of current user 
+        // in currentAuthors meaning this user already created this tag. If 
+        // tag exists from another userwill let current user add their own tag 
+        // with same name
+        var isThisADuplicate = currentTags.indexOf(newTag);
+
+        if (isThisADuplicate == -1 || currentAuthors[isThisADuplicate] != newAuthor) {
             currentTags.push(newTag);
             currentAuthors.push(newAuthor);
             $(".warning_label").text('')
-        } 
-        else {
-            $(".warning_label").text("That tag is already assigned to this album.")
+        } else {
+            $(".warning_label").text(`You already added the '${newTag}' tag to this album.`);
+            $('#new_tag').val('');
+            // leave function before posting
+            return
         };
         
         // Use AJAX to put the new tag in the database   

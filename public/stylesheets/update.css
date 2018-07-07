@@ -40,6 +40,11 @@ td, th {
     margin-top: 6px; /* change this to whatever height you want it */
 }
 
+.warning_label {
+    margin-left: 0px;
+    margin-bottom: 10px;
+}
+
 /* ======= navigation arrows ======== */
 #back_arrow {
     height: 22px;
