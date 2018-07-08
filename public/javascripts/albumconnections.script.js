@@ -6,7 +6,7 @@ function hideDOMelement(elementId) {
         let element = document.getElementById(elementId)
         element.style.display = "none";
     } catch (error) {
-        // this element does not exist yere
+        // this element does not exist here
     }
 }
 
@@ -15,7 +15,7 @@ function showDOMelement(elementId) {
         let element = document.getElementById(elementId)
         element.style.display = "block";
     } catch (error) {
-        // this element does not exist yere
+        // this element does not exist here
     }
 }
 // --------- END UTILITIES --------
@@ -25,8 +25,8 @@ var connectedAlbums = [];
 var directConnections = [];
 
 function updateConnectedAlbums() {
-    var dbRefrence2 = database1.ref().child(userID + "/Connected Albums");
-    dbRefrence2.on('value', snap => {
+    var dbRefrence3 = database2.ref().child(albumId);
+    dbRefrence3.on('value', snap => {
         connectedAlbums = snap.val() || [];
 
         findDirectConnections();
@@ -40,15 +40,14 @@ function findDirectConnections() {
     directConnections = [];
     
     if (connectedAlbums.length != 0) {
-         for (let index = 0; index < connectedAlbums.length; index++) {
-            let connection = connectedAlbums[index];
+        for (let index = 0; index < connectedAlbums.length; index++) {
+            var connectionObject = connectedAlbums[index];
             
             // avoids js errors for undefined values
-            if (connection != undefined) {
-                for (let index = 0; index < connection.length; index++) {
-                    let element = connection[index];
-                    if (element == albumId) { directConnections.push(connection) }   
-                }
+            // only adds connections created by this author
+            if (connectionObject != undefined & connectionObject.author == userID) {
+                
+                directConnections.push(connectionObject.connection)
             }
         }
     }
@@ -65,15 +64,12 @@ function populateConnections() {
         for (let index = 0; index < directConnections.length; index++) {
             let connection = directConnections[index];
 
-            for (let index = 0; index < connection.length; index++) {
-                let element = connection[index];
-                if (element != albumId) {
-                    $.getJSON ( '/albumdetails/json/' + parseInt(element), function(rawData) {
-                        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 105).replace('{h}', 105);
-                        $('.connection_results').append(`<a href="/albumdetails/${element}"><img class="small_cover" src="${cover}"></a>`)
-                    });
-                }
-            }  
+            if (connection != albumId) {
+                $.getJSON ( '/albumdetails/json/' + parseInt(connection), function(rawData) {
+                    var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 105).replace('{h}', 105);
+                    $('.connection_results').append(`<a href="/albumdetails/${connection}"><img class="small_cover" src="${cover}"></a>`)
+                });
+            }
         }
     }
 }

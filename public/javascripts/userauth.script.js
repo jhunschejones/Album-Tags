@@ -38,8 +38,15 @@ const app2 = firebase.initializeApp({
     projectId: "album-tag-auth"
 }, 'app2');
 
-// Get a database instance for app2
+const app3 = firebase.initializeApp({
+    apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
+    databaseURL: "https://album-tag-auth.firebaseio.com/",
+    projectId: "album-tag-auth"
+}, 'app3');
+
+// Get a database instance for app2 and app3
 var database1 = firebase.database(app2);
+var database2 = firebase.database(app3);
 
 const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
@@ -74,8 +81,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         // update favorite albums if page uses this functionality
         try {
             updateFavoriteAlbums();
-        }
-        catch (error) {
+        } catch (error) {
             // we're not on the my favorites page
         }
 

@@ -85,17 +85,35 @@ var isEqual = function (value, other) {
 
 
 // ----- START FIREBASE ALBUM CONNECTIONS SECTION ------
-var connectedAlbums = [];
-var directConnections = [];
+// will include json object of all connections for this album
+var connectedAlbums = []; 
+var seccondConnectedAlbums = [];
+// will be an array of just album id's connected to this album
+var directConnections = []; 
 
 function updateConnectedAlbums() {
-    var dbRefrence2 = database1.ref().child(userID + "/Connected Albums");
-    dbRefrence2.on('value', snap => {
+    var dbRefrence3 = database2.ref().child(albumId);
+    dbRefrence3.on('value', snap => {
         connectedAlbums = snap.val() || [];
 
         findDirectConnections();
     });
 }
+
+function checkSecondConnections(method, connectedAlbumId) {
+    if (method == "add") { pathAlbumId = newAlbumId }
+    if (method == "delete") { pathAlbumId = connectedAlbumId }
+
+    var dbRefrence4 = database2.ref().child(pathAlbumId);
+    dbRefrence4.once('value').then(function(snapshot) {
+        seccondConnectedAlbums = snapshot.val() || [];
+        
+        if (method == "add") { addSecondConnection(); }
+
+        if (method == "delete") { removeSecondConnection(connectedAlbumId); }
+    });   
+}
+
 // ----- END FIREBASE ALBUM CONNECTIONS SECTION ------
 
 
@@ -104,15 +122,14 @@ function findDirectConnections() {
     directConnections = [];
     
     if (connectedAlbums.length != 0) {
-         for (let index = 0; index < connectedAlbums.length; index++) {
-            let connection = connectedAlbums[index];
+        for (let index = 0; index < connectedAlbums.length; index++) {
+            var connectionObject = connectedAlbums[index];
             
             // avoids js errors for undefined values
-            if (connection != undefined) {
-                for (let index = 0; index < connection.length; index++) {
-                    let element = connection[index];
-                    if (element == albumId) { directConnections.push(connection) }   
-                }
+            // only shows connections formed by this user
+            if (connectionObject != undefined & connectionObject.author == userID) {
+
+                directConnections.push(connectionObject.connection)
             }
         }
     }
@@ -129,24 +146,22 @@ function populateConnections() {
         for (let index = 0; index < directConnections.length; index++) {
             let connection = directConnections[index];
 
-            for (let index = 0; index < connection.length; index++) {
-                let element = connection[index];
-                if (element != albumId) {
-                    $.getJSON ( '/albumdetails/json/' + parseInt(element), function(rawData) {
-                        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 75).replace('{h}', 75);
-                        $('.connection_results').append(`<tr><td><a href="/albumdetails/${element}"><img class="small_cover" src="${cover}"></a></td><td><a href="" onclick="deleteConnection(${element})">Delete</a></td></tr>`)
-                    });
-                }
-            }  
+            if (connection != albumId) {
+                $.getJSON ( '/albumdetails/json/' + parseInt(connection), function(rawData) {
+                    var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 75).replace('{h}', 75);
+                    $('.connection_results').append(`<tr><td><a href="/albumdetails/${connection}"><img class="small_cover" src="${cover}"></a></td><td><a href="" onclick="deleteConnection(${connection})">Delete</a></td></tr>`)
+                });
+            }            
         }
     }
 }
 
 var isDelete = false;
+var newAlbumId;
 
 function newConnection() {
     if ($('#new_connection').val() != ''){
-        let newAlbumId = parseInt($('#new_connection').val());
+        newAlbumId = parseInt($('#new_connection').val());
         isDelete = false;
 
         $.getJSON ( '/albumdetails/json/' + parseInt(newAlbumId), function(rawData) {
@@ -160,7 +175,8 @@ function newConnection() {
             }
         }).then(function(){
             if (isValidAlbum) {
-                createConnection(newAlbumId, isDelete);
+                if (newAlbumId != albumId) { createConnection(newAlbumId, isDelete); }
+                else { alert("You cannot connect an album to itself.") }
             } else {
                 alert("Sorry, Apple says that's not an album ID.")
             }
@@ -182,32 +198,58 @@ function deleteConnection(connectedAlbum) {
 }
 
 function createConnection(newAlbumId, isDelete) {
-    let newConnection = [albumId, newAlbumId]
+    let newConnection = {
+        "author" : userID,
+        "connection" : newAlbumId
+    }
     let duplicate = false
 
     if (directConnections.length != 0) {
         for (let index = 0; index < directConnections.length; index++) {
            let connection = directConnections[index];
-
-            for (let index = 0; index < connection.length; index++) {
-                let element = connection[index];
-                if (element == newAlbumId) { duplicate = true }   
-            }
+           if (connection == newAlbumId) { duplicate = true }
         }
     }
-    if (isDelete == true) { removeConnection(newConnection) }
+    // if this is a delete request, call removeConnection
+    if (isDelete == true) { removeConnection(newConnection, newAlbumId); return; }
 
-    if (duplicate == false && isDelete == false) { addConnection(newConnection) }
-    else {console.log("Duplicate")}
+    // if this is an add requrest and it is not aduplicate clal addConnection
+    if (duplicate == false && isDelete == false) { addConnection(newConnection); return; }
+
+    // only duplicate add requests should hit this branch
+    else { alert("You've already created this connection.") }
 }
 
 function addConnection(newConnection) {
     connectedAlbums.push(newConnection);
-
-    updateConnectionDatabase();
+    database2.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("add", newAlbumId) })
 }
 
-function removeConnection(connection) {
+function addSecondConnection() {
+
+    let secondNewConnection = { "author" : userID, "connection" : albumId }
+    seccondConnectedAlbums.push(secondNewConnection);
+    database2.ref().child(newAlbumId).set(seccondConnectedAlbums);
+}
+
+// need to find a way to recieve this connected album id here
+function removeSecondConnection(connectedAlbum) {
+    var index
+    let connection = { "author" : userID, "connection" : albumId }
+
+    for (let j = 0; j < seccondConnectedAlbums.length; j++) {
+        let element = seccondConnectedAlbums[j];
+
+        if (isEqual(element, connection) == true) { 
+            index = seccondConnectedAlbums.indexOf(element) 
+        }
+    }
+
+    seccondConnectedAlbums.splice(index, 1);
+    database2.ref().child(connectedAlbum).set(seccondConnectedAlbums);
+}
+
+function removeConnection(connection, connectedAlbumId) {
     var index
 
     for (let j = 0; j < connectedAlbums.length; j++) {
@@ -219,11 +261,10 @@ function removeConnection(connection) {
     }
 
     connectedAlbums.splice(index, 1);
-    updateConnectionDatabase();
+    database2.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("delete", connectedAlbumId) })
 }
 
-function updateConnectionDatabase() {
-    database1.ref().child(userID).set({
-        "Connected Albums" : connectedAlbums
-    });
-}
+// function updateConnectionDatabase(pathAlbum, connectionObject) {
+
+//     database2.ref().child(pathAlbum).set(connectionObject)
+// }
