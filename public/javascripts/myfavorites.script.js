@@ -68,6 +68,19 @@ function removeElementFromArray(array, element){
         array.splice(array.indexOf(element), 1)
     }
 }
+
+function truncate(str, len){
+    // set up the substring
+    var subString = str.substr(0, len-1);
+    
+    return (
+        // add elipse after last complete word
+        subString.substr(0, subString.lastIndexOf(' '))
+        // trim trailing comma
+        .replace(/(^[,\s]+)|([,\s]+$)/g, '') + '...'
+    )
+};
+
 // ------- END UTILITIES SECTION ----------
 
 
@@ -93,13 +106,21 @@ function createCard(cardNumber) {
 
 
 function populateCard(albumNumber, results, cardNumber) {
+    // set up album and artist trunction
+    let smallArtist = results.artistName;
+    let largeArtist = results.artistName;
+    let smallAlbum = results.name;
+    let largeAlbum = results.name;
+    if (smallArtist.length > 32) { smallArtist = truncate(smallArtist, 32) } 
+    if (smallAlbum.length > 44) { smallAlbum = truncate(smallAlbum, 44) } 
+
+    if (largeArtist.length > 49) { largeArtist = truncate(largeArtist, 49) } 
+    if (largeAlbum.length > 66) { largeAlbum = truncate(largeAlbum, 66) }
     
     // artist name
-    $(`#card${cardNumber} .card-body h4`).html(
-        results.artistName);
+    $(`#card${cardNumber} .card-body h4`).html(`<span class="large_artist">${largeArtist}</span><span class="small_artist">${smallArtist}</span>`);
     // album name
-    $(`#card${cardNumber} .card-body .album`).html(
-        ' ' + results.name); 
+    $(`#card${cardNumber} .card-body .album`).html(`<span class="large_album">${largeAlbum}</span><span class="small_album">${smallAlbum}</span>`); 
     // add release year to card div as a class: year-YYYY
     $(`#card${cardNumber}`).addClass(`year-${results.releaseDate.slice(0,4)}`);
     // add artist to card div as: artist-NAME
@@ -293,6 +314,7 @@ function filterByGenre(genre){
 
     restoreCards();
     masterFilter(filterGenre);
+
     masterFilter(filterYear);
     masterFilter(filterArtist);
     filterByTopTen(filterTopTen)
@@ -320,6 +342,8 @@ function buildArtistFilters() {
     // add each artist to list
     for (let index = 0; index < artistsList.length; index++) {
         let artist = artistsList[index];
+        if (artist.length > 40) { artist = truncate(artist, 32) }
+
         let cleanArtist = replaceSpaceWithUnderscore(replaceSepecialCharacters(artist));
         cleanArtist = replaceSpaceWithUnderscore(cleanArtist)
 

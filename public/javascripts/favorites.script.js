@@ -1,4 +1,19 @@
+// ------- START UTILITIES SECTION ----------
 console.log('The custom script for the favorites page is running.');
+
+function truncate(str, len){
+    // set up the substring
+    var subString = str.substr(0, len-1);
+    
+    return (
+        // add elipse after last complete word
+        subString.substr(0, subString.lastIndexOf(' '))
+        // trim trailing comma
+        .replace(/(^[,\s]+)|([,\s]+$)/g, '') + '...'
+    )
+};
+
+// ------- END UTILITIES SECTION ----------
 
 function getAlbumInfo(albumNumber, cardNumber) {
     
@@ -11,7 +26,8 @@ function getAlbumInfo(albumNumber, cardNumber) {
     }
     else {
         let emptyCard = document.getElementById(`card${cardNumber}`)
-        emptyCard.style.display = "none"
+        // emptyCard.style.display = "none"
+        emptyCard.remove();
     }
 
     })
@@ -29,12 +45,28 @@ function createCard(cardNumber) {
 
 // populates the album card
 function populateCard(albumNumber, results, cardNumber) {
+    // old artist name
+    // $(`#card${cardNumber} .card-body h4`).html(
+    //     results.artistName);
+    // // album name
+    // $(`#card${cardNumber} .card-body .album`).html(
+    //     ' ' + results.name); 
+
+    // set up album and artist trunction
+    let smallArtist = results.artistName;
+    let largeArtist = results.artistName;
+    let smallAlbum = results.name;
+    let largeAlbum = results.name;
+    if (smallArtist.length > 32) { smallArtist = truncate(smallArtist, 32) } 
+    if (smallAlbum.length > 44) { smallAlbum = truncate(smallAlbum, 44) } 
+
+    if (largeArtist.length > 49) { largeArtist = truncate(largeArtist, 49) } 
+    if (largeAlbum.length > 66) { largeAlbum = truncate(largeAlbum, 66) }
+    
     // artist name
-    $(`#card${cardNumber} .card-body h4`).html(
-        results.artistName);
+    $(`#card${cardNumber} .card-body h4`).html(`<span class="large_artist">${largeArtist}</span><span class="small_artist">${smallArtist}</span>`);
     // album name
-    $(`#card${cardNumber} .card-body .album`).html(
-        ' ' + results.name); 
+    $(`#card${cardNumber} .card-body .album`).html(`<span class="large_album">${largeAlbum}</span><span class="small_album">${smallAlbum}</span>`); 
     // album cover
     $(`#card${cardNumber} img`).attr(
         'src', results.artwork.url.replace('{w}', 350).replace('{h}', 350));
@@ -45,9 +77,6 @@ function populateCard(albumNumber, results, cardNumber) {
 
 // ----- START FIREBASE FAVORITES SECTION ------
 var favoriteAlbums;
-// Ol5d5mjWi9eQ7HoANLhM4OFBnso2
-//
-// [1343868318, 1334753255, 1314637017, 1324396794, 1296409535, 1348607884, 1344892854, 1318043781, 1303824307, 1316167917, 1351982641, 1369092265, 1362852732, 1356521195, 1338961464, 1361795429, 1375011130, 1346307591, 1347448476, 1328766663, 716394623]
 
 dbRefrence = firebase.database().ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
 dbRefrence.on('value', snap => {

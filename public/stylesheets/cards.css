@@ -24,6 +24,25 @@
   #favorites_all_cards .card {
     width: 10.8rem;
   }
+  .large_artist,
+  .large_album {
+    display: none;
+  }
+  .small_artist,
+  .small_album {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .small_artist,
+  .small_album {
+    display: none;
+  }
+  .large_artist,
+  .large_album {
+    display: block;
+  }
 }
   
 .card {
