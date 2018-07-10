@@ -263,6 +263,24 @@ function updateFavoriteAlbums() {
     });
 }
 
+function showAllTags() {
+    event.preventDefault()   
+    // console.log("show all tags called") 
+    allTagsNoFilter();
+    $('#show_all_tags').show()
+    $('#show_only_my_tags').hide()
+    sessionStorage.setItem('tags', 'All Tags');
+}
+
+function showOnlyMyTags() {
+    event.preventDefault()  
+    // console.log("show my tags called")  
+    filterDisplayedTags()
+    $('#show_all_tags').hide()
+    $('#show_only_my_tags').show()
+    sessionStorage.setItem('tags', 'My Tags');
+}
+
 // consider renaming this function
 // hit .js error when ID's were not on page yet
 function checkForDuplicates() {  
@@ -304,15 +322,25 @@ function updateDatabase() {
 }
 
 
+// calling populateAlbumDetails and populateTags to fill the page
+populateAlbumDetails(albumId);
+populateTags(albumId);
+// setTimeout(function(){ populateTags(albumId); }, 2000);
 
-// waiting for the page to be ready before filling content
-// decide if this looks better than just calling functions
-// $( document ).ready(function(){
-    // calling populateAlbumDetails and populateTags to fill the page
-    populateAlbumDetails(albumId);
-    populateTags(albumId);
-    // populate our list of dom elements for filtering 
-// });
+function checkUserDisplayPrefrences() {
+    // Get saved data from sessionStorage
+    var whatTagsToShow = sessionStorage.getItem('tags');
+
+    if (whatTagsToShow == 'My Tags') {
+        // console.log("I'm only going to show your tags")
+        $('#show_all_tags').hide()
+    } else if (whatTagsToShow == 'All Tags') {
+    // console.log("I'm going to show all tags")
+    $('#show_only_my_tags').hide()
+    } else {
+        // do nothing
+    }
+}
 
 // called by the search button on tags card
 function tagSearch() {
