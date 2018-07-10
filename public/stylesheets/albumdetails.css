@@ -138,6 +138,10 @@
     opacity: 0.8;
 }
 
+.hide_me_details {
+    display: none !important;
+}
+
 /* ======= navigation arrows ======== */
 #back_arrow {
     height: 22px;

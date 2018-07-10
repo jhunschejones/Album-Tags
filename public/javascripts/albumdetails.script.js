@@ -122,8 +122,8 @@ function populateAlbumDetails(albumNumber){
 
         $('.albumdetails_details img').attr("src", cover, '<br');
         $('.albumdetails_artist').append(artist);
-        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out" style="display:none;cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
-        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out" style="display:none;cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
         // $('.albumdetails_album').append(album, '<br/>');
         $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
 
@@ -263,13 +263,19 @@ function updateFavoriteAlbums() {
     });
 }
 
+// consider renaming this function
+// hit .js error when ID's were not on page yet
 function checkForDuplicates() {  
     if (myFavoriteAlbums.indexOf(albumId) == -1) {
-        remove_from_favorites.style.display = "none";
-        add_to_favorites.style.display = "inline";
+        // remove_from_favorites.style.display = "none";
+        // add_to_favorites.style.display = "inline";
+        $('#add_to_favorites').removeClass('hide_me_details');
+        $('#remove_from_favorites').addClass('hide_me_details');
     } else {
-        add_to_favorites.style.display = "none";
-        remove_from_favorites.style.display = "inline";
+        // add_to_favorites.style.display = "none";
+        // remove_from_favorites.style.display = "inline";
+        $('#remove_from_favorites').removeClass('hide_me_details');
+        $('#add_to_favorites').addClass('hide_me_details');
     }
 }
 
