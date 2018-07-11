@@ -5,7 +5,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     res.render('about', { 
       pageTitle: "",
-      subTitle: "What is Album Tags?"
+      subTitle: "What is Album Tags?",
+      thisYear: `${(new Date()).getFullYear()}`
   });
 });
 

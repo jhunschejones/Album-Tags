@@ -154,7 +154,7 @@ function tagUpdatePermissionsGranted() {
         sessionStorage.setItem('tags', 'My Tags');
     }
 
-    $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-primary update_button hide_when_logged_out">Update Tags</a>');
+    $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update<span class="button_text"> Tags</span></a>');
 
     $("#tags_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_tags" class="hide_when_logged_out" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showAllTags()"data-toggle="tooltip" data-placement="right" title="Show All Tags"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_tags" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showOnlyMyTags()" data-toggle="tooltip" data-placement="right" title="Only Show My Tags">');
 

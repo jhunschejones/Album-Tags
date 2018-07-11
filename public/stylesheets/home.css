@@ -1,5 +1,6 @@
 #background_image_container {
-    background-image: url("../images/glass-2557577_1920.jpg");
+    /* background-image: url("../images/glass-2557577_1920.jpg"); */
+    /* background image url set below in @media section */
     background-position: top;
     background-repeat: no-repeat;
     background-size: cover;

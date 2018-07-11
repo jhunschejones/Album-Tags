@@ -88,6 +88,15 @@ function toggleTracksAndArrows(content, up, down) {
     }
 }
 
+function countInArray(array, item) {
+    var count = 0;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === item) {
+            count++;
+        }
+    }
+    return count;
+}
 // -------- END UTILITIES SECTION --------
 
 
@@ -174,7 +183,7 @@ function populateTags(albumNumber) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
             $(".tag_results").text('');
-            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-primary tag_search_button hide_when_logged_out" style="display:none;">Search by Selected Tags</a>');
+            $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-secondary tag_search_button hide_when_logged_out" style="display:none;">Search<span class="button_text"> by Selected Tags</span></a>');
             var tags = rawData[0].tags;
             var authors = rawData[0].createdBy;
 
@@ -214,7 +223,7 @@ function populateTags(albumNumber) {
                 $('.album_details_tags').hide();
             }  
         }
-    });
+    })
 };
 
 
@@ -269,7 +278,9 @@ function showAllTags() {
     allTagsNoFilter();
     $('#show_all_tags').show()
     $('#show_only_my_tags').hide()
+    $('#tags_modifier').html('All ');
     sessionStorage.setItem('tags', 'All Tags');
+    clearTagArray()
 }
 
 function showOnlyMyTags() {
@@ -278,8 +289,53 @@ function showOnlyMyTags() {
     filterDisplayedTags()
     $('#show_all_tags').hide()
     $('#show_only_my_tags').show()
+    $('#tags_modifier').html('My ');
     sessionStorage.setItem('tags', 'My Tags');
+    clearTagArray()
 }
+
+function clearTagArray() {
+    event.preventDefault();
+    $('.warning_label').html('');
+    
+    if ($( ".selected_tag" ).length > 0) {
+        $( ".selected_tag" ).toggleClass( "badge-primary" );
+        $( ".selected_tag" ).toggleClass( "badge-light" );
+        $( ".selected_tag" ).toggleClass( "selected_tag" );
+
+        selectedTags = [];
+    }
+    // else {
+    //     $('.warning_label').text('');
+    //     $('.warning_label').text('No tags have been selected.');
+    // }
+};
+
+function deDupAllTags(){
+    let allAlbumTags = $('.album_details_tags')
+    let allTagIDs = []
+    let duplicateTagIDs = []
+    for (let index = 0; index < allAlbumTags.length; index++) {
+        let element = allAlbumTags[index].id;
+        allTagIDs.push(element)
+    }
+
+    for (let index = 0; index < allTagIDs.length; index++) {
+        let element = allTagIDs[index];
+        if (countInArray(allTagIDs, element) > 1) {
+            duplicateTagIDs.push(index)
+        }     
+    }
+    
+    for (let index = 0; index < duplicateTagIDs.length; index++) {
+        let j = duplicateTagIDs[index];
+        let elem = allAlbumTags[j].classList.contains(`author-${userID}`)
+        if (elem == false) {
+            allAlbumTags[j].remove()
+        } 
+    }
+}
+
 
 // consider renaming this function
 // hit .js error when ID's were not on page yet
@@ -330,13 +386,17 @@ populateTags(albumId);
 function checkUserDisplayPrefrences() {
     // Get saved data from sessionStorage
     var whatTagsToShow = sessionStorage.getItem('tags');
+    deDupAllTags()
 
     if (whatTagsToShow == 'My Tags') {
         // console.log("I'm only going to show your tags")
         $('#show_all_tags').hide()
+        $('#tags_modifier').html('My ');
     } else if (whatTagsToShow == 'All Tags') {
-    // console.log("I'm going to show all tags")
-    $('#show_only_my_tags').hide()
+        // console.log("I'm going to show all tags")
+        $('#show_only_my_tags').hide()
+        $('#tags_modifier').html('All ');
+        showAllTags();
     } else {
         // do nothing
     }

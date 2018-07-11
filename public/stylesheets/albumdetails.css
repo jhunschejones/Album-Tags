@@ -113,7 +113,8 @@
     overflow: auto;
 }
 
-.tag_search_button {
+.tag_search_button,
+#clear_tags_btn {
     margin-top: 15px;
 }
 
