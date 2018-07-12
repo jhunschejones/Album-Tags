@@ -67,7 +67,7 @@ function populateConnections() {
             if (connection != albumId) {
                 $.getJSON ( '/albumdetails/json/' + parseInt(connection), function(rawData) {
                     var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 105).replace('{h}', 105);
-                    $('.connection_results').append(`<a href="/albumdetails/${connection}"><img class="small_cover" src="${cover}"></a>`)
+                    $('.connection_results').append(`<a href="/albumdetails/${connection}"><img class="small_cover" src="${cover}" data-toggle="tooltip" data-placement="top" title="Album Details" data-trigger="hover"></a>`)
                 });
             }
         }

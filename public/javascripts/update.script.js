@@ -62,7 +62,7 @@ function populateTable() {
         // calling my makeNiceDate function from below to format the date
         var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
         
-        $('.albumdetails_artist').append(artist);
+        $('.albumdetails_artist').append(`<span onclick="moreByThisArtist('${artist}')" data-toggle="tooltip" data-placement="right" title="Search This Artist" data-trigger="hover" style="cursor:pointer;">${artist}</span>`);
         // $('.albumdetails_album').append(album, '<br>');
         $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
         $('.albumdetails_details img').attr("src", cover, '<br');
@@ -226,14 +226,16 @@ function addTag() {
 };
 
 function showAlbumID() {
+    $('#the_album_id').tooltip('disable')
     showDOMelement("the_album_id")
     hideDOMelement("the_album_name")
     setTimeout(showAlbumName, 7000)
  }
  
  function showAlbumName() {
-     showDOMelement("the_album_name")
-     hideDOMelement("the_album_id")
+    $('#the_album_name').tooltip('disable')
+    showDOMelement("the_album_name")
+    hideDOMelement("the_album_id")
  }
 
 
@@ -270,6 +272,18 @@ function postTags() {
     })
 };
 
+
+function moreByThisArtist(artist) {
+    sessionStorage.setItem('artist', artist);
+    window.location.href = '/search'
+}
+
+function scrollDown() {
+    if (isTouchDevice == true & screen.width < 570) {
+        window.scrollTo(0,document.body.scrollHeight)
+    }
+}
+
 // long functions called here, waiting for page to load before calling
 // the api and database calls
 $( document ).ready( function() {
@@ -290,13 +304,15 @@ $('#tags_table tbody').on('click', 'td a.deletetaglink', deleteTag);
 var isTouchDevice = false
 
 $(function () {
-    if ("ontouchstart" in document.documentElement) {
-        isTouchDevice = true
-    }
-    
-    if(isTouchDevice == false) {
-        $('[data-toggle="tooltip"]').tooltip()
-    }
+    setTimeout(function(){ 
+        if ("ontouchstart" in document.documentElement) {
+            isTouchDevice = true
+        }
+        
+        if(isTouchDevice == false) {
+            $('[data-toggle="tooltip"]').tooltip()
+        }
+    }, 1000);
 })
 // combine with data-trigger="hover" in html element 
 // for desired behavior

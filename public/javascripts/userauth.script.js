@@ -99,7 +99,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
         if (allowedUsers.indexOf(userEmail) > -1) {
-            // user is signed in and has permissions
+            // user is signed in and has admin permissions
             tagUpdatePermissionsGranted();
 
             var whatTagsToShow = sessionStorage.getItem('tags');
@@ -123,7 +123,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             if (whatTagsToShow != 'All Tags') {
                 sessionStorage.setItem('tags', 'My Tags');
                 filterDisplayedTags();
-            }
+            } 
         }
     } else {
         // No user is signed in.    
@@ -156,7 +156,7 @@ function tagUpdatePermissionsGranted() {
 
     $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update<span class="button_text"> Tags</span></a>');
 
-    $("#tags_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_tags" class="hide_when_logged_out" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showAllTags()"data-toggle="tooltip" data-placement="right" title="Show All Tags"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_tags" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showOnlyMyTags()" data-toggle="tooltip" data-placement="right" title="Only Show My Tags">');
+    $("#tags_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_tags" class="hide_when_logged_out" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showAllTags()" data-toggle="tooltip" data-placement="right" title="Show All Tags" data-trigger="hover"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_tags" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showOnlyMyTags()" data-toggle="tooltip" data-placement="right" title="Only Show My Tags" data-trigger="hover">');
 
     $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update Connections</a>');
 
@@ -207,9 +207,12 @@ function filterDisplayedTags() {
         }  
         if (anyTagsOnPage == true) {
             $(".tag_search_button").show() 
+            $('#tag_results').show()
+            $('#tag_results_message').html('')
         } else {
             $(".tag_search_button").hide()
-            $('#tag_results').html('<small class="text-primary">You currently have no tags for this album!</small>'); 
+            $('#tag_results').hide()
+            $('#tag_results_message').html('<small class="text-primary">You currently have no tags for this album!</small>'); 
         }
     } catch (error) {
         // not on album details
@@ -231,9 +234,12 @@ function allTagsNoFilter() {
 
         if (anyTagsOnPage == true) {
             $(".tag_search_button").show() 
+            $('#tag_results').show()
+            $('#tag_results_message').html('')
         } else {
             $(".tag_search_button").hide()
-            $('#tag_results').html('<small class="text-primary">There are currently no tags for this album!</small>'); 
+            $('#tag_results').hide()
+            $('#tag_results_message').html('<small class="text-primary">There are currently no tags for this album!</small>'); 
         }
     } catch (error) {
         // not on album details
@@ -289,3 +295,19 @@ loginButton.addEventListener("click", logIn);
 loginButton2.addEventListener("click", logIn);
 logoutButton.addEventListener("click", logOut);
 logoutButton2.addEventListener("click", logOut);
+
+// ------------- start tooltips section -----------
+// var isTouchDevice = false
+
+// $(function () {
+//     if ("ontouchstart" in document.documentElement) {
+//         isTouchDevice = true
+//     }
+    
+//     if(isTouchDevice == false) {
+//         $('[data-toggle="tooltip"]').tooltip()
+//     }
+// })
+// combine with data-trigger="hover" in html element 
+// for desired behavior
+// -------------- end tooltips section --------------

@@ -27,7 +27,7 @@ var emptyArtists = false;
 var emptyAlbums = false;
 
 // populate search results
-function populateSearchResults(pageReloaded) {    
+function populateSearchResults(pageReloaded, artist) {    
     showDOMelement("loader");
     hideDOMelement("results_returned");
     // hideDOMelement("artists_label");
@@ -37,10 +37,18 @@ function populateSearchResults(pageReloaded) {
     
     // stop button from reloading page
     if (pageReloaded == false) {
-        event.preventDefault(event);
+        try {
+            event.preventDefault();
+        } catch (error) {
+            // nothing was clicked to get here
+        }
     }
     // get the value of the search box  
     var mySearch = $('#search_box').val();
+
+    if (mySearch == '' & artist != undefined) {
+        mySearch = artist
+    }
 
     // reset the results spans
     $('.artist_results').html('');
@@ -213,16 +221,13 @@ $( document ).ready(function() {
         pageReloaded = false;
     }
     else {
-        console.log("Page loaded with no search criteria");
+        var moreByThisArtist = sessionStorage.getItem('artist');
+
+        if (moreByThisArtist != undefined) {
+            populateSearchResults(pageReloaded, moreByThisArtist);
+            sessionStorage.removeItem('artist');
+        } else {
+            // no artist searched or loaded in sessionStorage
+        }
     }
 });
-
-
-// event listener called when enter is pressed with value in text form
-// doesn't appear to be needed
-//
-// $("form").submit(function (e) {
-//     e.preventDefault();
-//     pageReloaded = false;
-//     populateSearchResults(pageReloaded);
-// });

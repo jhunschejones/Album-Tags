@@ -13,6 +13,7 @@ function hideDOMelement(elementId) {
     try {
         let element = document.getElementById(elementId)
         element.style.display = "none";
+        // $(`'#${element}'`).tooltip('disable')
     } catch (error) {
         // this element does not exist yere
     }
@@ -22,6 +23,7 @@ function showDOMelement(elementId) {
     try {
         let element = document.getElementById(elementId)
         element.style.display = "block";
+        // $(`#${element}`).tooltip('enable')
     } catch (error) {
         // this element does not exist yere
     }
@@ -130,9 +132,9 @@ function populateAlbumDetails(albumNumber){
         }
 
         $('.albumdetails_details img').attr("src", cover, '<br');
-        $('.albumdetails_artist').append(artist);
-        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites">`)
-        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites">`)
+        $('.albumdetails_artist').append(`<span onclick="moreByThisArtist('${artist}')" data-toggle="tooltip" data-placement="right" title="Search This Artist" data-trigger="hover" style="cursor:pointer;">${artist}</span>`);
+        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites" data-trigger="hover">`)
+        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites" data-trigger="hover">`)
         // $('.albumdetails_album').append(album, '<br/>');
         $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
 
@@ -148,13 +150,16 @@ function populateAlbumDetails(albumNumber){
     });
 };
 
+
 function showAlbumID() {
-   showDOMelement("the_album_id")
-   hideDOMelement("the_album_name")
-   setTimeout(showAlbumName, 7000)
+    $('#the_album_id').tooltip('disable')
+    showDOMelement("the_album_id")
+    hideDOMelement("the_album_name")
+    setTimeout(showAlbumName, 7000)
 }
 
 function showAlbumName() {
+    $('#the_album_name').tooltip('disable')
     showDOMelement("the_album_name")
     hideDOMelement("the_album_id")
 }
@@ -187,9 +192,9 @@ function populateTags(albumNumber) {
             var tags = rawData[0].tags;
             var authors = rawData[0].createdBy;
 
-            // hide entire tags box if no tags exist
             if (tags.length < 1) {
-                $('.tags_card').hide();
+                // hide entire tags box if no tags exist
+                // $('.tags_card').hide();
             } else {
                 for (let index = 0; index < tags.length; index++) {
                     var element = tags[index];
@@ -215,7 +220,7 @@ function populateTags(albumNumber) {
                     } else {                  
                         var tagName = element.replace(/[^A-Z0-9]+/ig,'');
                     }
-    
+
                     // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                     // tag to toggle a badge-success class name and change the color
                     $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${element}</a>  `);               
@@ -413,3 +418,33 @@ function tagSearch() {
         $('.warning_label').html('<br/>Select one or more tags to preform a tag-search.');
     }
 };
+
+function moreByThisArtist(artist) {
+    sessionStorage.setItem('artist', artist);
+    window.location.href = '/search'
+}
+
+function scrollDown() {
+    if (isTouchDevice == true & screen.width < 570) {
+        window.scrollTo(0,document.body.scrollHeight)
+    }
+}
+
+
+// ------------- start tooltips section -----------
+var isTouchDevice = false
+
+$(function () {
+    setTimeout(function(){ 
+        if ("ontouchstart" in document.documentElement) {
+            isTouchDevice = true
+        }
+        
+        if(isTouchDevice == false) {
+            $('[data-toggle="tooltip"]').tooltip()
+        }
+    }, 1000);
+})
+// combine with data-trigger="hover" in html element 
+// for desired behavior
+// -------------- end tooltips section --------------
