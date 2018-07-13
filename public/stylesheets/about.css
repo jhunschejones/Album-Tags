@@ -107,7 +107,8 @@ a:hover {
 /* iphone 5s */
 @media screen and (max-width: 320px) {
     #absolute_content {
-        top: 18%;    
+        /* top: 18%;*/
+        top: 102px;
         left: 0%;
         right: 0%;
         max-height: 78.7vh;
@@ -121,7 +122,8 @@ a:hover {
 /* iphone 7/8 */
 @media screen and (min-width: 321px) and (max-width: 375px) {
     #absolute_content {
-        top: 15%;
+        /* top: 15%; */
+        top: 100px;
         left: 0%;
         right: 0%;
         max-height: 78.7vh;
@@ -136,7 +138,8 @@ a:hover {
 @media screen and (min-width: 376px) and (max-width: 414px) {
     #absolute_content {
         max-height: 81vh;
-        top: 13.8%;
+        /* top: 13.8%; */
+        top: 100px;
         left: 0%;
         right: 0%;
     }

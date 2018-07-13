@@ -25,11 +25,11 @@ var connectedAlbums = [];
 var directConnections = [];
 
 function updateConnectedAlbums() {
-    var dbRefrence3 = database2.ref().child(albumId);
-    dbRefrence3.on('value', snap => {
+    var connectionsRefrence = connectionsDatabase.ref().child(albumId);
+    connectionsRefrence.on('value', snap => {
         connectedAlbums = snap.val() || [];
 
-        findDirectConnections();
+        populateConnections();
     });
 }
 // ----- END FIREBASE ALBUM CONNECTIONS SECTION ------
@@ -37,39 +37,56 @@ function updateConnectedAlbums() {
 
 // drills through full connectedAlbums array to pull out direct connections
 function findDirectConnections() {
-    directConnections = [];
     
-    if (connectedAlbums.length != 0) {
-        for (let index = 0; index < connectedAlbums.length; index++) {
-            var connectionObject = connectedAlbums[index];
+    
+    // if (connectedAlbums.length != 0) {
+    //     for (let index = 0; index < connectedAlbums.length; index++) {
+    //         var connectionObject = connectedAlbums[index];
             
-            // avoids js errors for undefined values
-            // only adds connections created by this author
-            if (connectionObject != undefined & connectionObject.author == userID) {
-                
-                directConnections.push(connectionObject.connection)
-            }
-        }
-    }
+    //         // avoids js errors for undefined values
+    //         // only adds connections created by this author
+    //         if (connectionObject != undefined) {
+
+    //             if (connectionObject.author == userID) {
+    //                 directConnections.push(connectionObject.connection)
+    //             }
+    //         }
+    //     }
+    // }
     populateConnections();
 }
 
 // drills through directConnections to pull out connected albums and show them on the page
 function populateConnections() {
     $(".connection_results").text('');
+    directConnections = [];
 
-    if (directConnections.length != 0) {
-        showDOMelement("connections_card");
+    if(connectedAlbums.length !=0) {
+        
+        for (let index = 0; index < connectedAlbums.length; index++) {
+            let connected = connectedAlbums[index];
+            let connection = connected.connection
+            let author = connected.author;
 
-        for (let index = 0; index < directConnections.length; index++) {
-            let connection = directConnections[index];
+            // curating a directConnections array for later use in finding indirectConnections
+            directConnections.push(connection)
 
-            if (connection != albumId) {
+            if (connected.connection != albumId) {
                 $.getJSON ( '/albumdetails/json/' + parseInt(connection), function(rawData) {
                     var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 105).replace('{h}', 105);
-                    $('.connection_results').append(`<a href="/albumdetails/${connection}"><img class="small_cover" src="${cover}" data-toggle="tooltip" data-placement="top" title="Album Details" data-trigger="hover"></a>`)
+
+                    $('.connection_results').append(`<a href="/albumdetails/${connection}" id="${connection}" class="connection author-${author}"><img class="small_cover" src="${cover}" data-toggle="tooltip" data-placement="top" title="Album Details" data-trigger="hover"></a>`)
+                }).then(function() {
+                    // this check lets the call remain async but only calls checkConnectionDisplayPrefrences
+                    // once when its done looping through all the connections
+                    if ((index + 1) == connectedAlbums.length) {
+                        checkConnectionDisplayPrefrences()
+                    }
                 });
             }
         }
+    } else {
+        //there are no connected albums
+        checkConnectionDisplayPrefrences();
     }
 }

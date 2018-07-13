@@ -114,39 +114,43 @@ var tagsForThisAlbum;
 function populateAlbumDetails(albumNumber){
 
     $.getJSON ( '/albumdetails/json/' + albumNumber, function(rawData) {
-        var artist = rawData.data[0].attributes.artistName;
-        var album = rawData.data[0].attributes.name;
-        var label = rawData.data[0].attributes.recordLabel;
-        // the replaceing at the end here is setting the width and height of the image
-        var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 450).replace('{h}', 450);
-        var applemusicurl = rawData.data[0].attributes.url;
-        // calling my makeNiceDate function from below to format the date
-        var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
-        
-        var songObjectArray = rawData.data[0].relationships.tracks.data;
-        var songNames = [];
-
-        for (let index = 0; index < songObjectArray.length; index++) {
-            let element = songObjectArray[index];
-            songNames.push(element.attributes.name);
+        try {
+            var artist = rawData.data[0].attributes.artistName;
+            var album = rawData.data[0].attributes.name;
+            var label = rawData.data[0].attributes.recordLabel;
+            // the replaceing at the end here is setting the width and height of the image
+            var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 450).replace('{h}', 450);
+            var applemusicurl = rawData.data[0].attributes.url;
+            // calling my makeNiceDate function from below to format the date
+            var release = makeNiceDate(rawData.data[0].attributes.releaseDate);
+            
+            var songObjectArray = rawData.data[0].relationships.tracks.data;
+            var songNames = [];
+    
+            for (let index = 0; index < songObjectArray.length; index++) {
+                let element = songObjectArray[index];
+                songNames.push(element.attributes.name);
+            }
+    
+            $('.albumdetails_details img').attr("src", cover, '<br');
+            $('.albumdetails_artist').append(`<span onclick="moreByThisArtist('${artist}')" data-toggle="tooltip" data-placement="right" title="Search This Artist" data-trigger="hover" style="cursor:pointer;">${artist}</span>`);
+            $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites" data-trigger="hover">`)
+            $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites" data-trigger="hover">`)
+            // $('.albumdetails_album').append(album, '<br/>');
+            $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
+    
+            // adding path to apple music to button
+            $('.applemusicurl').attr("href", applemusicurl, '<br>');
+            $('.albumdetails_label').append(label, '<br>');
+            $('.albumdetails_release').append(release, '<br>');
+            
+            songNames.forEach(element => {
+                $('.song_names').append(`<li>${element}</li>`);
+            });
+        } catch (error) {
+            newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
+            console.log(albumNumber, error)     
         }
-
-        $('.albumdetails_details img').attr("src", cover, '<br');
-        $('.albumdetails_artist').append(`<span onclick="moreByThisArtist('${artist}')" data-toggle="tooltip" data-placement="right" title="Search This Artist" data-trigger="hover" style="cursor:pointer;">${artist}</span>`);
-        $('.albumdetails_artist').append(`<img src="../images/heart-unliked.png" height="30" width="auto" id="add_to_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="addToFavoriteAlbums(${albumNumber})" data-toggle="tooltip" title="Add To Favorites" data-trigger="hover">`)
-        $('.albumdetails_artist').append(`<img src="../images/heart-liked.png" height="30" width="auto" id="remove_from_favorites" class="hide_when_logged_out hide_me_details" style="cursor:pointer;" onclick="removeFromFavorites(${albumNumber})" data-toggle="tooltip" title="Remove From Favorites" data-trigger="hover">`)
-        // $('.albumdetails_album').append(album, '<br/>');
-        $('.albumdetails_album').append(`<span id="the_album_name" data-toggle="tooltip" data-placement="right" title="Click to Show Album ID" data-trigger="hover" onclick="showAlbumID()" style="cursor:pointer;">${album}</span><span id="the_album_id" class="text-secondary" data-toggle="tooltip" data-placement="right" title="Select & Copy Album ID" data-trigger="hover" style="display:none;">${albumId}</span>`);
-
-        // adding path to apple music to button
-        $('.applemusicurl').attr("href", applemusicurl, '<br>');
-        $('.albumdetails_label').append(label, '<br>');
-        $('.albumdetails_release').append(release, '<br>');
-        
-        songNames.forEach(element => {
-            $('.song_names').append(`<li>${element}</li>`);
-        });
-        
     });
 };
 
@@ -269,8 +273,8 @@ function addToTagArray(tag) {
 var myFavoriteAlbums;
 
 function updateFavoriteAlbums() {
-    dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
-    dbRefrence.on('value', snap => {
+    var favoritesRefrence = favoritesDatabase.ref().child(userID + "/My Favorites");
+    favoritesRefrence.on('value', snap => {
         // if value is null, this makes myFavoriteAlbums an empty string
         myFavoriteAlbums = snap.val() || [];
         checkForDuplicates();
@@ -341,6 +345,54 @@ function deDupAllTags(){
     }
 }
 
+function deDupAllConnections(){
+    let allAlbumConnections = $('.connection');
+    let allConnectionIDs = []
+    let duplicateConnectionIDs = []
+
+    for (let index = 0; index < allAlbumConnections.length; index++) {
+        let element = allAlbumConnections[index].id;
+        allConnectionIDs.push(element)
+    }
+
+    for (let index = 0; index < allConnectionIDs.length; index++) {
+        let element = allConnectionIDs[index];
+        if (countInArray(allConnectionIDs, element) > 1) {
+            duplicateConnectionIDs.push(index)
+        }     
+    }
+    
+    for (let index = 0; index < duplicateConnectionIDs.length; index++) {
+        let j = duplicateConnectionIDs[index];
+        let elem = allAlbumConnections[j].classList.contains(`author-${userID}`)
+        if (elem == false) {
+            allAlbumConnections[j].remove()
+        } 
+    }
+}
+
+function showAllConnections() {
+    // event.preventDefault()   
+    // console.log("show all tags called") 
+    allConnectionsNoFilter();
+    $('#show_all_connections').show()
+    $('#show_only_my_connections').hide()
+    $('#connections_modifier').html('All ');
+    sessionStorage.setItem('connections', 'All Connections');
+    // clearTagArray()
+}
+
+function showOnlyMyConnections() {
+    // event.preventDefault()  
+    // console.log("show my tags called")  
+    filterDisplayedConnections()
+    $('#show_all_connections').hide()
+    $('#show_only_my_connections').show()
+    $('#connections_modifier').html('My ');
+    sessionStorage.setItem('connections', 'My Connections');
+    // clearTagArray()
+}
+
 
 // consider renaming this function
 // hit .js error when ID's were not on page yet
@@ -402,6 +454,25 @@ function checkUserDisplayPrefrences() {
         $('#show_only_my_tags').hide()
         $('#tags_modifier').html('All ');
         showAllTags();
+    } else {
+        // do nothing
+    }
+}
+
+function checkConnectionDisplayPrefrences() {
+    $('#connections_card').show();
+    var whatConnectionsToShow = sessionStorage.getItem('connections');
+    deDupAllConnections()
+
+    if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
+        $('#show_all_connections').hide()
+        $('#connections_modifier').html('My ');
+        showOnlyMyConnections()
+        // console.log("showing only my connections")
+    } else if (whatConnectionsToShow == "All Connections") {
+        $('#show_only_my_connections').hide()
+        $('#connections_modifier').html('All ');
+        showAllConnections()
     } else {
         // do nothing
     }

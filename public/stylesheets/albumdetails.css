@@ -113,6 +113,10 @@
     overflow: auto;
 }
 
+#connection_results_message {
+    padding: 4px 0px 15px 0px;
+}
+
 .tag_search_button,
 #clear_tags_btn {
     margin-top: 15px;

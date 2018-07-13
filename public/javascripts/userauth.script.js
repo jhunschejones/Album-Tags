@@ -25,30 +25,29 @@ function showDOMelement(elementId) {
 var config = {
     apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
     authDomain: "album-tag-auth.firebaseapp.com",
-    databaseURL: "https://album-tag-favorites.firebaseio.com/",
+    databaseURL: "https://album-tag-auth.firebaseio.com/",
     projectId: "album-tag-auth",
     storageBucket: "album-tag-auth.appspot.com",
     messagingSenderId: "1048555394172"
 };
-const app1 = firebase.initializeApp(config);
+const defaultApp = firebase.initializeApp(config);
 
-const app2 = firebase.initializeApp({
+const connectionsApp = firebase.initializeApp({
     apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
     databaseURL: "https://album-tag-connections.firebaseio.com/",
     projectId: "album-tag-auth"
 }, 'app2');
 
-const app3 = firebase.initializeApp({
+const favoritesApp = firebase.initializeApp({
     apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
-    databaseURL: "https://album-tag-auth.firebaseio.com/",
+    databaseURL: "https://album-tag-favorites.firebaseio.com/",
     projectId: "album-tag-auth"
 }, 'app3');
 
-// Get a database instance for app2 and app3
-var database1 = firebase.database(app2);
-var database2 = firebase.database(app3);
+// Get a database instance for connectionsApp and favoritesApp
+const connectionsDatabase = firebase.database(connectionsApp);
+const favoritesDatabase = firebase.database(favoritesApp);
 
-const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
 var loginButton = document.getElementById("login_button");
 var loginButton2 = document.getElementById("full_menu_login_button")
 var logoutButton = document.getElementById("logout_button");
@@ -97,33 +96,53 @@ firebase.auth().onAuthStateChanged(function(user) {
             // we're not on contact page
         }
 
-
+        const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has admin permissions
             tagUpdatePermissionsGranted();
 
             var whatTagsToShow = sessionStorage.getItem('tags');
-            if (whatTagsToShow != 'All Tags') {
+            if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
                 sessionStorage.setItem('tags', 'My Tags');
                 filterDisplayedTags();
-            } else {
+            } else if (whatTagsToShow == "All Tags") {
+                sessionStorage.setItem('tags', 'All Tags');
                 allTagsNoFilter()
+            } 
+
+
+            var whatConnectionsToShow = sessionStorage.getItem('connections');            
+            if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
+                sessionStorage.setItem('connections', 'My Connections');
+                filterDisplayedConnections();
+            } else if (whatConnectionsToShow == "All Connections") {
+                sessionStorage.setItem('connections', 'All Connections');
+                allConnectionsNoFilter()
             }
-            // can add admin functions here 
+
         } 
         else {
-            // user is signed in but does not have tag permissions
-            // console.log('This user is not authorized to update tags.');
-            // connectionPermissionsGranted();
-            // filterDisplayedTags();
-            // user is signed in and has permissions
+            // user is signed in but does not have admin permissions
             tagUpdatePermissionsGranted();
             
             var whatTagsToShow = sessionStorage.getItem('tags');
-            if (whatTagsToShow != 'All Tags') {
+            if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
                 sessionStorage.setItem('tags', 'My Tags');
                 filterDisplayedTags();
+            } else if (whatTagsToShow == "All Tags") {
+                sessionStorage.setItem('tags', 'All Tags');
+                allTagsNoFilter()
             } 
+
+
+            var whatConnectionsToShow = sessionStorage.getItem('connections');            
+            if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
+                sessionStorage.setItem('connections', 'My Connections');
+                filterDisplayedConnections();
+            } else if (whatConnectionsToShow == "All Connections") {
+                sessionStorage.setItem('connections', 'All Connections');
+                allConnectionsNoFilter()
+            }
         }
     } else {
         // No user is signed in.    
@@ -156,7 +175,9 @@ function tagUpdatePermissionsGranted() {
 
     $("#update_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update<span class="button_text"> Tags</span></a>');
 
-    $("#tags_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_tags" class="hide_when_logged_out" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showAllTags()" data-toggle="tooltip" data-placement="right" title="Show All Tags" data-trigger="hover"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_tags" style="height:24px;margin-top:17px;margin-left:5px;" onclick="showOnlyMyTags()" data-toggle="tooltip" data-placement="right" title="Only Show My Tags" data-trigger="hover">');
+    $("#tags_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_tags" class="hide_when_logged_out" style="height:22px;margin-left:10px;" onclick="showAllTags()" data-toggle="tooltip" data-placement="right" title="Show All Tags" data-trigger="hover"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_tags" style="height:22px;margin-left:10px;" onclick="showOnlyMyTags()" data-toggle="tooltip" data-placement="right" title="Only Show My Tags" data-trigger="hover">');
+
+    $("#connections_toggle").html('<img src="/images/toggle_off.png" id="show_only_my_connections" class="hide_when_logged_out" style="height:22px;margin-left:10px;" onclick="showAllConnections()" data-toggle="tooltip" data-placement="right" title="Show All Connections" data-trigger="hover"><img src="/images/toggle_on.png" class="hide_when_logged_out" id="show_all_connections" style="height:22px;margin-left:10px;" onclick="showOnlyMyConnections()" data-toggle="tooltip" data-placement="right" title="Only Show My Connections" data-trigger="hover">');
 
     $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button hide_when_logged_out">Update Connections</a>');
 
@@ -172,22 +193,6 @@ function tagUpdatePermissionsGranted() {
     }
 }
 
-// This is old functionality from when connections permissions was a lower set of permissions from tag permissions
-//
-// function connectionPermissionsGranted() {
-//     try {
-//         $("#connection_button_container").html('<a href="" onclick="goToUpdatePage()" class="btn btn-sm btn-outline-secondary update_button">Update Connections</a>');
-//         // Rmoving stuff the user should't have access to here
-//         $('#tags_table').remove();
-//         $('#new_tag').remove();
-//         $('#add_tag_button').remove();
-//         $('.warning_label').remove();
-//         $('.add_tag_text_input').remove();
-//         logInMessage.innerHTML = "";
-//     } catch (error) {
-//         // console.log(error)
-//     }
-// }
 
 function filterDisplayedTags() {
     try {
@@ -247,6 +252,64 @@ function allTagsNoFilter() {
 
 }
 
+
+function filterDisplayedConnections() {
+    try {
+        let anyConnectionsOnPage = false
+        connectionsForThisAlbum = $(".connection")
+        for (let index = 0; index < connectionsForThisAlbum.length; index++) {
+            let connection = connectionsForThisAlbum[index];
+    
+            if($(connection).hasClass(`author-${userID}`)) {
+                // console.log("tag belongs to this author")
+                $(connection).show()
+                anyConnectionsOnPage = true
+            } else {
+                // console.log("tag does not belong to this author")
+                $(connection).hide()
+            }
+        }  
+        if (anyConnectionsOnPage == true) {
+            // $(".tag_search_button").show() 
+            $('#connection_results').show()
+            $('#connection_results_message').html('')
+        } else {
+            // $(".tag_search_button").hide()
+            $('#connection_results').hide()
+            $('#connection_results_message').html('<small class="text-primary">You currently have no connections for this album!</small>'); 
+        }
+    } catch (error) {
+        // not on album details
+    }
+}
+
+function allConnectionsNoFilter() {
+    try {
+        let anyConnectionsOnPage = false
+        connectionsForThisAlbum = $(".connection")
+        
+        if (connectionsForThisAlbum.length > 0) { 
+            anyConnectionsOnPage = true 
+            for (let index = 0; index < connectionsForThisAlbum.length; index++) {
+                let thisConnection = connectionsForThisAlbum[index];
+                $(thisConnection).show()
+            }  
+        }
+
+        if (anyConnectionsOnPage == true) {
+            // $(".tag_search_button").show() 
+            $('#connection_results').show()
+            $('#connection_results_message').html('')
+        } else {
+            // $(".tag_search_button").hide()
+            $('#connection_results').show()
+            $('#connection_results_message').html('<small class="text-primary">There are currently no connections for this album!</small>'); 
+        }
+    } catch (error) {
+        // not on album details
+    }
+}
+
 // log user in using google auth
 function logIn() {
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -295,19 +358,3 @@ loginButton.addEventListener("click", logIn);
 loginButton2.addEventListener("click", logIn);
 logoutButton.addEventListener("click", logOut);
 logoutButton2.addEventListener("click", logOut);
-
-// ------------- start tooltips section -----------
-// var isTouchDevice = false
-
-// $(function () {
-//     if ("ontouchstart" in document.documentElement) {
-//         isTouchDevice = true
-//     }
-    
-//     if(isTouchDevice == false) {
-//         $('[data-toggle="tooltip"]').tooltip()
-//     }
-// })
-// combine with data-trigger="hover" in html element 
-// for desired behavior
-// -------------- end tooltips section --------------

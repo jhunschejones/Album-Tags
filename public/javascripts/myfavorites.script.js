@@ -89,7 +89,15 @@ function getAlbumInfo(albumNumber, cardNumber) {
     $.getJSON( '/favorites/album/' + albumNumber)
     .done(function(rawData) {     
     // send album info to populateCard
-    populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
+    try {
+        populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
+    } catch (error) {
+        console.log(albumNumber, error)
+        newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
+
+        let emptyCard = document.getElementById(`card${cardNumber}`)
+        emptyCard.remove();
+    }
 
     // Ben's Suggestions if performance is still lagging:
     // try fetch, https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -152,8 +160,8 @@ function populateCard(albumNumber, results, cardNumber) {
 var myFavoriteAlbums;
 
 function updateFavoriteAlbums() {
-    dbRefrence = firebase.database().ref().child(userID + "/My Favorites");
-    dbRefrence.on('value', snap => {
+    var favoritesRefrence = favoritesDatabase.ref().child(userID + "/My Favorites");
+    favoritesRefrence.on('value', snap => {
         myFavoriteAlbums = snap.val() || [];
         myFavoriteAlbums.sort();
         startFavoritesPage();

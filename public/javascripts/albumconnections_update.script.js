@@ -92,8 +92,8 @@ var seccondConnectedAlbums = [];
 var directConnections = []; 
 
 function updateConnectedAlbums() {
-    var dbRefrence3 = database2.ref().child(albumId);
-    dbRefrence3.on('value', snap => {
+    var connectionsRefrence = connectionsDatabase.ref().child(albumId);
+    connectionsRefrence.on('value', snap => {
         connectedAlbums = snap.val() || [];
 
         findDirectConnections();

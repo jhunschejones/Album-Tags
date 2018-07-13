@@ -21,12 +21,19 @@ function getAlbumInfo(albumNumber, cardNumber) {
     .done(function(rawData) {
     
     // if the album is from this year, populate the page, otherwise remove the card
-    if(rawData.data[0].attributes.releaseDate.slice(0,4) == `${(new Date()).getFullYear()}`){
-        populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
-    }
-    else {
+    try {
+        if(rawData.data[0].attributes.releaseDate.slice(0,4) == `${(new Date()).getFullYear()}`){
+            populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
+        }
+        else {
+            let emptyCard = document.getElementById(`card${cardNumber}`)
+            emptyCard.remove();
+        }
+    } catch (error) {
+        console.log(albumNumber, error)
+        newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
+
         let emptyCard = document.getElementById(`card${cardNumber}`)
-        // emptyCard.style.display = "none"
         emptyCard.remove();
     }
 
@@ -78,11 +85,12 @@ function populateCard(albumNumber, results, cardNumber) {
 // ----- START FIREBASE FAVORITES SECTION ------
 var favoriteAlbums;
 
-dbRefrence = firebase.database().ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
-dbRefrence.on('value', snap => {
+var favoritesRefrence = favoritesDatabase.ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
+favoritesRefrence.on('value', snap => {
     favoriteAlbums = snap.val();
     // now that favorites are obtained, sort and load the page
     favoriteAlbums.sort();
+    // favoriteAlbums = favoriteAlbums.filter(function(n){ return n != undefined }); 
     startFavoritesPage();
 });
 // ----- END FIREBASE FAVORITES SECTION ------
