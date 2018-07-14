@@ -148,8 +148,32 @@ function populateAlbumDetails(albumNumber){
                 $('.song_names').append(`<li>${element}</li>`);
             });
         } catch (error) {
-            newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
-            console.log(albumNumber, error)     
+            // newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
+            console.log(albumNumber, error) 
+            
+            function logError() {
+                var newKey = firebase.database().ref().child('errors').push().key;
+            
+                firebase.database().ref('errors/' + newKey).update({
+                // firebase.database().ref('errors/').set({
+                    "error" : 
+                    {
+                        "Album_Number" : albumNumber,
+                        "User" : userID,
+                        "URL" : window.location.href,
+                        "Date_Time" : new Date().toLocaleString(),
+                        "Error" : JSON.stringify(error, Object.getOwnPropertyNames(error))
+                    }
+                    // "error" : "No errors!"
+                });
+            
+                // return firebase.database().ref('/errors').once('value').then(function(snapshot) {
+                //     var error = snapshot.val();
+                //     console.log(error)
+                // });
+            }
+    
+            logError()
         }
     });
 };

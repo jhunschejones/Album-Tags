@@ -93,7 +93,32 @@ function getAlbumInfo(albumNumber, cardNumber) {
         populateCard(albumNumber, rawData.data[0].attributes, cardNumber);
     } catch (error) {
         console.log(albumNumber, error)
-        newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
+
+        function logError() {
+            var newKey = firebase.database().ref().child('errors').push().key;
+        
+            firebase.database().ref('errors/' + newKey).update({
+            // firebase.database().ref('errors/').set({
+                "error" : 
+                {
+                    "Album_Number" : albumNumber,
+                    "User" : userID,
+                    "URL" : window.location.href,
+                    "Date_Time" : new Date().toLocaleString(),
+                    "Error" : JSON.stringify(error, Object.getOwnPropertyNames(error))
+                }
+                // "error" : "No errors!"
+            });
+        
+            // return firebase.database().ref('/errors').once('value').then(function(snapshot) {
+            //     var error = snapshot.val();
+            //     console.log(error)
+            // });
+        }
+
+        logError()
+        
+        // newrelic.setCustomAttribute("Page_Load_Error", "Album_number_may_no_longer_be_valid")
 
         let emptyCard = document.getElementById(`card${cardNumber}`)
         emptyCard.remove();
