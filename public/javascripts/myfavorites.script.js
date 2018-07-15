@@ -284,7 +284,7 @@ var genresList = [];
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function getGenreTags(albumNumber, cardNumber) {
-    $.getJSON ( '/albumdetails/database/' + albumNumber, function(rawData) {
+    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
 
             var tags = rawData[0].tags;
