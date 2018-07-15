@@ -487,3 +487,77 @@ $(function () {
 // combine with data-trigger="hover" in html element 
 // for desired behavior
 // -------------- end tooltips section --------------
+
+
+// function newFavoritesFormat(albumID) {
+
+//     let newFavorite
+//     let artist
+//     let album
+//     $.getJSON ( '/albumdetails/json/' + albumID, function(rawData) {
+//         artist = rawData.data[0].attributes.artistName;
+//         album = rawData.data[0].attributes.name;
+//     }).then(function(){
+//         newFavorite = 
+//         {
+//             "albumId" : albumID,
+//             "artistName" : artist,
+//             "albumName" : album
+//         }
+//     }).then(function() {
+//         removeOldAddNew(albumID, newFavorite)
+//     })
+// }
+
+// function removeOldAddNew(current, newFavorite) {
+//     let index = myFavoriteAlbums.indexOf(current);
+//     myFavoriteAlbums.splice(index, 1);
+
+//     myFavoriteAlbums.push(newFavorite);
+//     updateDatabase()
+// }
+
+// function updateDatabase() {
+
+//     favoritesDatabase.database().ref(userID).set({
+//         "My Favorites": myFavoriteAlbums
+//     });
+// }
+
+// function startFavoritesUpdate() {
+//     for (let index = 0; index < myFavoriteAlbums.length; index++) {
+//         let element = myFavoriteAlbums[index];
+//         newFavoritesFormat(element)
+//     }
+// }
+
+function startFavoritesUpdate() {
+    for (let index = 0; index < myFavoriteAlbums.length; index++) {
+        let albumID = myFavoriteAlbums[index];
+        
+        let newFavorite
+        let artist
+        let album
+        $.getJSON ( '/albumdetails/json/' + albumID, function(rawData) {
+            artist = rawData.data[0].attributes.artistName;
+            album = rawData.data[0].attributes.name;
+        }).then(function(){
+            newFavorite = 
+            {
+                "albumId" : albumID,
+                "artistName" : artist,
+                "albumName" : album
+            }
+        }).then(function() {
+            let index = myFavoriteAlbums.indexOf(albumID);
+            myFavoriteAlbums.splice(index, 1);
+        
+            myFavoriteAlbums.push(newFavorite);
+            updateDatabase()
+        }).then(function() {
+            favoritesDatabase.database().ref(userID).set({
+                "My Favorites": myFavoriteAlbums
+            });
+        })
+    }
+}

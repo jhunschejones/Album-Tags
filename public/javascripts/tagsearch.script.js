@@ -22,7 +22,7 @@ function populateTags() {
 function getTagedAlbums() {
     
     // this is pulling data from url and checking the database
-    $.getJSON ( '/search/tags/database/' + cleanSelectedTags).then(function(rawData) {
+    $.getJSON ( '/search/tags/newtags/database/' + cleanSelectedTags).then(function(rawData) {
         
         if (typeof(rawData[0]) != "undefined") {
 

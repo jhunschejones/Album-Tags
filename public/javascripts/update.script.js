@@ -49,12 +49,14 @@ var currentTags = [];
 var currentAuthors = [];
 var tagsForThisAlbum
 var totalAuthors
+var artist
+var album
 
 
 function populateTable() {
     $.getJSON ( '/albumdetails/json/' + albumId, function(rawData) {
-        var artist = rawData.data[0].attributes.artistName;
-        var album = rawData.data[0].attributes.name;
+        artist = rawData.data[0].attributes.artistName;
+        album = rawData.data[0].attributes.name;
         var label = rawData.data[0].attributes.recordLabel;
         // the replaceing at the end here is setting the width and height of the image
         var cover = rawData.data[0].attributes.artwork.url.replace('{w}', 500).replace('{h}', 500);
@@ -77,52 +79,51 @@ function populateTable() {
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function populateTags(reason) {
-    var noAuthors = false
 
     // console.log("populate tags called")
-    $.getJSON ( '/albumdetails/database/' + albumId, function(rawData) {
+    $.getJSON ( '/albumdetails/newtags/database/' + albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             $('.tag_results').text('');
             currentTags = [];
             currentAuthors = [];
-            var tags = rawData[0].tags;
-            var authors = rawData[0].createdBy;
+            var thisAlbumData = rawData[0].createdBy
 
-            for (let index = 0; index < tags.length; index++) {
-                var element = tags[index];
-                var author;
+            for (let index = 0; index < thisAlbumData.length; index++) {
+                var element = thisAlbumData[index];
+                var tag = element.tag
+                var author = element.author
 
                 // correcting for old authors structure
-                try {
-                    author = authors[index];
-                    if (author == "Joshua Jones") {
-                        author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                    }
-                } catch (error) {
-                    // error should only fire on older structures where there is no author field
-                    // these tags were all added by me origionally when the data structure was 
-                    // simpler
-                    author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                    noAuthors = true
-                }
+                // try {
+                //     author = authors[index];
+                //     if (author == "Joshua Jones") {
+                //         author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                //     }
+                // } catch (error) {
+                //     // error should only fire on older structures where there is no author field
+                //     // these tags were all added by me origionally when the data structure was 
+                //     // simpler
+                //     author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                //     noAuthors = true
+                // }
 
-                element = replaceUnderscoreWithBackSlash(element);
-                currentTags.push(element);
+                tag = replaceUnderscoreWithBackSlash(tag);
+                currentTags.push(tag);
                 currentAuthors.push(author);
 
                 // creating a unique tag for each element, solving the problem of number tags not allowed
                 // by adding some letters to the start of any tag that can be converted to a number
                 // then using a regular expression to remove all spaces in each tag
-                if (parseInt(element)) {
+                if (parseInt(tag)) {
                     var addLetters = "tag_";
-                    var tagName = addLetters.concat(element).replace(/\s/g,'');
+                    var tagName = addLetters.concat(tag).replace(/\s/g,'');
                 } else {                  
-                    var tagName = element.replace(/\s/g,'');
+                    var tagName = tag.replace(/\s/g,'');
                 }
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<tr class="album_details_tags update_tags author-${author}"><td>${element}</td><td><a href="#" class="deletetaglink" rel="${element}">Delete</a></td></tr>`);  
+                $('.tag_results').append(`<tr class="album_details_tags update_tags author-${author}"><td>${tag}</td><td><a href="#" class="deletetaglink" rel="${tag}">Delete</a></td></tr>`);  
                 // console.log(element)             
             }
             $(".update_tags").hide();
@@ -131,9 +132,6 @@ function populateTags(reason) {
             postTags(); 
         };
     }).then(function(){
-        if (noAuthors == true) {
-            correctAuthors();
-        }
         tagsForThisAlbum = $(".update_tags")
         for (let index = 0; index < tagsForThisAlbum.length; index++) {
             let thisTag = tagsForThisAlbum[index];
@@ -160,21 +158,21 @@ function populateTags(reason) {
 };
 
 
-function correctAuthors() {
-    currentAuthors = []
-    for (let index = 0; index < currentTags.length; index++) {
+// function correctAuthors() {
+//     currentAuthors = []
+//     for (let index = 0; index < currentTags.length; index++) {
 
-        currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
-    }
+//         currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
+//     }
 
     // Use AJAX to put the new tag in the database   
-    $.ajax(`database/${albumId}`, {
-        method: 'PUT',
-        contentType: 'application/json',
-        processData: false,
-        data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
-    })
-}
+    // $.ajax(`database/${albumId}`, {
+    //     method: 'PUT',
+    //     contentType: 'application/json',
+    //     processData: false,
+    //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+    // })
+// }
 
 function addTag() {
     event.preventDefault();
@@ -186,12 +184,12 @@ function addTag() {
         var newAuthor = userID;
 
         // correcting for old authors structure
-        for (let index = 0; index < currentAuthors.length; index++) {
-            let a = currentAuthors[index];
-            if (a == "Joshua Jones") {
-                currentAuthors[index] = 'Ol5d5mjWi9eQ7HoANLhM4OFBnso2'
-            }
-        }
+        // for (let index = 0; index < currentAuthors.length; index++) {
+        //     let a = currentAuthors[index];
+        //     if (a == "Joshua Jones") {
+        //         currentAuthors[index] = 'Ol5d5mjWi9eQ7HoANLhM4OFBnso2'
+        //     }
+        // }
 
         // isThisADuplicate will have a value of -1 if tag is not a duplicate 
         // at all, otherwise will check if index matchs index of current user 
@@ -212,11 +210,38 @@ function addTag() {
         };
         
         // Use AJAX to put the new tag in the database   
-        $.ajax(`database/${albumId}`, {
+        // $.ajax(`database/${albumId}`, {
+        //     method: 'PUT',
+        //     contentType: 'application/json',
+        //     processData: false,
+        //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+        
+        // MAKE TAG-AUTHOR OBJECTS
+        var createdByObject = []
+        for (let index = 0; index < currentTags.length; index++) {
+            let tag = currentTags[index];
+            let author = currentAuthors[index];
+            
+            let newTagAuthorObject = 
+            {
+                "tag": tag,
+                "author": author
+            }
+            createdByObject.push(newTagAuthorObject)
+        }
+    
+        // PUT TO NEW TAGS
+        $.ajax(`newtags/database/${albumId}`, {
             method: 'PUT',
             contentType: 'application/json',
             processData: false,
-            data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+            data: JSON.stringify(
+            { 
+                "tags" : currentTags, 
+                "createdBy" : createdByObject,
+                "artistName" : artist,
+                "albumName" : album
+            })
         }).then(populateTags("add"))
     } else {
         $(".warning_label").text("Please enter a non-empty tag.")
@@ -250,11 +275,30 @@ function deleteTag(event) {
         currentTags.splice(index, 1);
         currentAuthors.splice(index, 1);
 
-        $.ajax(`database/${albumId}`, {
+        var createdByObject = []
+        for (let index = 0; index < currentTags.length; index++) {
+            let tag = currentTags[index];
+            let author = currentAuthors[index];
+            
+            let newTagAuthorObject = 
+            {
+                "tag": tag,
+                "author": author
+            }
+            createdByObject.push(newTagAuthorObject)
+        }
+
+        $.ajax(`newtags/database/${albumId}`, {
             method: 'PUT',
             contentType: 'application/json',
             processData: false,
-            data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
+            data: JSON.stringify(
+            { 
+                "tags" : currentTags, 
+                "createdBy" : createdByObject,
+                "artistName" : artist,
+                "albumName" : album
+            })
         }).then(populateTags("delete"))
     }
 };
@@ -263,12 +307,19 @@ function deleteTag(event) {
 function postTags() {
 
     // Use AJAX to post the new tag in the database   
-    $.ajax(`database/${albumId}`, {
+    $.ajax(`newtags/database/${albumId}`, {
         method: 'POST',
         contentType: 'application/json',
         processData: false,
         // have to convert albumId to string so it works with the rest of app logic
-        data: JSON.stringify({"albumId" : albumId.toString(), "tags" : [], "createdBy" : []})
+        data: JSON.stringify(
+        {
+            "albumId" : albumId.toString(), 
+            "tags" : [], 
+            "createdBy" : [],
+            "artistName" : artist,
+            "albumName" : album
+        })
     })
 };
 

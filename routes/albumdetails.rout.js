@@ -45,4 +45,14 @@ router.get('/database/:albumId', function(req, res, next) {
     })
 });
 
+router.get('/newtags/database/:albumId', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('album-tags');
+    var thisAlbum = req.params.albumId;
+    collection.find({ "albumId" : thisAlbum }, function(e,docs){
+        // res.setHeader("Cache-Control", "private, max-age=600");
+        res.json(docs);
+    })
+});
+
 module.exports = router;

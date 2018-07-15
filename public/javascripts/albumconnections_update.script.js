@@ -104,8 +104,8 @@ function checkSecondConnections(method, connectedAlbumId) {
     if (method == "add") { pathAlbumId = newAlbumId }
     if (method == "delete") { pathAlbumId = connectedAlbumId }
 
-    var dbRefrence4 = database2.ref().child(pathAlbumId);
-    dbRefrence4.once('value').then(function(snapshot) {
+    var connectionsRefrence = connectionsDatabase.ref().child(pathAlbumId);
+    connectionsRefrence.once('value').then(function(snapshot) {
         seccondConnectedAlbums = snapshot.val() || [];
         
         if (method == "add") { addSecondConnection(); }
@@ -200,7 +200,9 @@ function deleteConnection(connectedAlbum) {
 function createConnection(newAlbumId, isDelete) {
     let newConnection = {
         "author" : userID,
-        "connection" : newAlbumId
+        "connection" : newAlbumId,
+        "artistName" : artist,
+        "albumName" : album
     }
     let duplicate = false
 
@@ -222,14 +224,21 @@ function createConnection(newAlbumId, isDelete) {
 
 function addConnection(newConnection) {
     connectedAlbums.push(newConnection);
-    database2.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("add", newAlbumId) })
+    connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("add", newAlbumId) })
 }
 
 function addSecondConnection() {
 
-    let secondNewConnection = { "author" : userID, "connection" : albumId }
-    seccondConnectedAlbums.push(secondNewConnection);
-    database2.ref().child(newAlbumId).set(seccondConnectedAlbums);
+    let newArtist
+    let newAlbum
+    $.getJSON ( '/albumdetails/json/' + newAlbumId, function(rawData) {
+        newArtist = rawData.data[0].attributes.artistName;
+        newAlbum = rawData.data[0].attributes.name;
+    }).then(function(){
+        let secondNewConnection = { "author" : userID, "connection" : albumId, "artistName" : newArtist, "albumName" : newAlbum }
+        seccondConnectedAlbums.push(secondNewConnection);
+        connectionsDatabase.ref().child(newAlbumId).set(seccondConnectedAlbums);
+    })
 }
 
 // need to find a way to recieve this connected album id here
@@ -246,7 +255,7 @@ function removeSecondConnection(connectedAlbum) {
     }
 
     seccondConnectedAlbums.splice(index, 1);
-    database2.ref().child(connectedAlbum).set(seccondConnectedAlbums);
+    connectionsDatabase.ref().child(connectedAlbum).set(seccondConnectedAlbums);
 }
 
 function removeConnection(connection, connectedAlbumId) {
@@ -261,7 +270,7 @@ function removeConnection(connection, connectedAlbumId) {
     }
 
     connectedAlbums.splice(index, 1);
-    database2.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("delete", connectedAlbumId) })
+    connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("delete", connectedAlbumId) })
 }
 
 // function updateConnectionDatabase(pathAlbum, connectionObject) {

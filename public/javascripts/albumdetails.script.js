@@ -212,46 +212,48 @@ function replaceUnderscoreWithBackSlash(str) {
 function populateTags(albumNumber) {
     var noAuthors = false
 
-    $.getJSON ( '/albumdetails/database/' + albumNumber, function(rawData) {
+    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             // clear default no-tags notice if tags exist
             $(".tag_results").text('');
             $(".tag_search_button").html('<a href="" onclick="tagSearch()" class="btn btn-sm btn-outline-secondary tag_search_button hide_when_logged_out" style="display:none;">Search<span class="button_text"> by Selected Tags</span></a>');
-            var tags = rawData[0].tags;
-            var authors = rawData[0].createdBy;
+            currentTags = [];
+            currentAuthors = [];
+            var thisAlbumData = rawData[0].createdBy
 
-            if (tags.length < 1) {
+            if (thisAlbumData.length < 1) {
                 // hide entire tags box if no tags exist
                 // $('.tags_card').hide();
             } else {
-                for (let index = 0; index < tags.length; index++) {
-                    var element = tags[index];
-                    var author;
+                for (let index = 0; index < thisAlbumData.length; index++) {
+                    var element = thisAlbumData[index];
+                    var tag = element.tag
+                    var author = element.author
     
-                    try {
-                        author = authors[index];
-                        if (author == "Joshua Jones") {
-                            author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                        }
-                    } catch (error) {
-                        // error should only fire on older structures where there is no author field
-                        author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                    }
+                    // try {
+                    //     author = authors[index];
+                    //     if (author == "Joshua Jones") {
+                    //         author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                    //     }
+                    // } catch (error) {
+                    //     // error should only fire on older structures where there is no author field
+                    //     author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
+                    // }
              
-                    element = replaceUnderscoreWithBackSlash(element)
+                    tag = replaceUnderscoreWithBackSlash(tag)
                     // creating a unique tag for each element, solving the problem of number tags not allowed
                     // by adding some letters to the start of any tag that can be converted to a number
                     // then using a regular expression to remove all spaces and special characters in each tag
-                    if (parseInt(element)) {
+                    if (parseInt(tag)) {
                         var addLetters = "tag_";
-                        var tagName = addLetters.concat(element).replace(/[^A-Z0-9]+/ig,'');
+                        var tagName = addLetters.concat(tag).replace(/[^A-Z0-9]+/ig,'');
                     } else {                  
-                        var tagName = element.replace(/[^A-Z0-9]+/ig,'');
+                        var tagName = tag.replace(/[^A-Z0-9]+/ig,'');
                     }
 
                     // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                     // tag to toggle a badge-success class name and change the color
-                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${element}</a>  `);               
+                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${tag}</a>  `);               
                 }
                 $('.album_details_tags').hide();
             }  
@@ -453,7 +455,7 @@ function removeFromFavorites(newAlbum) {
 
 function updateDatabase() {
     // console.log("update database called")
-    firebase.database().ref(userID).set({
+    favoritesDatabase.database().ref(userID).set({
         "My Favorites": myFavoriteAlbums
     });
 }

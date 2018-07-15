@@ -66,4 +66,27 @@ router.get('/tags/database/:selectedtags', function(req, res, next) {
     })
 });
 
+// ================= TAGS SEARCH FROM NEW TAGS ===============
+router.get('/tags/newtags/database/:selectedtags', function(req, res, next) {
+    var db = req.db;
+    var collection = db.get('album-tags');
+    var selectedTags = req.params.selectedtags;
+
+    // clean up tags pulled out of url
+    selectedTags = selectedTags.split(",")
+    selectedTags.forEach(element => {
+        // go through the array and remove the item 
+        let index = selectedTags.indexOf(element)
+        selectedTags.splice(index, 1);
+        // trim any spaces off the ends of the item
+        element = element.trim();
+        // put the item back in the array
+        selectedTags.push(element);
+    });
+
+    collection.find({ "tags" : { $all: selectedTags } }, function(e,docs){
+        res.json(docs);
+    })
+});
+
 module.exports = router;
