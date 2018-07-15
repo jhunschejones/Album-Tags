@@ -455,7 +455,7 @@ function removeFromFavorites(newAlbum) {
 
 function updateDatabase() {
     // console.log("update database called")
-    favoritesDatabase.database().ref(userID).set({
+    favoritesDatabase.ref(userID).set({
         "My Favorites": myFavoriteAlbums
     });
 }
