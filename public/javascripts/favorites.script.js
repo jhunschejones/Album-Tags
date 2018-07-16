@@ -126,7 +126,7 @@ function startFavoritesPage() {
     $('#favorites_all_cards').html("");
     // create card and populate for each favorite album
     for (let index = 0; index < favoriteAlbums.length; index++) {
-        let album = favoriteAlbums[index];
+        let album = favoriteAlbums[index].albumId;
         let card = (index + 1);
         
         createCard(card);
