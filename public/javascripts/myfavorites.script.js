@@ -284,14 +284,18 @@ var genresList = [];
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function getGenreTags(albumNumber, cardNumber) {
-    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber, function(rawData) {
+
+    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber.albumId, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
+            
 
             var tags = rawData[0].tags;
-            var authors = rawData[0].createdBy;
+            // var authors = rawData[0].createdBy;
+            var tagsObjects = rawData[0].createdBy;
 
             for (let index = 0; index < tags.length; index++) {
                 var tag = tags[index];
+                var tagObject = tagsObjects[index]
                 tag = replaceUnderscoreWithBackSlash(tag);
 
                 if(isGenre(tag) == true){             
@@ -299,12 +303,16 @@ function getGenreTags(albumNumber, cardNumber) {
                     // add genre as a class on the card
                     $(`#card${cardNumber}`).addClass(`genre-${replaceSpaceWithUnderscore(tag)}`);
                     genresList.push(tag);
-                } else if (tag == "Top 10") {
+                } else {
+                    // none of these tags are genres
+                }
+
+                if (tagObject.tag == "Top 10" & tagObject.author == userID) {
                     // using for top 10 functionality later
                     $("#top_10_button").show();
                     $(`#card${cardNumber}`).addClass("Top_10");
                 } else {
-                    // none of these tags are genres
+                    // console.log("There are no top 10 records")
                 }
             };
         };
