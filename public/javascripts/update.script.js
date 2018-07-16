@@ -47,13 +47,13 @@ var albumId = $(".heres_the_album_id").text();
 albumId = parseInt(albumId);
 var currentTags = [];
 var currentAuthors = [];
-var tagsForThisAlbum
+// var tagsForThisAlbum
 var totalAuthors
 var artist
 var album
 
 
-function populateTable() {
+function populateAlbumInfo() {
     $.getJSON ( '/albumdetails/json/' + albumId, function(rawData) {
         artist = rawData.data[0].attributes.artistName;
         album = rawData.data[0].attributes.name;
@@ -93,20 +93,6 @@ function populateTags(reason) {
                 var tag = element.tag
                 var author = element.author
 
-                // correcting for old authors structure
-                // try {
-                //     author = authors[index];
-                //     if (author == "Joshua Jones") {
-                //         author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                //     }
-                // } catch (error) {
-                //     // error should only fire on older structures where there is no author field
-                //     // these tags were all added by me origionally when the data structure was 
-                //     // simpler
-                //     author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                //     noAuthors = true
-                // }
-
                 tag = replaceUnderscoreWithBackSlash(tag);
                 currentTags.push(tag);
                 currentAuthors.push(author);
@@ -132,9 +118,10 @@ function populateTags(reason) {
             postTags(); 
         };
     }).then(function(){
-        tagsForThisAlbum = $(".update_tags")
+        let tagsForThisAlbum = $(".update_tags")
         for (let index = 0; index < tagsForThisAlbum.length; index++) {
             let thisTag = tagsForThisAlbum[index];
+            // console.log(thisTag)
     
             if($(thisTag).hasClass(`author-${userID}`)) {
                 // console.log("tag belongs to this author")
@@ -158,21 +145,6 @@ function populateTags(reason) {
 };
 
 
-// function correctAuthors() {
-//     currentAuthors = []
-//     for (let index = 0; index < currentTags.length; index++) {
-
-//         currentAuthors.push("Ol5d5mjWi9eQ7HoANLhM4OFBnso2")
-//     }
-
-    // Use AJAX to put the new tag in the database   
-    // $.ajax(`database/${albumId}`, {
-    //     method: 'PUT',
-    //     contentType: 'application/json',
-    //     processData: false,
-    //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
-    // })
-// }
 
 function addTag() {
     event.preventDefault();
@@ -182,14 +154,6 @@ function addTag() {
         var newTag = $('#new_tag').val();
         newTag = removeExtraSpace(toTitleCase(replaceBackSlashWithUnderscore(newTag))).trim();
         var newAuthor = userID;
-
-        // correcting for old authors structure
-        // for (let index = 0; index < currentAuthors.length; index++) {
-        //     let a = currentAuthors[index];
-        //     if (a == "Joshua Jones") {
-        //         currentAuthors[index] = 'Ol5d5mjWi9eQ7HoANLhM4OFBnso2'
-        //     }
-        // }
 
         // isThisADuplicate will have a value of -1 if tag is not a duplicate 
         // at all, otherwise will check if index matchs index of current user 
@@ -208,13 +172,6 @@ function addTag() {
             // leave function before posting
             return
         };
-        
-        // Use AJAX to put the new tag in the database   
-        // $.ajax(`database/${albumId}`, {
-        //     method: 'PUT',
-        //     contentType: 'application/json',
-        //     processData: false,
-        //     data: JSON.stringify({"tags" : currentTags, "createdBy" : currentAuthors})
         
         // MAKE TAG-AUTHOR OBJECTS
         var createdByObject = []
@@ -338,8 +295,9 @@ function scrollDown() {
 // long functions called here, waiting for page to load before calling
 // the api and database calls
 $( document ).ready( function() {
-    populateTable();
-    populateTags("start");
+    populateAlbumInfo();
+    // callng this in user auth script
+    // populateTags("start");
 })
 
 // event listener called when enter is pressed with value in text form

@@ -423,7 +423,13 @@ function showOnlyMyConnections() {
 // consider renaming this function
 // hit .js error when ID's were not on page yet
 function checkForDuplicates() {  
-    if (myFavoriteAlbums.indexOf(albumId) == -1) {
+    let justAlbumIDs = []
+    for (let index = 0; index < myFavoriteAlbums.length; index++) {
+        let element = myFavoriteAlbums[index];
+        justAlbumIDs.push(element.albumId)
+    }
+
+    if (justAlbumIDs.indexOf(albumId) == -1) {
         // remove_from_favorites.style.display = "none";
         // add_to_favorites.style.display = "inline";
         $('#add_to_favorites').removeClass('hide_me_details');
@@ -437,24 +443,43 @@ function checkForDuplicates() {
 }
 
 function addToFavoriteAlbums(newAlbum) {
-    // console.log("add to favorite albums called")
 
-    myFavoriteAlbums.push(newAlbum);
+    let newFavorite
+    let artist
+    let album
+    $.getJSON ( '/albumdetails/json/' + newAlbum, function(rawData) {
+        artist = rawData.data[0].attributes.artistName;
+        album = rawData.data[0].attributes.name;
+    }).then(function(){
+        newFavorite = 
+        {
+            "albumId" : newAlbum,
+            "artistName" : artist,
+            "albumName" : album
+        }
+    }).then(function() {
+        myFavoriteAlbums.push(newFavorite);
 
-
-    updateDatabase();
-    checkForDuplicates();
+        updateDatabase();
+        checkForDuplicates();
+    })
 }
 
 function removeFromFavorites(newAlbum) {
-    let index = myFavoriteAlbums.indexOf(newAlbum);
+    
+    let justAlbumIDs = []
+    for (let index = 0; index < myFavoriteAlbums.length; index++) {
+        let element = myFavoriteAlbums[index];
+        justAlbumIDs.push(element.albumId)
+    }
+    let index = justAlbumIDs.indexOf(newAlbum);
     myFavoriteAlbums.splice(index, 1);
     updateDatabase();
     checkForDuplicates();
 }
 
 function updateDatabase() {
-    // console.log("update database called")
+
     favoritesDatabase.ref(userID).set({
         "My Favorites": myFavoriteAlbums
     });
@@ -464,7 +489,7 @@ function updateDatabase() {
 // calling populateAlbumDetails and populateTags to fill the page
 populateAlbumDetails(albumId);
 populateTags(albumId);
-// setTimeout(function(){ populateTags(albumId); }, 2000);
+
 
 function checkUserDisplayPrefrences() {
     // Get saved data from sessionStorage

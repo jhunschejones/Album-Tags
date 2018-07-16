@@ -65,7 +65,7 @@ function populateSearchResults(pageReloaded, artist) {
         // this is pulling data from url and populating cards
         $.getJSON ( '/search/' + mySearch, function(rawData) {
 
-            if (typeof(rawData.results.artists) != "undefined") {  
+            if (typeof(rawData.results.artists) != null) {  
                 // this stores an array
                 artists = rawData.results.artists.data;
                 emptyArtists = false;              

@@ -96,6 +96,12 @@ firebase.auth().onAuthStateChanged(function(user) {
             // we're not on contact page
         }
 
+        try {
+            populateTags("start");
+        } catch (error) {
+            // we're not on the update page
+        }
+
         const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
         if (allowedUsers.indexOf(userEmail) > -1) {
             // user is signed in and has admin permissions

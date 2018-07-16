@@ -18,7 +18,7 @@ router.get('/:search', function(req, res, next) {
     var thisSearch = req.params.search;
     request.get(  
     {  
-        url: `https://api.music.apple.com/v1/catalog/us/search?term=${thisSearch}&limit=25&&types=artists,albums`,  
+        url: `https://api.music.apple.com/v1/catalog/us/search?term=${thisSearch}&limit=25&types=artists,albums`, 
         auth: {  
             bearer: jwtToken  
         },  
