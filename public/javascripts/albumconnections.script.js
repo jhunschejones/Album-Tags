@@ -35,27 +35,6 @@ function updateConnectedAlbums() {
 // ----- END FIREBASE ALBUM CONNECTIONS SECTION ------
 
 
-// drills through full connectedAlbums array to pull out direct connections
-function findDirectConnections() {
-    
-    
-    // if (connectedAlbums.length != 0) {
-    //     for (let index = 0; index < connectedAlbums.length; index++) {
-    //         var connectionObject = connectedAlbums[index];
-            
-    //         // avoids js errors for undefined values
-    //         // only adds connections created by this author
-    //         if (connectionObject != undefined) {
-
-    //             if (connectionObject.author == userID) {
-    //                 directConnections.push(connectionObject.connection)
-    //             }
-    //         }
-    //     }
-    // }
-    populateConnections();
-}
-
 // drills through directConnections to pull out connected albums and show them on the page
 function populateConnections() {
     $(".connection_results").text('');

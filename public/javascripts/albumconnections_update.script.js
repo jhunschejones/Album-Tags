@@ -100,23 +100,6 @@ function updateConnectedAlbums() {
     });
 }
 
-function checkSecondConnections(method, connectedAlbumId) {
-    if (method == "add") { pathAlbumId = newAlbumId }
-    if (method == "delete") { pathAlbumId = connectedAlbumId }
-
-    var connectionsRefrence = connectionsDatabase.ref().child(pathAlbumId);
-    connectionsRefrence.once('value').then(function(snapshot) {
-        seccondConnectedAlbums = snapshot.val() || [];
-        
-        if (method == "add") { addSecondConnection(); }
-
-        if (method == "delete") { removeSecondConnection(connectedAlbumId); }
-    });   
-}
-
-// ----- END FIREBASE ALBUM CONNECTIONS SECTION ------
-
-
 // drills through full connectedAlbums array to pull out direct connections
 function findDirectConnections() {
     directConnections = [];
@@ -198,36 +181,6 @@ function deleteConnection(connectedAlbum) {
 }
 
 function createConnection(newAlbumId, isDelete) {
-    let newConnection = {
-        "author" : userID,
-        "connection" : newAlbumId,
-        "artistName" : artist,
-        "albumName" : album
-    }
-    let duplicate = false
-
-    if (directConnections.length != 0) {
-        for (let index = 0; index < directConnections.length; index++) {
-           let connection = directConnections[index];
-           if (connection == newAlbumId) { duplicate = true }
-        }
-    }
-    // if this is a delete request, call removeConnection
-    if (isDelete == true) { removeConnection(newConnection, newAlbumId); return; }
-
-    // if this is an add requrest and it is not aduplicate clal addConnection
-    if (duplicate == false && isDelete == false) { addConnection(newConnection); return; }
-
-    // only duplicate add requests should hit this branch
-    else { alert("You've already created this connection.") }
-}
-
-function addConnection(newConnection) {
-    connectedAlbums.push(newConnection);
-    connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("add", newAlbumId) })
-}
-
-function addSecondConnection() {
 
     let newArtist
     let newAlbum
@@ -235,31 +188,106 @@ function addSecondConnection() {
         newArtist = rawData.data[0].attributes.artistName;
         newAlbum = rawData.data[0].attributes.name;
     }).then(function(){
-        let secondNewConnection = { "author" : userID, "connection" : albumId, "artistName" : newArtist, "albumName" : newAlbum }
+
+        let newConnection = {
+            "author" : userID,
+            "connection" : newAlbumId,
+            "artistName" : newArtist,
+            "albumName" : newAlbum
+        }
+        let duplicate = false
+
+        if (directConnections.length != 0) {
+            for (let index = 0; index < directConnections.length; index++) {
+            let connection = directConnections[index];
+            if (connection == newAlbumId) { duplicate = true }
+            }
+        }
+        // if this is a delete request, call removeConnection
+        if (isDelete == true) { removeConnection(newConnection, newAlbumId); return; }
+
+        // if this is an add requrest and it is not aduplicate clal addConnection
+        if (duplicate == false && isDelete == false) { addConnection(newConnection); return; }
+
+        // only duplicate add requests should hit this branch
+        else { alert("You've already created this connection.") }
+    })
+}
+
+function addConnection(newConnection) {
+    connectedAlbums.push(newConnection);
+    connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("add", newAlbumId) })
+}
+
+function checkSecondConnections(method, connectedAlbumId) {
+    if (method == "add") { pathAlbumId = newAlbumId }
+    if (method == "delete") { pathAlbumId = connectedAlbumId }
+
+    var connectionsRefrence = connectionsDatabase.ref().child(pathAlbumId);
+    connectionsRefrence.once('value').then(function(snapshot) {
+        seccondConnectedAlbums = snapshot.val() || [];
+        
+        if (method == "add") { addSecondConnection(); }
+
+        if (method == "delete") { removeSecondConnection(connectedAlbumId); }
+    });   
+}
+
+function addSecondConnection() {
+
+    let newArtist
+    let newAlbum
+    $.getJSON ( '/albumdetails/json/' + albumId, function(rawData) {
+        newArtist = rawData.data[0].attributes.artistName;
+        newAlbum = rawData.data[0].attributes.name;
+    }).then(function(){
+        let secondNewConnection = { 
+            "author" : userID, 
+            "connection" : albumId, 
+            "artistName" : newArtist, 
+            "albumName" : newAlbum 
+        }
         seccondConnectedAlbums.push(secondNewConnection);
         connectionsDatabase.ref().child(newAlbumId).set(seccondConnectedAlbums);
     })
 }
 
-// need to find a way to recieve this connected album id here
 function removeSecondConnection(connectedAlbum) {
-    var index
-    let connection = { "author" : userID, "connection" : albumId }
+    // taking in album id of the connected record where we want to remove the CURRENT connection
+    let newArtist
+    let newAlbum
+    $.getJSON ( '/albumdetails/json/' + albumId, function(rawData) {
+        // looking up info about current record because this is the connection that we need to remove
+        newArtist = rawData.data[0].attributes.artistName;
+        newAlbum = rawData.data[0].attributes.name;
+    }).then(function(){
 
-    for (let j = 0; j < seccondConnectedAlbums.length; j++) {
-        let element = seccondConnectedAlbums[j];
-
-        if (isEqual(element, connection) == true) { 
-            index = seccondConnectedAlbums.indexOf(element) 
+        var index = -1
+        let connection = {
+            "albumName" : newAlbum,
+            "artistName" : newArtist,
+            "author" : userID,
+            "connection" : albumId
         }
-    }
 
-    seccondConnectedAlbums.splice(index, 1);
-    connectionsDatabase.ref().child(connectedAlbum).set(seccondConnectedAlbums);
+        for (let j = 0; j < seccondConnectedAlbums.length; j++) {
+            let element = seccondConnectedAlbums[j];
+
+            if (isEqual(element, connection) == true) { 
+                index = seccondConnectedAlbums.indexOf(element) 
+            }
+        }
+
+        if (index != -1) {
+            seccondConnectedAlbums.splice(index, 1);
+            connectionsDatabase.ref().child(connectedAlbum).set(seccondConnectedAlbums);
+        }
+    })
 }
 
 function removeConnection(connection, connectedAlbumId) {
-    var index
+    // takes in 'connection', a connection object to delete, and connectedAlbumId which is the album id that we no longer want to be connected
+    var index = -1
 
     for (let j = 0; j < connectedAlbums.length; j++) {
         let element = connectedAlbums[j];
@@ -269,11 +297,8 @@ function removeConnection(connection, connectedAlbumId) {
         }
     }
 
-    connectedAlbums.splice(index, 1);
-    connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("delete", connectedAlbumId) })
+    if (index != -1) {
+        connectedAlbums.splice(index, 1);
+        connectionsDatabase.ref().child(albumId).set(connectedAlbums).then(function() { checkSecondConnections("delete", connectedAlbumId) })
+    }
 }
-
-// function updateConnectionDatabase(pathAlbum, connectionObject) {
-
-//     database2.ref().child(pathAlbum).set(connectionObject)
-// }
