@@ -499,7 +499,7 @@ $(function () {
 
 
 // ======= RUN THIS FUNCTION WHILE LOGGED IN TO UPDATE DATABASE =======
-console.log('Run startFavoritesUpdate() to update the datastructure of your favorites!')
+// console.log('Run startFavoritesUpdate() to update the datastructure of your favorites!')
 function startFavoritesUpdate() {
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
         let albumID = myFavoriteAlbums[index];

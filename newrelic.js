@@ -50,7 +50,4 @@ exports.config = {
       'response.headers.x*'
     ]
   }
-  // browser_monitoring : {
-  //   enable : true
-  // }
 }
