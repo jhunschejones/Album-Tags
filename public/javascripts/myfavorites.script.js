@@ -38,15 +38,9 @@ function replaceSepecialCharacters(str) {
 }
 
 function isGenre(str) {
-    if(str == 'Metalcore') {
-        return true
-    } else if(str == 'Pop Punk') {
-        return true
-    } else if(str == 'Emo') {
-        return true
-    } else if(str == 'Rock') {
-        return true
-    } else if(str == 'Post-Hardcore') {
+    let myGenres = ['Metalcore', 'Pop Punk', 'Emo', 'Rock', 'Post-Hardcore', 'Accoustic', 'Screamo', 'Metal', 'Nu Metal', 'Alt Metal', 'Djent']
+
+    if (myGenres.indexOf(str) != -1) {
         return true
     } else {
         return false
@@ -170,7 +164,7 @@ function populateCard(albumNumber, results, cardNumber) {
     
     // album cover
     $(`#card${cardNumber} img`).attr(
-        'src', results.artwork.url.replace('{w}', 350).replace('{h}', 350));
+        'src', results.artwork.url.replace('{w}', 260).replace('{h}', 260));
     // add album-details-link to album cover
     $(`#card${cardNumber} .album_details_link`).attr(
         'href', `/albumdetails/${albumNumber}`);
@@ -319,7 +313,7 @@ function getGenreTags(albumNumber, cardNumber) {
     });
 };
 
-var notMyGenres = ["Music", "Adult Alternative", "CCM", "Christian & Gospel", "Christian Rock", "College Rock", "Hard Rock", "Punk"]
+var notMyGenres = ["Music", "Adult Alternative", "CCM", "Christian & Gospel", "Christian Rock", "College Rock", "Hard Rock", "Punk", "Death Metal/Black Metal", "Christian Metal"]
 
 function buildGenreFilters() {
 

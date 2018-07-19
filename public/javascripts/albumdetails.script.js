@@ -229,16 +229,6 @@ function populateTags(albumNumber) {
                     var element = thisAlbumData[index];
                     var tag = element.tag
                     var author = element.author
-    
-                    // try {
-                    //     author = authors[index];
-                    //     if (author == "Joshua Jones") {
-                    //         author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                    //     }
-                    // } catch (error) {
-                    //     // error should only fire on older structures where there is no author field
-                    //     author = "Ol5d5mjWi9eQ7HoANLhM4OFBnso2";
-                    // }
              
                     tag = replaceUnderscoreWithBackSlash(tag)
                     // creating a unique tag for each element, solving the problem of number tags not allowed
@@ -253,7 +243,7 @@ function populateTags(albumNumber) {
 
                     // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                     // tag to toggle a badge-success class name and change the color
-                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${tag}</a>  `);               
+                    $('.tag_results').append(`<a href="" onclick="changeClass(${tagName})" id="${tagName}" class="badge badge-light album_details_tags author-${author}">${tag}</a>  `);   
                 }
                 $('.album_details_tags').hide();
             }  
@@ -366,8 +356,27 @@ function deDupAllTags(){
         let j = duplicateTagIDs[index];
         let elem = allAlbumTags[j].classList.contains(`author-${userID}`)
         if (elem == false) {
+            // remove DOM element if doesn't belong to this author
             allAlbumTags[j].remove()
         } 
+
+        // loop this first part of the function to reconstruct duplicate array
+        // this will allow me to display one of a set of duplicate elements even 
+        // if none of them belong to the current user
+        allAlbumTags = $('.album_details_tags')
+        allTagIDs = []
+        duplicateTagIDs = []
+        for (let index = 0; index < allAlbumTags.length; index++) {
+            let element = allAlbumTags[index].id;
+            allTagIDs.push(element)
+        }
+    
+        for (let index = 0; index < allTagIDs.length; index++) {
+            let element = allTagIDs[index];
+            if (countInArray(allTagIDs, element) > 1) {
+                duplicateTagIDs.push(index)
+            }     
+        }
     }
 }
 
@@ -392,8 +401,28 @@ function deDupAllConnections(){
         let j = duplicateConnectionIDs[index];
         let elem = allAlbumConnections[j].classList.contains(`author-${userID}`)
         if (elem == false) {
+            // remove DOM element if doesn't belong to this author
             allAlbumConnections[j].remove()
         } 
+
+        // loop this first part of the function to reconstruct duplicate array
+        // this will allow me to display one of a set of duplicate elements even 
+        // if none of them belong to the current user
+        allAlbumConnections = $('.connection');
+        allConnectionIDs = []
+        duplicateConnectionIDs = []
+    
+        for (let index = 0; index < allAlbumConnections.length; index++) {
+            let element = allAlbumConnections[index].id;
+            allConnectionIDs.push(element)
+        }
+    
+        for (let index = 0; index < allConnectionIDs.length; index++) {
+            let element = allConnectionIDs[index];
+            if (countInArray(allConnectionIDs, element) > 1) {
+                duplicateConnectionIDs.push(index)
+            }     
+        }
     }
 }
 

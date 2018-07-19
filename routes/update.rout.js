@@ -50,7 +50,7 @@ router.post('/database/:albumId', function(req, res) {
     var db = req.db;
     var collection = db.get('musictags');
     var thisAlbum = req.params.albumId;
-    // console.log(req.body)
+
     collection.insert(req.body, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
@@ -77,7 +77,7 @@ router.post('/newtags/database/:albumId', function(req, res) {
     var db = req.db;
     var collection = db.get('album-tags');
     var thisAlbum = req.params.albumId;
-    // console.log(req.body)
+
     collection.insert(req.body, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
@@ -90,8 +90,6 @@ router.put('/newtags/database/:albumId', function(req, res) {
     var db = req.db;
     var collection = db.get('album-tags');
     var thisAlbum = req.params.albumId;
-
-    // console.log("made it to put router")
 
     collection.update(
         { "albumId": thisAlbum }, 
@@ -107,36 +105,6 @@ router.put('/newtags/database/:albumId', function(req, res) {
     );
     res.sendStatus(200)   
 });
-
-
-// TEST OBJECT
-// {
-//     "_id": {
-//         "$oid": "5aaf28cbbdd4480014f2a249"
-//     },
-//     "albumId": "363554612",
-//     "tags": [
-//         "Noodley Guitars",
-//         "Intricate Rhythms",
-//         "Emo"
-//     ],
-//     "createdBy": [
-//         {
-//             "tag": "Noodley Guitars",
-//             "author": "Ol5d5mjWi9eQ7HoANLhM4OFBnso2"
-//         },
-//         {
-//             "tag": "Intricate Rhythms",
-//             "author": "Ol5d5mjWi9eQ7HoANLhM4OFBnso2"
-//         },
-//         {
-//             "tag": "Emo",
-//             "author": "Ol5d5mjWi9eQ7HoANLhM4OFBnso2"
-//         }
-//     ],
-//     "artistName": "PM Today",
-//     "albumName": "In Medias Res"
-// }
 
 
 module.exports = router;

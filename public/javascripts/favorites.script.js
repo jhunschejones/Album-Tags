@@ -77,12 +77,6 @@ function createCard(cardNumber) {
 
 // populates the album card
 function populateCard(albumNumber, results, cardNumber) {
-    // old artist name
-    // $(`#card${cardNumber} .card-body h4`).html(
-    //     results.artistName);
-    // // album name
-    // $(`#card${cardNumber} .card-body .album`).html(
-    //     ' ' + results.name); 
 
     // set up album and artist trunction
     let smallArtist = results.artistName;
@@ -101,7 +95,7 @@ function populateCard(albumNumber, results, cardNumber) {
     $(`#card${cardNumber} .card-body .album`).html(`<span class="large_album">${largeAlbum}</span><span class="small_album">${smallAlbum}</span>`); 
     // album cover
     $(`#card${cardNumber} img`).attr(
-        'src', results.artwork.url.replace('{w}', 350).replace('{h}', 350));
+        'src', results.artwork.url.replace('{w}', 260).replace('{h}', 260));
     // add album-details-link to album cover
     $(`#card${cardNumber} .album_details_link`).attr(
         'href', `/albumdetails/${albumNumber}`);
