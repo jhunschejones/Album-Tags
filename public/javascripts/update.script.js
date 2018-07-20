@@ -75,7 +75,6 @@ function populateAlbumInfo() {
     });
 };
 
-
 // this populates the Tags card with any tags stored in the mongodb database
 // and retrieved by the router stored at the URL listed with the album number
 function populateTags(reason) {
@@ -109,8 +108,9 @@ function populateTags(reason) {
 
                 // Here we add the tags as elements on the DOM, with an onclick function that uses a unique
                 // tag to toggle a badge-success class name and change the color
-                $('.tag_results').append(`<tr class="album_details_tags update_tags author-${author}"><td>${tag}</td><td><a href="#" class="deletetaglink" rel="${tag}">Delete</a></td></tr>`);  
-                // console.log(element)             
+                // NOTE: rel is set to the index of this specific element in the author and tag arrays
+                // this update was made to allow deletion of a specific element when there are duplciates
+                $('.tag_results').append(`<tr class="album_details_tags update_tags author-${author}"><td>${tag}</td><td><a href="#" class="deletetaglink" rel="${index}">Delete</a></td></tr>`);              
             }
             $(".update_tags").hide();
         } else {
@@ -228,7 +228,7 @@ function deleteTag(event) {
     if (confirmation === true) {
         totalAuthors = currentAuthors.length
 
-        var index = currentTags.indexOf($(this).attr('rel'))
+        var index = $(this).attr('rel')
         currentTags.splice(index, 1);
         currentAuthors.splice(index, 1);
 

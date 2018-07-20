@@ -338,91 +338,95 @@ function clearTagArray() {
 
 function deDupAllTags(){
     let allAlbumTags = $('.album_details_tags')
-    let allTagIDs = []
-    let duplicateTagIDs = []
+
+    let thisAuthor = []
+    let thisAuthorId = []
+    let otherAuthor = []
+    let otherAuthorId = []
+    
+    // divide all tags into two arrays of elements by author
     for (let index = 0; index < allAlbumTags.length; index++) {
-        let element = allAlbumTags[index].id;
-        allTagIDs.push(element)
+        let elementId = allAlbumTags[index].id;
+        let element = allAlbumTags[index];
+
+
+        if (element.classList.contains(`author-${userID}`) == true) {
+            thisAuthor.push(element)
+            thisAuthorId.push(elementId)
+        } else {
+            otherAuthor.push(element)
+            otherAuthorId.push(elementId)
+        }
     }
 
-    for (let index = 0; index < allTagIDs.length; index++) {
-        let element = allTagIDs[index];
-        if (countInArray(allTagIDs, element) > 1) {
-            duplicateTagIDs.push(index)
+    // remove tags from other authors if the same tag exists from current user
+    for (let index = 0; index < otherAuthor.length; index++) {
+        let element = otherAuthor[index];
+        let elementId = otherAuthorId[index];
+
+        if (thisAuthorId.indexOf(elementId) != -1) {
+            element.remove()
+            otherAuthor.splice(index, 1);
+            otherAuthorId.splice(index, 1);
+        }
+    }
+
+    // remove duplicates from others array
+    for (let index = 0; index < otherAuthor.length; index++) {
+        let element = otherAuthor[index];
+        let elementId = otherAuthorId[index];
+        
+        if (countInArray(otherAuthorId, elementId) > 1) {
+            element.remove()
+            otherAuthor.splice(index, 1);
+            otherAuthorId.splice(index, 1);
         }     
-    }
-    
-    for (let index = 0; index < duplicateTagIDs.length; index++) {
-        let j = duplicateTagIDs[index];
-        let elem = allAlbumTags[j].classList.contains(`author-${userID}`)
-        if (elem == false) {
-            // remove DOM element if doesn't belong to this author
-            allAlbumTags[j].remove()
-        } 
-
-        // loop this first part of the function to reconstruct duplicate array
-        // this will allow me to display one of a set of duplicate elements even 
-        // if none of them belong to the current user
-        allAlbumTags = $('.album_details_tags')
-        allTagIDs = []
-        duplicateTagIDs = []
-        for (let index = 0; index < allAlbumTags.length; index++) {
-            let element = allAlbumTags[index].id;
-            allTagIDs.push(element)
-        }
-    
-        for (let index = 0; index < allTagIDs.length; index++) {
-            let element = allTagIDs[index];
-            if (countInArray(allTagIDs, element) > 1) {
-                duplicateTagIDs.push(index)
-            }     
-        }
     }
 }
 
 function deDupAllConnections(){
     let allAlbumConnections = $('.connection');
-    let allConnectionIDs = []
-    let duplicateConnectionIDs = []
+
+    let thisAuthor = []
+    let thisAuthorId = []
+    let otherAuthor = []
+    let otherAuthorId = []
 
     for (let index = 0; index < allAlbumConnections.length; index++) {
-        let element = allAlbumConnections[index].id;
-        allConnectionIDs.push(element)
+        let element = allAlbumConnections[index];
+        let elementId = allAlbumConnections[index].id;
+
+        if (element.classList.contains(`author-${userID}`) == true) {
+            thisAuthor.push(element)
+            thisAuthorId.push(elementId)
+        } else {
+            otherAuthor.push(element)
+            otherAuthorId.push(elementId)
+        }
     }
 
-    for (let index = 0; index < allConnectionIDs.length; index++) {
-        let element = allConnectionIDs[index];
-        if (countInArray(allConnectionIDs, element) > 1) {
-            duplicateConnectionIDs.push(index)
+    // remove tags from other authors if the same tag exists from current user
+    for (let index = 0; index < otherAuthor.length; index++) {
+        let element = otherAuthor[index];
+        let elementId = otherAuthorId[index];
+
+        if (thisAuthorId.indexOf(elementId) != -1) {
+            element.remove()
+            otherAuthor.splice(index, 1);
+            otherAuthorId.splice(index, 1);
+        }
+    }
+
+    // remove duplicates from others array
+    for (let index = 0; index < otherAuthor.length; index++) {
+        let element = otherAuthor[index];
+        let elementId = otherAuthorId[index];
+        
+        if (countInArray(otherAuthorId, elementId) > 1) {
+            element.remove()
+            otherAuthor.splice(index, 1);
+            otherAuthorId.splice(index, 1);
         }     
-    }
-    
-    for (let index = 0; index < duplicateConnectionIDs.length; index++) {
-        let j = duplicateConnectionIDs[index];
-        let elem = allAlbumConnections[j].classList.contains(`author-${userID}`)
-        if (elem == false) {
-            // remove DOM element if doesn't belong to this author
-            allAlbumConnections[j].remove()
-        } 
-
-        // loop this first part of the function to reconstruct duplicate array
-        // this will allow me to display one of a set of duplicate elements even 
-        // if none of them belong to the current user
-        allAlbumConnections = $('.connection');
-        allConnectionIDs = []
-        duplicateConnectionIDs = []
-    
-        for (let index = 0; index < allAlbumConnections.length; index++) {
-            let element = allAlbumConnections[index].id;
-            allConnectionIDs.push(element)
-        }
-    
-        for (let index = 0; index < allConnectionIDs.length; index++) {
-            let element = allConnectionIDs[index];
-            if (countInArray(allConnectionIDs, element) > 1) {
-                duplicateConnectionIDs.push(index)
-            }     
-        }
     }
 }
 
