@@ -158,7 +158,7 @@ function populateCard(albumNumber, results, cardNumber) {
         let appleGenre = results.genreNames[index];
 
         if(notMyGenres.indexOf(appleGenre) == -1){
-            $(`#card${cardNumber}`).addClass(`genre-${replaceSpaceWithUnderscore(appleGenre)}`);
+            $(`#card${cardNumber}`).addClass(`genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(appleGenre))}`);
         }
     }
     
@@ -224,6 +224,10 @@ function clearFilters() {
         toggleStar();
     }
     restoreCards();
+    whatsOnThePage_genres()
+    whatsOnThePage_years()
+    whatsOnThePage_artists()
+    whatsOnThePage_Top10()
 }
 
 // closes filter dropdown menu's when page is scrolling
@@ -233,17 +237,108 @@ $(document).on( 'scroll', function(){
     // $('#artist_filter_menu').removeClass('show');
 });
 
+// filters artists in filter to match what albums are on page
+function whatsOnThePage_artists() {
+    let whatsLeft = $('.albumCard:visible')
+    let artistOnPage = []
+
+    for (let index = 0; index < whatsLeft.length; index++) {
+        let element = $(`#${whatsLeft[index].id}`).prop("classList")[3];
+        artistOnPage.push(element)
+    }
+
+    let artistFilters = $('.artist_to_filter_by')
+    for (let index = 0; index < artistFilters.length; index++) {
+        let element = artistFilters[index].id;
+        if (artistOnPage.indexOf(element) == -1) {
+            $(`#${element}`).hide()
+        } else {
+            $(`#${element}`).show()
+        }
+    }
+}
+
+// filters genres in filter to match what albums are on page
+function whatsOnThePage_genres() {
+    let whatsLeft = $('.albumCard:visible')
+    let genreOnPage = []
+
+    for (let index = 0; index < whatsLeft.length; index++) {
+        let element = $(`#${whatsLeft[index].id}`).prop("classList");
+        
+        for (let index = 4; index < element.length; index++) {
+            let genre = element[index];
+            genreOnPage.push(genre)   
+        }
+    }
+
+    let genreFilters = $('.genre_to_filter_by')
+    for (let index = 0; index < genreFilters.length; index++) {
+        let element = genreFilters[index].id;
+        if (genreOnPage.indexOf(element) == -1) {
+            $(`#${element}`).hide()
+        } else {
+            $(`#${element}`).show()
+        }
+    }
+}
+
+// filters years in filter to match what albums are on page
+function whatsOnThePage_years() {
+    let whatsLeft = $('.albumCard:visible')
+    let yearsOnPage = []
+
+    for (let index = 0; index < whatsLeft.length; index++) {
+        let element = $(`#${whatsLeft[index].id}`).prop("classList")[2];
+        yearsOnPage.push(element)
+    }
+
+    let yearFilters = $('.year_to_filter_by')
+    for (let index = 0; index < yearFilters.length; index++) {
+        let element = yearFilters[index].id;
+        if (yearsOnPage.indexOf(element) == -1) {
+            $(`#${element}`).hide()
+        } else {
+            $(`#${element}`).show()
+        }
+    }
+}
+
+// filters top_10 in filter to match what albums are on page
+function whatsOnThePage_Top10() {
+    let whatsLeft = $('.albumCard:visible')
+
+    let top10 = false
+    for (let index = 0; index < whatsLeft.length; index++) {
+        let element = $(`#${whatsLeft[index].id}`).prop("classList");
+        
+        for (let index = 4; index < element.length; index++) {
+            let tag = element[index];
+            if (tag == "Top_10") {
+                top10 = true
+            }
+        }
+    }
+
+    if (top10 == true) {
+        $('#top_10_button').show()
+    } else {
+        $('#top_10_button').hide()
+    }
+}
 
 
 // ------------------ START YEARS FILTERS --------------------
 
 // this populates the years the user can filter by in the dropdown
 function buildYearFilters() {
+    // clear everythig in list
+    $('#year_filter_menu').html("");
+    $('#artist_filter_menu').append('<small id="loading_year_filters" class="text-primary" style="margin-left:8px;">Loading Year Filters...</small>')
+
     yearsList = removeDuplicates(yearsList);
     yearsList.sort();
 
-    // clear everythig in list
-    $('#year_filter_menu').html("");
     // add each year to list
     for (let index = 0; index < yearsList.length; index++) {
         let year = yearsList[index];
@@ -252,7 +347,10 @@ function buildYearFilters() {
         } else {
             $('#year_filter_menu').append(`<a id="year-${year}" class="badge badge-light year_to_filter_by" href="#" onclick="filterByYear(${year})">${year}</a>`)
         }
-    }  
+    }
+
+    $('#loading_year_filters').hide();
+    whatsOnThePage_years()  
 };
 
 function filterByYear(year) {
@@ -267,6 +365,9 @@ function filterByYear(year) {
     masterFilter(filterYear);
     masterFilter(filterArtist);
     filterByTopTen(filterTopTen)
+    whatsOnThePage_Top10()
+    // whatsOnThePage_genres()
+    // whatsOnThePage_artists()
 };
 // ------------------ END YEARS FILTERS --------------------
 
@@ -292,11 +393,13 @@ function getGenreTags(albumNumber, cardNumber) {
                 var tagObject = tagsObjects[index]
                 tag = replaceUnderscoreWithBackSlash(tag);
 
-                if(isGenre(tag) == true){             
+                if(isGenre(tag) == true){
+                    genresList.push(tag);             
                     
                     // add genre as a class on the card
-                    $(`#card${cardNumber}`).addClass(`genre-${replaceSpaceWithUnderscore(tag)}`);
-                    genresList.push(tag);
+                    tag = replaceSepecialCharacters(tag)
+                    tag = replaceSpaceWithUnderscore(tag)
+                    $(`#card${cardNumber}`).addClass(`genre-${tag}`);
                 } else {
                     // none of these tags are genres
                 }
@@ -316,6 +419,9 @@ function getGenreTags(albumNumber, cardNumber) {
 var notMyGenres = ["Music", "Adult Alternative", "CCM", "Christian & Gospel", "Christian Rock", "College Rock", "Hard Rock", "Punk", "Death Metal/Black Metal", "Christian Metal"]
 
 function buildGenreFilters() {
+    // clear everythig in list
+    $('#genre_filter_menu').html("");
+    $('#artist_filter_menu').append('<small id="loading_genre_filters" class="text-primary" style="margin-left:8px;">Loading Genre Filters...</small>')
 
     // flatten array and remove duplicates
     appleGenreList = removeDuplicates(appleGenreList.reduce((a, b) => a.concat(b), []));
@@ -327,32 +433,35 @@ function buildGenreFilters() {
     genresList = removeDuplicates(genresList.concat(appleGenreList));
     genresList.sort();
 
-    // clear everythig in list
-    $('#genre_filter_menu').html("");
     // add each genre to list
     for (let index = 0; index < genresList.length; index++) {
         let genre = genresList[index];
-        if(filterGenre == `genre-${replaceSpaceWithUnderscore(genre)}`) {
-            $('#genre_filter_menu').append(`<a id="genre-${replaceSpaceWithUnderscore(genre)}" class="badge badge-primary genre_to_filter_by" href="#" onclick="filterByGenre('${genre}')">${genre}</a>`);
+        if(filterGenre == `genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(genre))}`) {
+            $('#genre_filter_menu').append(`<a id="genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(genre))}" class="badge badge-primary genre_to_filter_by" href="#" onclick="filterByGenre('${genre}')">${genre}</a>`);
         } else {
-            $('#genre_filter_menu').append(`<a id="genre-${replaceSpaceWithUnderscore(genre)}" class="badge badge-light genre_to_filter_by" href="#" onclick="filterByGenre('${genre}')">${genre}</a>`);
+            $('#genre_filter_menu').append(`<a id="genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(genre))}" class="badge badge-light genre_to_filter_by" href="#" onclick="filterByGenre('${genre}')">${genre}</a>`);
         }       
-    }  
+    }
+
+    $('#loading_genre_filters').hide();
+    whatsOnThePage_genres()
 };
 
 function filterByGenre(genre){
-    if(document.getElementById(`genre-${replaceSpaceWithUnderscore(genre)}`).classList.contains("badge-primary")){
+    if(document.getElementById(`genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(genre))}`).classList.contains("badge-primary")){
         filterGenre = 'none';
     } else {
-        filterGenre = `genre-${replaceSpaceWithUnderscore(genre)}`;
+        filterGenre = `genre-${replaceSpaceWithUnderscore(replaceSepecialCharacters(genre))}`;
     }
 
     restoreCards();
     masterFilter(filterGenre);
-
     masterFilter(filterYear);
     masterFilter(filterArtist);
     filterByTopTen(filterTopTen)
+    whatsOnThePage_Top10()
+    // whatsOnThePage_years()
+    // whatsOnThePage_artists()
 }
 
 function startTags() {
@@ -369,11 +478,12 @@ function startTags() {
 
 // ------------------ START ARTIST FILTERS --------------------
 function buildArtistFilters() {
+    // clear everythig in list
+    $('#artist_filter_menu').html("");
+    $('#artist_filter_menu').append('<small id="loading_artist_filters" class="text-primary" style="margin-left:8px;">Loading Artist Filters...</small>')
     artistsList = removeDuplicates(artistsList);
     artistsList.sort();
 
-    // clear everythig in list
-    $('#artist_filter_menu').html("");
     // add each artist to list
     for (let index = 0; index < artistsList.length; index++) {
         let artist = artistsList[index];
@@ -387,7 +497,10 @@ function buildArtistFilters() {
         } else {
             $('#artist_filter_menu').append(`<a id="artist-${cleanArtist}" class="badge badge-light artist_to_filter_by" href="#" onclick="filterByArtist('${cleanArtist}')">${artist}</a>`)
         }
-    }  
+    } 
+
+    $('#loading_artist_filters').hide();
+    whatsOnThePage_artists() 
 };
 
 function filterByArtist(artist) {
@@ -405,6 +518,9 @@ function filterByArtist(artist) {
     masterFilter(filterYear);
     masterFilter(filterArtist);
     filterByTopTen(filterTopTen)
+    whatsOnThePage_Top10()
+    // whatsOnThePage_genres()
+    // whatsOnThePage_years()
 };
 // ------------------ END ARTIST FILTERS --------------------
 
@@ -449,6 +565,7 @@ function filterByTopTen(classToFilter) {
 function startFavoritesPage() {
     // clear any warnings
     $('#all_cards').html("");
+
     // display instructions if no favorites exist for this user
     if (myFavoriteAlbums.length == 0) {
         showDOMelement("log_in_message")
@@ -461,6 +578,8 @@ function startFavoritesPage() {
     } else {
         $('#log_in_message').html("");
     }
+    $('#artist_filter_menu').html("");
+    $('#artist_filter_menu').append('<small id="loading_artist_filters" class="text-primary" style="margin-left:8px;">Loading Artist Filters...</small>')
     // create card and populate for each favorite album
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
         let album = myFavoriteAlbums[index].albumId;
@@ -489,36 +608,3 @@ $(function () {
 // combine with data-trigger="hover" in html element 
 // for desired behavior
 // -------------- end tooltips section --------------
-
-
-
-// ======= RUN THIS FUNCTION WHILE LOGGED IN TO UPDATE DATABASE =======
-// console.log('Run startFavoritesUpdate() to update the datastructure of your favorites!')
-function startFavoritesUpdate() {
-    for (let index = 0; index < myFavoriteAlbums.length; index++) {
-        let albumID = myFavoriteAlbums[index];
-        
-        let newFavorite
-        let artist
-        let album
-        $.getJSON ( '/albumdetails/json/' + albumID, function(rawData) {
-            artist = rawData.data[0].attributes.artistName;
-            album = rawData.data[0].attributes.name;
-        }).then(function(){
-            newFavorite = 
-            {
-                "albumId" : albumID,
-                "artistName" : artist,
-                "albumName" : album
-            }
-        }).then(function() {
-            let index = myFavoriteAlbums.indexOf(albumID);
-            myFavoriteAlbums.splice(index, 1);
-            myFavoriteAlbums.push(newFavorite);
-        }).then(function() {
-            favoritesDatabase.ref(userID).set({
-                "My Favorites": myFavoriteAlbums
-            });
-        })
-    }
-}
