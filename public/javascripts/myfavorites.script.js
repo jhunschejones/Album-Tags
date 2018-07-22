@@ -334,7 +334,7 @@ function whatsOnThePage_Top10() {
 function buildYearFilters() {
     // clear everythig in list
     $('#year_filter_menu').html("");
-    $('#artist_filter_menu').append('<small id="loading_year_filters" class="text-primary" style="margin-left:8px;">Loading Year Filters...</small>')
+    $('#year_filter_menu').append('<small id="loading_year_filters" class="text-primary" style="margin-left:8px;">Loading Year Filters...</small>')
 
     yearsList = removeDuplicates(yearsList);
     yearsList.sort();
@@ -380,7 +380,7 @@ var genresList = [];
 // and retrieved by the router stored at the URL listed with the album number
 function getGenreTags(albumNumber, cardNumber) {
 
-    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber.albumId, function(rawData) {
+    $.getJSON ( '/albumdetails/newtags/database/' + albumNumber, function(rawData) {
         if (typeof(rawData[0]) != "undefined") {
             
 
@@ -421,7 +421,7 @@ var notMyGenres = ["Music", "Adult Alternative", "CCM", "Christian & Gospel", "C
 function buildGenreFilters() {
     // clear everythig in list
     $('#genre_filter_menu').html("");
-    $('#artist_filter_menu').append('<small id="loading_genre_filters" class="text-primary" style="margin-left:8px;">Loading Genre Filters...</small>')
+    $('#genre_filter_menu').append('<small id="loading_genre_filters" class="text-primary" style="margin-left:8px;">Loading Genre Filters...</small>')
 
     // flatten array and remove duplicates
     appleGenreList = removeDuplicates(appleGenreList.reduce((a, b) => a.concat(b), []));
@@ -580,9 +580,21 @@ function startFavoritesPage() {
     }
     $('#artist_filter_menu').html("");
     $('#artist_filter_menu').append('<small id="loading_artist_filters" class="text-primary" style="margin-left:8px;">Loading Artist Filters...</small>')
+
+    // pull album id's into an array to sort them 
+    let myFavoriteAlbumsArray = []
+    for (let index = 0; index < myFavoriteAlbums.length; index++) {
+        let element = myFavoriteAlbums[index];
+        myFavoriteAlbumsArray.push(element.albumId)
+    }
+
+    // providing a compare function to sort by actual value, not first numbers
+    // reverse shows newer albums first (mostly)
+    myFavoriteAlbums = myFavoriteAlbumsArray.sort(function(a, b){return a-b}).reverse();
+
     // create card and populate for each favorite album
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
-        let album = myFavoriteAlbums[index].albumId;
+        let album = myFavoriteAlbums[index];
         let card = (index + 1);
         
         createCard(card)
@@ -608,3 +620,68 @@ $(function () {
 // combine with data-trigger="hover" in html element 
 // for desired behavior
 // -------------- end tooltips section --------------
+
+
+
+
+// ======= RUN THIS FUNCTION WHILE LOGGED IN TO UPDATE DATABASE =======
+let albumID 
+let newFavorite
+let artist
+let album
+let release
+
+
+function timedSteps(index) {
+    albumID = favoritesToUpdate[index];
+    
+    $.getJSON ( '/albumdetails/json/' + albumID, function(rawData) {
+        artist = rawData.data[0].attributes.artistName;
+        album = rawData.data[0].attributes.name;
+        release = rawData.data[0].attributes.releaseDate;
+    })
+}
+
+function moreSteps() {
+    var newFavorite = 
+        {
+            "albumId" : albumID,
+            "artistName" : artist,
+            "albumName" : album,
+            "releaseDate" : release
+        }
+
+    updatedFavorites.push(newFavorite);
+}
+
+var favoritesToUpdate
+var updatedFavorites = []
+
+function startFavoritesUpdate() {
+    var index = -1
+    var myTimer = setInterval(function() {
+        
+        if (index < myFavoriteAlbums.length) { 
+            index = (index + 1)
+        } else {
+            console.log("done")
+            clearInterval(myTimer);
+        }
+        
+        setTimeout(function(){ timedSteps(index) }, 1500)
+        setTimeout(function(){ moreSteps() }, 3000)
+        
+    }, 4000);
+}
+
+function finishUpdate() {
+    favoritesDatabase.ref(userID).set({
+        "My Favorites": updatedFavorites
+    });
+}
+
+// ======= INSTRUCTIONS =========
+console.log('1. Run this: favoritesToUpdate = myFavoriteAlbums'
++ '\n' + '2. Then run this: startFavoritesUpdate()'
++ '\n' + '3. Check updatedFavorites array for undefined values and use array.splice(index, 1) to take these off'
++ '\n' + '4. Last run this: finishUpdate()')

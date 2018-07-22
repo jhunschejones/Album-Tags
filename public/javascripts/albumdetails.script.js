@@ -480,15 +480,18 @@ function addToFavoriteAlbums(newAlbum) {
     let newFavorite
     let artist
     let album
+    let releaseDate
     $.getJSON ( '/albumdetails/json/' + newAlbum, function(rawData) {
         artist = rawData.data[0].attributes.artistName;
         album = rawData.data[0].attributes.name;
+        releaseDate = release = rawData.data[0].attributes.releaseDate;
     }).then(function(){
         newFavorite = 
         {
             "albumId" : newAlbum,
             "artistName" : artist,
-            "albumName" : album
+            "albumName" : album,
+            "releaseDate" : releaseDate
         }
     }).then(function() {
         myFavoriteAlbums.push(newFavorite);

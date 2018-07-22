@@ -107,9 +107,7 @@ var favoriteAlbums;
 var favoritesRefrence = favoritesDatabase.ref().child('Ol5d5mjWi9eQ7HoANLhM4OFBnso2/My Favorites');
 favoritesRefrence.on('value', snap => {
     favoriteAlbums = snap.val();
-    // now that favorites are obtained, sort and load the page
-    favoriteAlbums.sort();
-    // favoriteAlbums = favoriteAlbums.filter(function(n){ return n != undefined }); 
+
     startFavoritesPage();
 });
 // ----- END FIREBASE FAVORITES SECTION ------
@@ -118,9 +116,19 @@ favoritesRefrence.on('value', snap => {
 function startFavoritesPage() {
     // clear any warnings
     $('#favorites_all_cards').html("");
-    // create card and populate for each favorite album
+
+    // pull album id's into an array to sort them 
+    let favoriteAlbumsArray = []
     for (let index = 0; index < favoriteAlbums.length; index++) {
-        let album = favoriteAlbums[index].albumId;
+        let element = favoriteAlbums[index];
+        favoriteAlbumsArray.push(element.albumId)
+    }
+    // providing a compare function to sort by actual value, not first numbers
+    favoriteAlbumsArray.sort(function(a, b){return a-b});
+
+    // create card and populate for each favorite album
+    for (let index = 0; index < favoriteAlbumsArray.length; index++) {
+        let album = favoriteAlbumsArray[index];
         let card = (index + 1);
         
         createCard(card);
