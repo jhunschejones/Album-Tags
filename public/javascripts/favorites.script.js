@@ -13,6 +13,22 @@ function truncate(str, len){
     )
 };
 
+function bubbleSort(arr, prop)
+{
+    var swapped;
+    do {
+        swapped = false;
+        for (var i = 0; i < arr.length - 1; i++) {
+            if (arr[i][prop] > arr[i + 1][prop]) {
+                var temp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = temp;
+                swapped = true;
+            }
+        }
+    } while (swapped);
+}
+
 // ------- END UTILITIES SECTION ----------
 
 function getAlbumInfo(albumNumber, cardNumber) {
@@ -117,6 +133,8 @@ function startFavoritesPage() {
     // clear any warnings
     $('#favorites_all_cards').html("");
 
+    bubbleSort(favoriteAlbums, "releaseDate")
+
     // pull album id's into an array to sort them 
     let favoriteAlbumsArray = []
     for (let index = 0; index < favoriteAlbums.length; index++) {
@@ -124,7 +142,8 @@ function startFavoritesPage() {
         favoriteAlbumsArray.push(element.albumId)
     }
     // providing a compare function to sort by actual value, not first numbers
-    favoriteAlbumsArray.sort(function(a, b){return a-b});
+    // favoriteAlbumsArray.sort(function(a, b){return a-b});
+    favoriteAlbumsArray.reverse();
 
     // create card and populate for each favorite album
     for (let index = 0; index < favoriteAlbumsArray.length; index++) {

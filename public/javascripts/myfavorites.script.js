@@ -75,6 +75,23 @@ function truncate(str, len){
     )
 };
 
+function bubbleSort(arr, prop)
+{
+    var swapped;
+    do {
+        swapped = false;
+        for (var i = 0; i < arr.length - 1; i++) {
+            if (arr[i][prop] > arr[i + 1][prop]) {
+                var temp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = temp;
+                swapped = true;
+            }
+        }
+    } while (swapped);
+}
+
+
 // ------- END UTILITIES SECTION ----------
 
 
@@ -337,7 +354,7 @@ function buildYearFilters() {
     $('#year_filter_menu').append('<small id="loading_year_filters" class="text-primary" style="margin-left:8px;">Loading Year Filters...</small>')
 
     yearsList = removeDuplicates(yearsList);
-    yearsList.sort();
+    yearsList.sort().reverse();
 
     // add each year to list
     for (let index = 0; index < yearsList.length; index++) {
@@ -404,12 +421,16 @@ function getGenreTags(albumNumber, cardNumber) {
                     // none of these tags are genres
                 }
 
-                if (tagObject.tag == "Top 10" & tagObject.author == userID) {
-                    // using for top 10 functionality later
-                    $("#top_10_button").show();
-                    $(`#card${cardNumber}`).addClass("Top_10");
-                } else {
-                    // console.log("There are no top 10 records")
+                try {
+                    if (tagObject.tag == "Top 10" & tagObject.author == userID) {
+                        // using for top 10 functionality later
+                        $("#top_10_button").show();
+                        $(`#card${cardNumber}`).addClass("Top_10");
+                    } else {
+                        // console.log("There are no top 10 records")
+                    }
+                } catch (error) {
+                    console.log(albumNumber)
                 }
             };
         };
@@ -581,6 +602,8 @@ function startFavoritesPage() {
     $('#artist_filter_menu').html("");
     $('#artist_filter_menu').append('<small id="loading_artist_filters" class="text-primary" style="margin-left:8px;">Loading Artist Filters...</small>')
 
+    bubbleSort(myFavoriteAlbums, "releaseDate")
+
     // pull album id's into an array to sort them 
     let myFavoriteAlbumsArray = []
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
@@ -590,7 +613,8 @@ function startFavoritesPage() {
 
     // providing a compare function to sort by actual value, not first numbers
     // reverse shows newer albums first (mostly)
-    myFavoriteAlbums = myFavoriteAlbumsArray.sort(function(a, b){return a-b}).reverse();
+    // myFavoriteAlbums = myFavoriteAlbumsArray.sort(function(a, b){return a-b}).reverse();
+    myFavoriteAlbums = myFavoriteAlbumsArray.reverse()
 
     // create card and populate for each favorite album
     for (let index = 0; index < myFavoriteAlbums.length; index++) {
