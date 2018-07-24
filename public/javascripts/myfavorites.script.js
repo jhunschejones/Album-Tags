@@ -37,6 +37,10 @@ function replaceSepecialCharacters(str) {
     return str.replace(/[^\w\s]/gi, '');
 }
 
+function removeDash(str) {
+    return str.replace(/-/g, '');
+}
+
 function isGenre(str) {
     let myGenres = ['Metalcore', 'Pop Punk', 'Emo', 'Rock', 'Post-Hardcore', 'Accoustic', 'Screamo', 'Metal', 'Nu Metal', 'Alt Metal', 'Djent']
 
@@ -81,7 +85,8 @@ function bubbleSort(arr, prop)
     do {
         swapped = false;
         for (var i = 0; i < arr.length - 1; i++) {
-            if (arr[i][prop] > arr[i + 1][prop]) {
+            // console.log("Comparing " + parseInt(removeDash(arr[i][prop])) + " to " + parseInt(removeDash(arr[i + 1][prop])))
+            if (parseInt(removeDash(arr[i][prop])) > parseInt(removeDash(arr[i + 1][prop]))) {
                 var temp = arr[i];
                 arr[i] = arr[i + 1];
                 arr[i + 1] = temp;
