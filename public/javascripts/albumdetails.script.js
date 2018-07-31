@@ -248,6 +248,8 @@ function populateTags(albumNumber) {
                 $('.album_details_tags').hide();
             }  
         }
+    }).then(function() {
+        filterDisplayedTags();
     })
 };
 

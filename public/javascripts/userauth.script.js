@@ -60,99 +60,116 @@ var user = firebase.auth().currentUser;
 var userID;
 var dbRefrence;
 
+function signInFunctionality(user) {
+    // new hide functionality
+    $('.hide_when_logged_in').addClass('hide_me');
+    $('.hide_when_logged_out').removeClass('hide_me');
+
+    showDOMelement("full_menu_login_logout_container");
+
+    // set our variables with this user's info
+    userEmail = user.email;
+    userName = user.displayName;
+    userID = user.uid;
+
+    // update favorite albums if page uses this functionality
+    try {
+        updateFavoriteAlbums();
+    } catch (error) {
+        // we're not on the my favorites page
+    }
+
+    try {
+        updateConnectedAlbums()
+    } catch (error) {
+        // we're not on a connected albums page
+    }
+
+    try {
+        populateUserData();
+    } catch (error) {
+        // we're not on contact page
+    }
+
+    try {
+        populateTags("start");
+    } catch (error) {
+        // we're not on the update page
+    }
+
+    const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
+    if (allowedUsers.indexOf(userEmail) > -1) {
+        // user is signed in and has admin permissions
+        tagUpdatePermissionsGranted();
+
+        var whatTagsToShow = sessionStorage.getItem('tags');
+        if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
+            sessionStorage.setItem('tags', 'My Tags');
+            filterDisplayedTags();
+        } else if (whatTagsToShow == "All Tags") {
+            sessionStorage.setItem('tags', 'All Tags');
+            allTagsNoFilter()
+        } 
+
+
+        var whatConnectionsToShow = sessionStorage.getItem('connections');            
+        if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
+            sessionStorage.setItem('connections', 'My Connections');
+            filterDisplayedConnections();
+        } else if (whatConnectionsToShow == "All Connections") {
+            sessionStorage.setItem('connections', 'All Connections');
+            allConnectionsNoFilter()
+        }
+
+    } 
+    else {
+        // user is signed in but does not have admin permissions
+        tagUpdatePermissionsGranted();
+        
+        var whatTagsToShow = sessionStorage.getItem('tags');
+        if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
+            sessionStorage.setItem('tags', 'My Tags');
+            filterDisplayedTags();
+        } else if (whatTagsToShow == "All Tags") {
+            sessionStorage.setItem('tags', 'All Tags');
+            allTagsNoFilter()
+        } 
+
+
+        var whatConnectionsToShow = sessionStorage.getItem('connections');            
+        if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
+            sessionStorage.setItem('connections', 'My Connections');
+            filterDisplayedConnections();
+        } else if (whatConnectionsToShow == "All Connections") {
+            sessionStorage.setItem('connections', 'All Connections');
+            allConnectionsNoFilter()
+        }
+    }
+}
+
+var sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+var sessionLogin = false
+if (sessionId != null) {
+    sessionLogin = true;
+    console.log("Session storage login");
+    signInFunctionality(sessionId);
+}
+
 
 // checking if user is logged in or logs in during session
 firebase.auth().onAuthStateChanged(function(user) {
-    // returns true if user is not null
-    if (user) {
+    // this makes the firebase login only fire when session login isn't stored
+    if (sessionLogin === false) {
+        // returns true if user is not null
+        if (user) {
+            sessionStorage.setItem('sessionId', JSON.stringify(user));
+            console.log("Firebase login")
+            signInFunctionality(user);
 
-        // new hide functionality
-        $('.hide_when_logged_in').addClass('hide_me');
-        $('.hide_when_logged_out').removeClass('hide_me');
-
-        showDOMelement("full_menu_login_logout_container");
-
-        // set our variables with this user's info
-        userEmail = user.email;
-        userName = user.displayName;
-        userID = user.uid;
-
-        // update favorite albums if page uses this functionality
-        try {
-            updateFavoriteAlbums();
-        } catch (error) {
-            // we're not on the my favorites page
+        } else {
+            // No user is signed in.    
+            noUserSignedIn();
         }
-
-        try {
-            updateConnectedAlbums()
-        } catch (error) {
-            // we're not on a connected albums page
-        }
-
-        try {
-            populateUserData();
-        } catch (error) {
-            // we're not on contact page
-        }
-
-        try {
-            populateTags("start");
-        } catch (error) {
-            // we're not on the update page
-        }
-
-        const allowedUsers = ["joshjones103@gmail.com", "znoffy5@gmail.com", "devon.curry891@gmail.com", "milesjohnsonmusic@gmail.com", "austinhuelsbeck@gmail.com"];
-        if (allowedUsers.indexOf(userEmail) > -1) {
-            // user is signed in and has admin permissions
-            tagUpdatePermissionsGranted();
-
-            var whatTagsToShow = sessionStorage.getItem('tags');
-            if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
-                sessionStorage.setItem('tags', 'My Tags');
-                filterDisplayedTags();
-            } else if (whatTagsToShow == "All Tags") {
-                sessionStorage.setItem('tags', 'All Tags');
-                allTagsNoFilter()
-            } 
-
-
-            var whatConnectionsToShow = sessionStorage.getItem('connections');            
-            if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
-                sessionStorage.setItem('connections', 'My Connections');
-                filterDisplayedConnections();
-            } else if (whatConnectionsToShow == "All Connections") {
-                sessionStorage.setItem('connections', 'All Connections');
-                allConnectionsNoFilter()
-            }
-
-        } 
-        else {
-            // user is signed in but does not have admin permissions
-            tagUpdatePermissionsGranted();
-            
-            var whatTagsToShow = sessionStorage.getItem('tags');
-            if (whatTagsToShow == 'My Tags' || whatTagsToShow == undefined) {
-                sessionStorage.setItem('tags', 'My Tags');
-                filterDisplayedTags();
-            } else if (whatTagsToShow == "All Tags") {
-                sessionStorage.setItem('tags', 'All Tags');
-                allTagsNoFilter()
-            } 
-
-
-            var whatConnectionsToShow = sessionStorage.getItem('connections');            
-            if (whatConnectionsToShow == "My Connections" || whatConnectionsToShow == undefined){
-                sessionStorage.setItem('connections', 'My Connections');
-                filterDisplayedConnections();
-            } else if (whatConnectionsToShow == "All Connections") {
-                sessionStorage.setItem('connections', 'All Connections');
-                allConnectionsNoFilter()
-            }
-        }
-    } else {
-        // No user is signed in.    
-        noUserSignedIn();
     }
 });
 
@@ -352,7 +369,8 @@ function goToUpdatePage() {
 
 function logOut() {
     firebase.auth().signOut().then(function() {
-        // Sign-out successful.        
+        // Sign-out successful.  
+        storage.removeItem('sessionId');      
         noUserSignedIn();
     }).catch(function(error) {
     // An error happened.
