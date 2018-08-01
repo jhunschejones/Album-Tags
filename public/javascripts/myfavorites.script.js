@@ -41,6 +41,10 @@ function removeDash(str) {
     return str.replace(/-/g, '');
 }
 
+function removeDoubleSpace(str) {
+    return str.replace(/\s\s+/g, ' ');
+}
+
 function isGenre(str) {
     let myGenres = ['Metalcore', 'Pop Punk', 'Emo', 'Rock', 'Post-Hardcore', 'Accoustic', 'Screamo', 'Metal', 'Nu Metal', 'Alt Metal', 'Djent']
 
@@ -76,6 +80,18 @@ function truncate(str, len){
         subString.substr(0, subString.lastIndexOf(' '))
         // trim trailing comma
         .replace(/(^[,\s]+)|([,\s]+$)/g, '') + '...'
+    )
+};
+
+function truncatePlain(str, len){
+    // set up the substring
+    var subString = str.substr(0, len-1);
+
+    return (
+        // add elipse after last complete word
+        subString.substr(0, subString.lastIndexOf(' '))
+        // trim trailing comma
+        .replace(/(^[,\s]+)|([,\s]+$)/g, '')
     )
 };
 
@@ -173,7 +189,7 @@ function populateCard(albumNumber, results, cardNumber) {
     // add release year to card div as a class: year-YYYY
     $(`#card${cardNumber}`).addClass(`year-${results.releaseDate.slice(0,4)}`);
     // add artist to card div as: artist-NAME
-    $(`#card${cardNumber}`).addClass(`artist-${replaceSpaceWithUnderscore(replaceSepecialCharacters(results.artistName))}`);
+    $(`#card${cardNumber}`).addClass(`artist-${replaceSpaceWithUnderscore(removeDoubleSpace(replaceSepecialCharacters(results.artistName)))}`);
 
     
     for (let index = 0; index < results.genreNames.length; index++) {
@@ -263,15 +279,24 @@ $(document).on( 'scroll', function(){
 function whatsOnThePage_artists() {
     let whatsLeft = $('.albumCard:visible')
     let artistOnPage = []
+    let choppedArtistsOnPage = []
 
     for (let index = 0; index < whatsLeft.length; index++) {
         let element = $(`#${whatsLeft[index].id}`).prop("classList")[3];
         artistOnPage.push(element)
     }
 
+    // for (let index = 0; index < artistOnPage.length; index++) {
+    //     let element = artistOnPage[index];
+    //     let chopped = element.substr(0, 39);
+    //     chopped = chopped.substr(0, chopped.lastIndexOf('_')).replace(/(^[,\s]+)|([,\s]+$)/g, '')
+    //     choppedArtistsOnPage.push(chopped)
+    // }
+
     let artistFilters = $('.artist_to_filter_by')
     for (let index = 0; index < artistFilters.length; index++) {
         let element = artistFilters[index].id;
+        
         if (artistOnPage.indexOf(element) == -1) {
             $(`#${element}`).hide()
         } else {
@@ -513,11 +538,12 @@ function buildArtistFilters() {
     // add each artist to list
     for (let index = 0; index < artistsList.length; index++) {
         let artist = artistsList[index];
+        let longArtist = artist;
+        
         if (artist.length > 40) { artist = truncate(artist, 32) }
 
-        let cleanArtist = replaceSpaceWithUnderscore(replaceSepecialCharacters(artist));
-        cleanArtist = replaceSpaceWithUnderscore(cleanArtist)
-
+        let cleanArtist = replaceSpaceWithUnderscore(removeDoubleSpace(replaceSepecialCharacters(longArtist)));
+        
         if(filterArtist == `artist-${cleanArtist}`){
             $('#artist_filter_menu').append(`<a id="artist-${cleanArtist}" class="badge badge-primary artist_to_filter_by" href="#" onclick="filterByArtist('${cleanArtist}')">${artist}</a>`)
         } else {
@@ -530,8 +556,8 @@ function buildArtistFilters() {
 };
 
 function filterByArtist(artist) {
-    let cleanArtist = replaceSepecialCharacters(artist);
-    cleanArtist = replaceSpaceWithUnderscore(cleanArtist)
+    let cleanArtist = 
+        replaceSpaceWithUnderscore(removeDoubleSpace(replaceSepecialCharacters(artist)));
 
     if(document.getElementById(`artist-${cleanArtist}`).classList.contains("badge-primary")){
         filterArtist = 'none';
@@ -710,7 +736,7 @@ function finishUpdate() {
 }
 
 // ======= INSTRUCTIONS =========
-console.log('1. Run this: favoritesToUpdate = myFavoriteAlbums'
-+ '\n' + '2. Then run this: startFavoritesUpdate()'
-+ '\n' + '3. Check updatedFavorites array for undefined values and use array.splice(index, 1) to take these off'
-+ '\n' + '4. Last run this: finishUpdate()')
+// console.log('1. Run this: favoritesToUpdate = myFavoriteAlbums'
+// + '\n' + '2. Then run this: startFavoritesUpdate()'
+// + '\n' + '3. Check updatedFavorites array for undefined values and use array.splice(index, 1) to take these off'
+// + '\n' + '4. Last run this: finishUpdate()')
