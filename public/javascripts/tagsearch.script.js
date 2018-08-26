@@ -55,5 +55,7 @@ function displayAlbum(thisAlbum, albumId) {
     $('.album_results').append(`${album} <span class="text-secondary font-italic">${artist}, ${release}</span> : <a href="/albumdetails/${albumId}">Album Details</a> <br>`);
 }
         
-populateTags();
+// commented this call out because it is already being called by the userauth script
+// and running it here was causing tags_searched to be populated twice 
+// populateTags();
 getTagedAlbums()
