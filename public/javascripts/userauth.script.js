@@ -3,21 +3,57 @@ console.log('The custom script for the userauth page is running');
 
 function hideDOMelement(elementId) {
     try {
-        let element = document.getElementById(elementId)
-        element.style.display = "none";
+        var element = document.getElementById(elementId)
+        
+        try {
+            element.style.display = "none";
+        } catch (error) {
+            function logError() {
+                var newKey = firebase.database().ref().child('errors').push().key;
+                firebase.database().ref('errors/' + newKey).update({
+                    "error" : 
+                    {
+                        "elementId" : elementId,
+                        "User" : userID,
+                        "URL" : window.location.href,
+                        "Date_Time" : new Date().toLocaleString(),
+                        "Error" : JSON.stringify(error, Object.getOwnPropertyNames(error))
+                    }
+                });
+            }
+            logError()
+        }
     } catch (error) {
         // this element does not exist here
-        console.log("element id: " + elementId + "error: " + error);
+        // console.log("element id: " + elementId + "\nerror: " + error);
     }
 }
 
 function showDOMelement(elementId) {
     try {
-        let element = document.getElementById(elementId)
-        element.style.display = "block";
+        var element = document.getElementById(elementId)
+        
+        try {
+            element.style.display = "block";
+        } catch (error) {
+            function logError() {
+                var newKey = firebase.database().ref().child('errors').push().key;
+                firebase.database().ref('errors/' + newKey).update({
+                    "error" : 
+                    {
+                        "elementId" : elementId,
+                        "User" : userID,
+                        "URL" : window.location.href,
+                        "Date_Time" : new Date().toLocaleString(),
+                        "Error" : JSON.stringify(error, Object.getOwnPropertyNames(error))
+                    }
+                });
+            }
+            logError()
+        }
     } catch (error) {
         // this element does not exist here
-        console.log("element id: " + elementId + "error: " + error);
+        // console.log("element id: " + elementId + "\nerror: " + error);
     }
 }
 
