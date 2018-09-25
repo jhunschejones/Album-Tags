@@ -7,6 +7,7 @@ function hideDOMelement(elementId) {
         element.style.display = "none";
     } catch (error) {
         // this element does not exist here
+        console.log("element id: " + elementId + "error: " + error);
     }
 }
 
@@ -16,6 +17,7 @@ function showDOMelement(elementId) {
         element.style.display = "block";
     } catch (error) {
         // this element does not exist here
+        console.log("element id: " + elementId + "error: " + error);
     }
 }
 
