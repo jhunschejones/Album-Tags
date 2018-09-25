@@ -257,10 +257,10 @@ function tagUpdatePermissionsGranted() {
 
 function filterDisplayedTags() {
     try {
-        let anyTagsOnPage = false
+        var anyTagsOnPage = false
         tagsForThisAlbum = $(".album_details_tags")
         for (let index = 0; index < tagsForThisAlbum.length; index++) {
-            let thisTag = tagsForThisAlbum[index];
+            var thisTag = tagsForThisAlbum[index];
     
             if($(thisTag).hasClass(`author-${userID}`)) {
                 // console.log("tag belongs to this author")
@@ -287,13 +287,13 @@ function filterDisplayedTags() {
 
 function allTagsNoFilter() {
     try {
-        let anyTagsOnPage = false
+        var anyTagsOnPage = false
         tagsForThisAlbum = $(".album_details_tags")
         
         if (tagsForThisAlbum.length > 0) { 
             anyTagsOnPage = true 
             for (let index = 0; index < tagsForThisAlbum.length; index++) {
-                let thisTag = tagsForThisAlbum[index];
+                var thisTag = tagsForThisAlbum[index];
                 $(thisTag).show()
             }  
         }
@@ -316,10 +316,10 @@ function allTagsNoFilter() {
 
 function filterDisplayedConnections() {
     try {
-        let anyConnectionsOnPage = false
+        var anyConnectionsOnPage = false
         connectionsForThisAlbum = $(".connection")
         for (let index = 0; index < connectionsForThisAlbum.length; index++) {
-            let connection = connectionsForThisAlbum[index];
+            var connection = connectionsForThisAlbum[index];
     
             if($(connection).hasClass(`author-${userID}`)) {
                 // console.log("tag belongs to this author")
@@ -346,13 +346,13 @@ function filterDisplayedConnections() {
 
 function allConnectionsNoFilter() {
     try {
-        let anyConnectionsOnPage = false
+        var anyConnectionsOnPage = false
         connectionsForThisAlbum = $(".connection")
         
         if (connectionsForThisAlbum.length > 0) { 
             anyConnectionsOnPage = true 
             for (let index = 0; index < connectionsForThisAlbum.length; index++) {
-                let thisConnection = connectionsForThisAlbum[index];
+                var thisConnection = connectionsForThisAlbum[index];
                 $(thisConnection).show()
             }  
         }
@@ -400,7 +400,7 @@ function logIn() {
 // directs user to update page for this album
 function goToUpdatePage() {
     event.preventDefault();
-    let url = window.location.href;
+    var url = window.location.href;
     url = url.replace("albumdetails", "update");
     window.location = url;
 };
