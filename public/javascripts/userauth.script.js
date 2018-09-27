@@ -259,7 +259,7 @@ function filterDisplayedTags() {
     try {
         var anyTagsOnPage = false
         tagsForThisAlbum = $(".album_details_tags")
-        for (let index = 0; index < tagsForThisAlbum.length; index++) {
+        for (var index = 0; index < tagsForThisAlbum.length; index++) {
             var thisTag = tagsForThisAlbum[index];
     
             if($(thisTag).hasClass(`author-${userID}`)) {
@@ -292,7 +292,7 @@ function allTagsNoFilter() {
         
         if (tagsForThisAlbum.length > 0) { 
             anyTagsOnPage = true 
-            for (let index = 0; index < tagsForThisAlbum.length; index++) {
+            for (var index = 0; index < tagsForThisAlbum.length; index++) {
                 var thisTag = tagsForThisAlbum[index];
                 $(thisTag).show()
             }  
@@ -318,7 +318,7 @@ function filterDisplayedConnections() {
     try {
         var anyConnectionsOnPage = false
         connectionsForThisAlbum = $(".connection")
-        for (let index = 0; index < connectionsForThisAlbum.length; index++) {
+        for (var index = 0; index < connectionsForThisAlbum.length; index++) {
             var connection = connectionsForThisAlbum[index];
     
             if($(connection).hasClass(`author-${userID}`)) {
@@ -351,7 +351,7 @@ function allConnectionsNoFilter() {
         
         if (connectionsForThisAlbum.length > 0) { 
             anyConnectionsOnPage = true 
-            for (let index = 0; index < connectionsForThisAlbum.length; index++) {
+            for (var index = 0; index < connectionsForThisAlbum.length; index++) {
                 var thisConnection = connectionsForThisAlbum[index];
                 $(thisConnection).show()
             }  
