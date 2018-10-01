@@ -262,7 +262,7 @@ function filterDisplayedTags() {
         for (var index = 0; index < tagsForThisAlbum.length; index++) {
             var thisTag = tagsForThisAlbum[index];
     
-            if($(thisTag).hasClass(`author-${userID}`)) {
+            if($(thisTag).hasClass('author-' + userID)) {
                 // console.log("tag belongs to this author")
                 $(thisTag).show()
                 anyTagsOnPage = true
@@ -321,7 +321,7 @@ function filterDisplayedConnections() {
         for (var index = 0; index < connectionsForThisAlbum.length; index++) {
             var connection = connectionsForThisAlbum[index];
     
-            if($(connection).hasClass(`author-${userID}`)) {
+            if($(connection).hasClass('author-' + userID)) {
                 // console.log("tag belongs to this author")
                 $(connection).show()
                 anyConnectionsOnPage = true
