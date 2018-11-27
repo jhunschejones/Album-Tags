@@ -104,12 +104,8 @@ function replaceBackSlashWithHtml(str) {
 }
 // -------- END UTILITIES SECTION --------
 
-// This is really messy, but the album Id is stored in the ejs file in a hidden 
-// element. It comes in as a string so I'm converting it to a number to use in
-// my logic below
-var albumId = $(".heres_the_album_id").text()
-albumId = parseInt(albumId)
-var tagsForThisAlbum
+const albumId = window.location.pathname.replace('/albumdetails/', '')
+let tagsForThisAlbum
 let albumResult
 
 // this function actually makes the database calls
