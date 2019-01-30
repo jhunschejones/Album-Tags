@@ -148,13 +148,44 @@ function populateCard(album, cardNumber) {
       'src', album.cover.replace('{w}', 260).replace('{h}', 260))
   // add album-details-link to album cover
   $(`#card${cardNumber} .album_details_link`).attr(
-      'href', `/albumdetails/${album.appleAlbumID}`)
+      'href', `/album/${album.appleAlbumID}`)
 
   // add to list of years to filter by 
   yearsList.push(`${album.releaseDate.slice(0,4)}`)
   appleGenreList.push(album.genres)
   artistsList.push(album.artist)
 }
+
+document.getElementById("share-favorites-button").addEventListener("click", function() {
+  $('#shareFavoritesModal').modal('show')
+})
+
+document.getElementById("get-shareable-link").addEventListener("click", function() {
+  let displayName = $('#display-name-input').val()
+
+  $.ajax(`/api/v1/list/favorites/${userID}`, {
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      "displayName": displayName
+    }),
+    success: function (data) {
+      const myFavoritesURL = window.location.protocol + "//" + window.location.host + "/list/" + data
+
+      const urlBox = document.getElementById("shareable-url")
+      urlBox.value = myFavoritesURL
+      urlBox.select()
+
+      navigator.clipboard.writeText(myFavoritesURL).then(function() {
+        // show message if clipboard write succeeded
+        $('#copied-message').show()
+        setTimeout(function(){ $('#copied-message').hide(); }, 3000)
+      }, function() {
+        // clipboard write failed
+      })
+    }
+  })
+})
 
 // ----- START FIREBASE AUTH SECTION ------
 // === OLD CONFIG ===
@@ -175,6 +206,7 @@ const defaultApp = firebase.initializeApp(config)
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     userID = firebase.auth().currentUser.uid
+    $('#all-favorites-filters').show()
     getFavoriteAlbums()
 
     $('#full_menu_login_logout_container').show()
@@ -185,13 +217,15 @@ firebase.auth().onAuthStateChanged(function(user) {
     $('#log_in_message').hide()
   } else {   
     // no user logged in
-    $('#all_cards').html('')
     $('#full_menu_login_logout_container').show()
     $('#login_button').show()
     $('#full_menu_login_button').show()
     $('#logout_button').hide()
     $('#full_menu_logout_button').hide()
     $('#loader').hide()
+
+    $('#all-favorites-filters').hide()
+    $('#all_cards').html('')
     $('#log_in_message').show()   
   }
 })
@@ -205,6 +239,7 @@ function logIn() {
     return firebase.auth().signInWithPopup(provider)
   })
   .then(function(result) {
+    $('#all-favorites-filters').show()
     userID = user.uid
     getFavoriteAlbums()
 
@@ -222,11 +257,13 @@ function logIn() {
 function logOut() {
   firebase.auth().signOut().then(function() {
     // log out functionality
-    $('#full_menu_login_logout_container').show()
-    $('#login_button').show()
-    $('#full_menu_login_button').show()
-    $('#logout_button').hide()
-    $('#full_menu_logout_button').hide()
+    // $('#full_menu_login_logout_container').show()
+    // $('#login_button').show()
+    // $('#full_menu_login_button').show()
+    // $('#logout_button').hide()
+    // $('#full_menu_logout_button').hide()
+    // $('#all-favorites-filters').hide();
+    location.reload();
 
   }).catch(function(error) {
   // An error happened.
@@ -291,7 +328,7 @@ function clearFilters() {
   filterYear = 'none'
   filterGenre = 'none'
   filterArtist = 'none'
-  if (filterTopTen == true) {
+  if (filterTopTen) {
     toggleStar()
   }
   restoreCards()
@@ -393,7 +430,7 @@ function whatsOnThePage_Top10() {
     }
   }
 
-  if (top10 == true) {
+  if (top10) {
     $('#top_10_button').show()
   } else {
     $('#top_10_button').hide()
@@ -458,7 +495,7 @@ function getGenreTags(album, cardNumber) {
       var tag = tagObject.tag
       // tag = replaceUnderscoreWithBackSlash(tag)
 
-      if(isGenre(tag) == true){
+      if(isGenre(tag)){
         genresList.push(tag)             
           
         // add genre as a class on the card
@@ -634,11 +671,12 @@ function startFavoritesPage() {
   // display instructions if no favorites exist for this user
   if (myFavoriteAlbums.message) {
     showDOMelement("log_in_message")
-    $('#log_in_message').html("<div style='text-align:center;margin: 20px 0px 50px 0px;'><p>Looks like you don't have any favorites yet!</p><p><a href='/search'>Search</a> for albums then click the <img src='../images/heart-unliked.png' height='30' width='auto'> icon on the Update</p><p>page to add them to your favorites.</p></div>")
+    $('#log_in_message').html("<div style='text-align:center;'><p style='margin: 20px 5px 50px 5px;'>Looks like you don't have any favorites yet! <a href='/search'>Search</a> for an album then click the <img src='../images/heart-unliked.png' height='30' width='auto'> icon on the Lists tab to add it to your favorites.</p></div>")
     hideDOMelement("filter_by_genre_dropdown_button")
     hideDOMelement("filter_by_year_dropdown_button")
     hideDOMelement("filter_by_artist_dropdown_button")
     hideDOMelement("clear_filters_button")
+    hideDOMelement("share-favorites-button")
     hideDOMelement("to_top_button")
     return
   } else {
@@ -664,3 +702,12 @@ function startFavoritesPage() {
   albumCardsList = $(".albumCard")
   startTags()
 }
+
+function addInfoButtons() {
+  const infoButtonSmall = '<small class="text-secondary ml-2 float-right page-info-button" style="cursor:pointer;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</small>'
+  $('#compact_menu p').append(infoButtonSmall)
+  const infoButtonLage = '<button class="btn btn-sm btn-outline-secondary sticky-top float-left button_text" style="cursor:pointer;margin-top:2px;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</button>'
+  $('#all-favorites-filters').append(infoButtonLage)
+}
+
+addInfoButtons()

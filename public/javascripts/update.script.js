@@ -522,6 +522,120 @@ function removeFromFavorites() {
   })
 }
 
+// ====== START LIST FUNCTIONALITY ======
+let allLists
+
+function getAllLists() {
+  $.ajax({
+    method: "GET",
+    url: "/api/v1/list/user/" + userID,
+    // url: "/api/v1/list/user/Ol5d5mjWi9eQ7HoANLhM4OFBnso2",
+    success: function(data) {
+      if (data.message) {
+        allLists = []
+      } else {
+        allLists = data
+      }
+      populateAllLists()
+    }
+  })
+}
+
+function populateAllLists() {
+  $('#list-options').html('')
+  $("<option selected>Add to a list...</option>").appendTo("#list-options")
+  allLists.forEach(list => {
+    $(`<option value="${list._id}">${list.title}</option>`).appendTo("#list-options")
+  })
+  $('<option value="create new list">Add to a new list...</option>').appendTo("#list-options")
+}
+
+function addToList(chosenList, album) {
+  if (chosenList && album) {
+    let addAlbumToListBody = {
+      method: "add album",
+      appleAlbumID: album.appleAlbumID,
+      title: album.title,
+      artist: album.artist,
+      releaseDate: album.releaseDate,
+      cover: album.cover
+    }
+    $.ajax({
+      method: "PUT",
+      url: "/api/v1/list/" + chosenList,
+      contentType: 'application/json',
+      data: JSON.stringify(addAlbumToListBody),
+      success: function(data) {
+        alert(`Successfully added this album to your list: "${data.title}"`)
+      }
+    })
+  }
+}
+
+function addToNewList(album, listTitle, displayName) {
+  if (album && listTitle && displayName) {
+    let newList = {
+      user: userID,
+      displayName: displayName,
+      title: listTitle,
+      albums: [album]
+    }
+    $.ajax({
+      method: "POST",
+      url: "/api/v1/list/",
+      contentType: 'application/json',
+      data: JSON.stringify(newList),
+      success: function(data) {
+        alert(`Successfully added list: "${data.title}"`)
+        // update the UI without making any additional API calls
+        allLists.push(data)
+        populateAllLists()
+      }
+    })
+  }
+}
+
+// ====== EVENT LISTENERS FOR LIST FUNCTIONALITY =====
+document.getElementById("add-to-list-button").addEventListener("click", function() {
+  let listOptions = document.getElementById("list-options")
+  let chosenList = listOptions[listOptions.selectedIndex].value
+  if (chosenList === "Add to a list...") {
+    // nothing should happen in this case
+  } else if (chosenList === "create new list") {
+    $('#newListModal').modal('show')
+  } else {
+    addToList(chosenList, albumResult)
+  }
+})
+
+document.getElementById("create-new-list-button").addEventListener("click", function() {
+  let listTitle = document.getElementById("new-list-title").value.trim()
+  let displayName = document.getElementById("new-display-name").value.trim() || "Unknown"
+  
+  if (listTitle) {
+    addToNewList(albumResult, listTitle, displayName)
+    $('#newListModal').modal('hide')
+    document.getElementById("new-display-name").value = ""
+    document.getElementById("new-list-title").value = ""
+  } else {
+    alert("All lists require a title!")
+  }
+})
+
+$("#new-list-title").keyup(function(event) {
+  if (event.keyCode === 13) {
+    $("#create-new-list-button").click()
+  }
+})
+
+$("#new-display-name").keyup(function(event) {
+  if (event.keyCode === 13) {
+    $("#create-new-list-button").click()
+  }
+})
+// ====== END LIST FUNCTIONALITY ======
+
+
 // ----- START FIREBASE AUTH SECTION ------
 // === OLD CONFIG ===
 // var config = {
@@ -542,6 +656,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     userID = firebase.auth().currentUser.uid
     getAlbumDetails()
+    getAllLists()
     // populateTags(albumResult)
     // findDirectConnections()
 
@@ -666,6 +781,9 @@ $('input[type=search]').on('keydown', function(e) {
     }
     if ($("#new_tag").is(":focus")) {
       addTag()
+    }
+    if ($("#list-options").is(":focus")) {
+      validateNewConnection()
     }
   }
 })

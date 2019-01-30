@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <% include partials/templates/head_tags.ejs %>
+    <link rel="stylesheet" href="/stylesheets/album.min.css">
+  </head>
+  <body>
+
+    <!-- BASIC NAVBAR TEMPLATE -->
+    <% include partials/templates/navbar_basic.ejs %>
+
+    <!-- START PAGE CONTENT -->
+    <div class="container-fluid">
+      <!-- top main row -->
+      <div class="row no-gutters">
+        <!-- left main column -->
+        <div class="col col-xl-4 mr-md-4 mb-md-5">
+          <h2 id="album-title"></h2>
+          <p id="band-name" class="text-secondary"></p>
+          <img src="" id="album-cover" class="img-fluid">
+        </div>
+        <!-- right main column -->
+        <div class="col-md-6 mr-md-2 mt-md-5 mt-3">
+          <div id="info-card" class="card">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                  <a id="info-info-card-tab" data-card="info" class="nav-link active" href="">Info</a>
+                </li>
+                <li class="nav-item">
+                  <a id="tags-info-card-tab" data-card="tags" class="nav-link inactive-info-tab" href="">Tags</a>
+                </li>
+                <li class="nav-item">
+                  <a id="connections-info-card-tab" data-card="connections" class="nav-link inactive-info-tab" href="">Connections</a>
+                </li>
+                <li class="nav-item">
+                  <a id="lists-info-card-tab" data-card="lists" class="nav-link inactive-info-tab" href="">Lists</a>
+                </li>
+              </ul>
+            </div>
+            <!-- ====== start info-card body elements ====== -->
+            <div id="info-info-card-body" class="card-body info-card-body">
+              <h5 class="card-title">Album information:<span class="text-secondary mr-1 float-right page-info-button" data-toggle="modal" data-target="#pageInfoModal">&#9432;</span></h5>
+              <strong class="card-text mb-0 mt-2">Tracks:</strong>
+              <ol id="track-titles" class="text-secondary"></ol>
+              <p id="release-date" class="card-text"><strong>Released: </strong><span class="text-secondary"></span></p>
+              <p id="record-company" class="card-text"><strong>Record Label: </strong><span class="text-secondary"><span></p>
+              <p id="apple-album-id" class="card-text mb-1"><strong>Apple album ID: </strong><span class="text-secondary" data-toggle="tooltip" data-placement="top" title="Use this to connect albums" data-trigger="hover"></span></p>
+              <a id="more-by-this-artist" href="">Search albums by this artist</a><br/>
+              <a id="apple-music-link" href="">Listen on Apple Music</a>
+            </div>
+            <div id="tags-info-card-body" class="card-body info-card-body">
+              <h5 class="card-title">Tags by <span id="tag-title-modifier">all users:</span><span id="tags-toggle" class="float-right"></span><span class="text-secondary mr-1 float-right page-info-button" data-toggle="modal" data-target="#pageInfoModal">&#9432;</span></h5>
+              <div id="current-tags" class="card-text mb-4"></div>
+              <!-- Note: bootstrap float-right class causes these to reverse order -->
+              <button type="button" class="btn btn-sm btn-outline-primary ml-1 float-right info-card-login-button">Log in to Update</button>
+              <button id="tag-update-button" type="button" class="btn btn-sm btn-outline-primary ml-1 float-right" data-toggle="modal" data-target="#updateTagModal">Add Tags</button>
+              <a id="clear-tag-button" href="" class="btn btn-sm btn-outline-primary ml-1 float-right">Clear</a>
+              <a id="tag-search-button" href="" class="btn btn-sm btn-outline-primary ml-1 float-right">Search</a>
+            </div>
+            <div id="connections-info-card-body" class="card-body info-card-body">
+              <h5 class="card-title">Connections by <span id="connection-title-modifier">all users:</span><span id="connections-toggle" class="float-right"></span><span class="text-secondary mr-1 float-right page-info-button" data-toggle="modal" data-target="#pageInfoModal">&#9432;</span></h5>
+              <div id="connected-albums" class="card-text"></div>
+              <button type="button" class="btn btn-sm btn-outline-primary ml-1 float-right info-card-login-button">Log in to Update</button>
+              <button type="button" id="connection-update-button" class="btn btn-sm  btn-outline-primary float-right" data-toggle="modal" data-target="#updateConnectionModal">Add Connections</button>
+            </div>
+            <div id="lists-info-card-body" class="card-body info-card-body">
+              <h5 id="favorite-title" class="card-title text-secondary text-center"><span id="favorited-icon"></span> + <span id="favorites-link" class="font-italic">your favorites</span><span class="text-secondary mr-1 float-right page-info-button" style="margin-left:-16px;font-weight:500;padding-top:0px;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</span><hr/></h5>
+              <h5 class="card-title"><span id="list-title-modifier">All <span class="large-button-text">user </span></span>lists with this album:<span id="lists-toggle" class="float-right"></span></h5>
+              <ul id="all-lists" class="card-text"></ul>
+              <button type="button" class="btn btn-sm btn-outline-primary ml-1 float-right info-card-login-button">Log in to Update</button>
+              <button type="button" id="list-update-button" class="btn btn-sm  btn-outline-primary float-right" data-toggle="modal" data-target="#updateListModal">Add to a List</button>
+            </div>  
+            <!-- ====== end info-card body elements ====== -->   
+            
+            <!-- ====== start update tag modal ====== -->
+            <div class="modal fade" id="updateTagModal" tabindex="-1" role="dialog" aria-labelledby="updateTagModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateTagModalLabel">Add New Tags</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="input-group">
+                      <input id="add-tag-input" type="search" class="form-control" placeholder="Add a new tag...">
+                      <div class="input-group-append">
+                        <button id="add-tag-button" class="btn btn-primary" type="button">Add</button>
+                      </div>
+                    </div>
+                    <small id="tag-success" class="text-primary">&nbsp;</small>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Done</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ====== end update tag modal ====== -->
+
+            <!-- ====== start update connection modal ====== -->
+            <div class="modal fade" id="updateConnectionModal" tabindex="-1" role="dialog" aria-labelledby="updateConnectionModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateConnectionModalLabel">Update Tags</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="input-group mb-3">
+                      <input id="add-connection-input" type="search" class="form-control" placeholder="Add a new connection...">
+                      <div class="input-group-append">
+                        <button id="add-connection-button" class="btn btn-primary" type="button">Add</button>
+                      </div>
+                    </div>
+                    <small class="text-secondary font-italic">To add a connection:</small><br/>
+                    <small>1. <span class="text-primary" id="search-for-second-album">Search</span> for the album you want to connect to</small><br/>
+                    <small>2. Copy the apple album ID from the info tab of another album</small><br/>
+                    <small>3. Paste the album ID into the input field above</small><br/>
+                    <small>4. Click 'add'!</small><br/>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Done</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ====== end update connection modal ====== -->    
+            
+            <!-- ====== start update list modal ====== -->
+            <div class="modal fade" id="updateListModal" tabindex="-1" role="dialog" aria-labelledby="updateListModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="updateListModalLabel">Update Tags</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="text-secondary mb-1"><small>Add to an existing list:</small></p>
+                    <div id="list-input-group mb-3" class="input-group">
+                      <select class="custom-select" id="list-options">
+                        <!-- javascript adds lists here -->
+                        <option selected>Select a list...</option>
+                      </select>
+                      <div class="input-group-append">
+                        <button id="add-to-list-button" class="btn btn-primary" type="button">Add</button>
+                      </div>
+                    </div>
+                    <p class="text-secondary mb-1 mt-4"><small>Add to a new list:</small></p>
+                    <div class="input-group mb-2">
+                      <input id="new-list-title" type="search" class="form-control" placeholder="New list name...">
+                    </div>
+                    <div class="input-group mb-1">
+                      <input id="new-display-name" type="search" class="form-control" placeholder="User display name...">
+                    </div>
+                    <!-- private checkbox, currently disabled
+                    <div class="input-group mt-2 mb-1">
+                      <input id="private-checkbox" type="checkbox" class="mr-1"><small class="text-secondary">Make this list private</small>
+                    </div>
+                    -->
+                    <button id="add-to-new-list-button" type="button" class="btn btn btn-primary float-right">Add to new list</button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Done</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- ====== end update list modal ====== -->            
+
+          </div>
+        </div>
+      </div>
+      <!-- bottom row -->
+      <div class="row">
+      </div>
+    </div>
+
+    <!-- ====== start page info modal ====== -->
+    <div class="modal fade" id="pageInfoModal" tabindex="-1" role="dialog" aria-labelledby="pageInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="pageInfoModalLabel">How to use this page</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div id="page-info-modal-body" class="modal-body text-secondary pt-2">
+
+            <small style="line-height:1em;"><strong>To add a tag to this album:</strong></small><br/>
+            <ol class="mb-0 pl-4"><small>
+              <li>Click to the <span class="font-italic">Tags</span> tab on this page</li>
+              <li>Click the <span class="font-italic">Add Tags</span> button at the bottom right of the card</li>
+              <li>Type in the new tag text</li>
+              <li>Click <span class="font-italic">Add</span></li>
+            </small></ol>
+            <p class="mb-2 pl-2" style="line-height:1em;"><small><span class="font-italic">Bonus:</span> visit the <a href="/alltags">all tags</a> page to see tags other users have used. Re-using tags is a great idea to connect albums together!</small></p>
+
+            <small style="line-height:1em;"><strong>To add a connection to this album:</strong></small><br/>
+            <ol class="mb-2 pl-4"><small>
+              <li>Copy the Apple album ID from the <span class="font-italic">Info</span> tab on this page</li>
+              <li><a href="/search">Search</a> for the album you want to connect to</li>
+              <li>Click the <span class="font-italic">Connections</span> tab on the <span class="font-italic">Album</span> page for the second album</li>
+              <li>Click the <span class="font-italic">Add Connections</span> button at the bottom right of the card there</li>
+              <li>Paste the first album's Apple album ID in the input field</li>
+              <li>Click <span class="font-italic">Add</span></li>
+            </small></ol>
+
+            <small style="line-height:1em;"><strong>To add this album to your favorites:</strong></small><br/>
+            <ol class="mb-2 pl-4"><small>
+              <li>Click the <span class="font-italic">Lists</span> tab on this page</li>
+              <li>Click the heart icon at the top/center of the card</li>
+              <li>The heart will turn red for favorited, grey for un-favorited</li>
+              <li>Visit <a href="/myfavorites">my favorites</a> to see all the albums you've favorited</li>
+            </small></ol>
+
+            <small style="line-height:1em;"><strong>To add this album to a list:</strong></small><br/>
+            <ol class="mb-2 pl-4"><small>
+              <li>Click the <span class="font-italic">Lists</span> tab on this page</li>
+              <li>Click the <span class="font-italic">Add to a List</span> button in the bottom right corner of the card</li>
+              <li>Select from an existing list or create a new list</li>
+              <li>You can choose the title of a new list and how you would like your name displayed as the creator of the list</li>
+              <li>View lists this album is in by clicking the link on the <span class="font-italic">Lists</span>, or view all your lists on the <a href="/mylists">my lists</a> page</li>
+            </small></ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ====== end page info modal ====== -->    
+
+    <!-- END PAGE CONTENT -->    
+
+    <% include partials/templates/footer.ejs %>
+    <script src="/javascripts/album.script.min.js"></script>
+  </body>
+</html>

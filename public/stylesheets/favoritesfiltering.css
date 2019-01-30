@@ -29,8 +29,16 @@
     padding: 5px;
 }
 
-#clear_filters_button {
-    margin: 2px 0px 0px 3px;
+#clear_filters_button,
+#share-favorites-button {
+    margin: 2px 0px 0px 0px;
+}
+
+#copied-message {
+    margin-left: 17px;
+    margin-bottom: 8px;
+    margin-top: -25px;
+    display: none;
 }
 
 @media screen and (min-width: 500px) {
