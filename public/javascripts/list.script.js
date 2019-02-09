@@ -1,4 +1,9 @@
 // ------- START UTILITIES SECTION ----------
+// ======
+// To compile with google closure compiler
+// instructions: https://developers.google.com/closure/compiler/docs/gettingstarted_app
+// terminal command: `java -jar compiler.jar --js list.script.js --js_output_file list.script.min.js`
+// ======
 function truncate(str, len){
   // set up the substring
   var subString = str.substr(0, len-1)
@@ -9,6 +14,25 @@ function truncate(str, len){
     // trim trailing comma
     .replace(/(^[,\s]+)|([,\s]+$)/g, '') + '...'
   )
+}
+
+function removeDash(str) {
+  return str.replace(/-/g, '');
+}
+
+function bubbleSort(arr, prop) {
+  var swapped;
+  do {
+    swapped = false
+    for (var i = 0; i < arr.length - 1; i++) {
+      if (parseInt(removeDash(arr[i][prop])) > parseInt(removeDash(arr[i + 1][prop]))) {
+        var temp = arr[i];
+        arr[i] = arr[i + 1];
+        arr[i + 1] = temp;
+        swapped = true;
+      }
+    }
+  } while (swapped);
 }
 // ------- END UTILITIES SECTION ----------
 
@@ -89,8 +113,12 @@ function populateList() {
   $('#list-creator').text("by: " + listCreator)
 
   if (listData.albums && listData.albums.length > 0) {
+    let albumArray = listData.albums
+    bubbleSort(albumArray, "releaseDate")
+    // reverse shows newer albums first (mostly)
+    albumArray = albumArray.reverse()
     let card = 0
-    listData.albums.forEach(albumObject => {
+    albumArray.forEach(albumObject => {
       card = card + 1
       createCard(card)
       populateCard(albumObject.album || albumObject, card)
@@ -104,7 +132,10 @@ function populateList() {
     $("#no-albums-message").show()
   }
 
-  if (isFavoritesList) { $('#edit-button').hide(); }
+  if (isFavoritesList) { 
+    $('#edit-button').hide(); 
+    $('#add-album-button').hide();
+  }
 }
 
 function removeAlbum(albumID) {
@@ -211,11 +242,140 @@ function editListTitle() {
   }
 }
 
-document.getElementById("edit-button").addEventListener("click", function() {
-  $('#editListModal').modal('show')
-  $('#list-title-input').val(listData.title)
-  $('#list-display-name-input').val(listData.displayName || "Unknown")
+let addAlbumResults = [];
+function populateAddToListModalResults(data) {
+  $('#add-album-search-results').html('');
+  $('#add-album-card-body .new-loader').hide();
+  if (data.albums) {
+    for (let index = 0; index < data.albums.length; index++) {
+      const album = data.albums[index];
+      const cardNumber = index;
+      createAddAlbumModalCard(album, cardNumber);
+      populateAddAlbumModalCard(album, cardNumber);
+    }
+    // this adds an empty space at the end so the user can scroll 
+    // all the way to the right to see the last album
+    createAddAlbumModalCard(data.albums.length + 1);
+
+    // store search results
+    addAlbumResults = data.albums;
+  }
+}
+
+function createAddAlbumModalCard(album, cardNumber) {
+  $('#add-album-search-results').append(`<div id="addAlbumModalCard${cardNumber}" class="search-modal-card" data-result-index="${cardNumber}"><img class="search-modal-card-image" src="" alt=""><div class="search-modal-card-body"><h4 class="search-modal-card-title"></h4><span class="search-modal-card-album"></span></div></div>`)
+}
+
+function populateAddAlbumModalCard(album, cardNumber) {
+  // set up album and artist trunction
+  let smallArtist = album.artist;
+  let largeArtist = album.artist;
+  let smallAlbum = album.title;
+  let largeAlbum = album.title;
+  if (smallArtist.length > 32) { smallArtist = truncate(smallArtist, 32); } 
+  if (smallAlbum.length > 44) { smallAlbum = truncate(smallAlbum, 44); } 
+
+  if (largeArtist.length > 49) { largeArtist = truncate(largeArtist, 49); } 
+  if (largeAlbum.length > 66) { largeAlbum = truncate(largeAlbum, 66); }
+  
+  // artist name
+  $(`#addAlbumModalCard${cardNumber} .search-modal-card-title`).html(`<span class="search-modal-card-large-artist">${largeArtist}</span><span class="search-modal-card-small-artist">${smallArtist}</span>`);
+  // album name
+  $(`#addAlbumModalCard${cardNumber} .search-modal-card-album`).html(`<span class="search-modal-card-large-album">${largeAlbum}</span><span class="search-modal-card-small-album">${smallAlbum}</span>`);
+  // album cover
+  $(`#addAlbumModalCard${cardNumber} .search-modal-card-image`).attr('src', album.cover.replace('{w}', 260).replace('{h}', 260));
+
+  $(`#addAlbumModalCard${cardNumber}`).click(function(event) {
+    event.preventDefault();
+    // connect to this album
+    const selectedAlbumIndex = $(this).data("result-index");
+    const selectedAlbum = addAlbumResults[selectedAlbumIndex];
+    addToList(selectedAlbum);
+  })
+}
+
+function addToList(selectedAlbum) {
+  if (selectedAlbum) {
+    let alreadyInList = listData.albums.find(x => x.appleAlbumID === selectedAlbum.appleAlbumID);
+
+    if (alreadyInList) {
+      alert(`"${selectedAlbum.title}" is already in this list.`);
+      return;
+    }
+
+    let addAlbumToListBody = {
+      method: "add album",
+      appleAlbumID: selectedAlbum.appleAlbumID,
+      title: selectedAlbum.title,
+      artist: selectedAlbum.artist,
+      releaseDate: selectedAlbum.releaseDate,
+      cover: selectedAlbum.cover
+    };
+    $.ajax({
+      method: "PUT",
+      url: "/api/v1/list/" + listData._id,
+      contentType: 'application/json',
+      data: JSON.stringify(addAlbumToListBody),
+      success: function(data) {
+        if (!data.message) {
+          listData = data;
+          populateList();
+          $('#editListModal').modal('hide');
+        } else {
+          alert(data.message);
+        }
+      }
+    });
+  }
+}
+
+function toggleActiveInfoTab(element) {
+  $('#editListModal .active').removeClass("active").addClass("inactive-list-edit-tab");
+  $(element).removeClass("inactive-list-edit-tab").addClass("active");
+  $('.edit-list-card-body').hide();
+  const selectedCard = element.data('card');
+  $(`#${selectedCard}-card-body`).show();
+}
+
+$('#add-album-modal-button').click(function(event) {
+  event.preventDefault();
+  const search = $('#add-album-modal-input').val().trim().replace(/[^\w\s]/gi, '');
+  $('#add-album-search-results').html('');
+  $('#add-album-card-body .new-loader').show();
+  executeSearch(search, "add to list");
 })
+
+// execute search when enter key is pressed
+$("#add-album-modal-input").keyup(function(event) {
+  if (event.keyCode === 13) {
+    $("#add-album-modal-button").click();
+  }
+});
+
+$('#edit-button').click(function(event) {
+  event.preventDefault();
+  toggleActiveInfoTab($('#edit-list-modal-nav-tab'));
+  $('#editListModal').modal('show');
+  $('#list-title-input').val(listData.title);
+  $('#list-display-name-input').val(listData.displayName || "Unknown");
+});
+$('#add-album-button').click(function(event) {
+  event.preventDefault();
+  toggleActiveInfoTab($('#add-album-modal-nav-tab'));
+  $('#editListModal').modal('show');
+  $('#list-title-input').val(listData.title);
+  $('#list-display-name-input').val(listData.displayName || "Unknown");
+});
+$('.add-album-refrence').click(function(event) {
+  event.preventDefault();
+  $('#pageInfoModal').modal('hide');
+  $("#add-album-button").click();
+});
+$('.edit-list-refrence').click(function(event) {
+  event.preventDefault();
+  $('#pageInfoModal').modal('hide');
+  $('#edit-button').click();
+});
 $("#list-title-input").keyup(function(event) {
   if (event.keyCode === 13) {
     $("#update-list-title").click();
@@ -230,6 +390,22 @@ $("#list-display-name-input").keyup(function(event) {
 document.getElementById("update-list-display-name").addEventListener("click", editDisplayName)
 document.getElementById("update-list-title").addEventListener("click", editListTitle)
 
+$('#editListModal .nav-link').click(function(event) {
+  event.preventDefault();
+  toggleActiveInfoTab($(this));
+});
+
+// make hover scrollbar always visible on touchscreens
+$(document).ready(function() {
+  let isTouchDevice = false;
+  if ("ontouchstart" in document.documentElement) { isTouchDevice = true; }
+  if (isTouchDevice) {
+    const searchResultsBox = document.getElementById("add-album-search-results");
+    searchResultsBox.style.paddingBottom="0px";
+    searchResultsBox.style.overflowX="scroll";
+  }
+});
+
 // ----- START FIREBASE AUTH SECTION ------
 const config = {
   apiKey: "AIzaSyAoadL6l7wVMmMcjqqa09_ayEC8zwnTyrc",
@@ -241,34 +417,36 @@ let userID = false
 // checking if user is logged in or logs in during session
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    userID = firebase.auth().currentUser.uid
-    getList()
+    userID = firebase.auth().currentUser.uid;
+    getList();
 
-    $('#full_menu_login_logout_container').show()
-    $('#login_button').hide()
-    $('#full_menu_login_button').hide()
-    $('#logout_button').show()
-    $('#full_menu_logout_button').show()
+    $('#full_menu_login_logout_container').show();
+    $('#login_button').hide();
+    $('#full_menu_login_button').hide();
+    $('#logout_button').show();
+    $('#full_menu_logout_button').show();
 
-    $('#edit-button').show()
-    $('.album-delete-button').show()
+    $('#edit-button').show();
+    $('#add-album-button').show();
+    $('.album-delete-button').show();
   } else {   
     // no user logged in
-    userID = false
+    userID = false;
 
-    getList()
+    getList();
 
-    $('#full_menu_login_logout_container').show()
-    $('#login_button').show()
-    $('#full_menu_login_button').show()
-    $('#logout_button').hide()
-    $('#full_menu_logout_button').hide()
-    $('#loader').hide()
+    $('#full_menu_login_logout_container').show();
+    $('#login_button').show();
+    $('#full_menu_login_button').show();
+    $('#logout_button').hide();
+    $('#full_menu_logout_button').hide();
+    $('#loader').hide();
 
-    $('#edit-button').hide()
-    $('.album-delete-button').hide()
+    $('#edit-button').hide();
+    $('#add-album-button').hide();
+    $('.album-delete-button').hide();
   }
-})
+});
 
 function logIn() {
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -278,37 +456,39 @@ function logIn() {
     return firebase.auth().signInWithPopup(provider)
   })
   .then(function(result) {
-    userID = user.uid
-    getList()
+    userID = user.uid;
+    getList();
 
-    $('#full_menu_login_logout_container').show()
-    $('#login_button').hide()
-    $('#full_menu_login_button').hide()
-    $('#logout_button').show()
-    $('#full_menu_logout_button').show()
+    $('#full_menu_login_logout_container').show();
+    $('#login_button').hide();
+    $('#full_menu_login_button').hide();
+    $('#logout_button').show();
+    $('#full_menu_logout_button').show();
 
-    $('#edit-button').show()
-    $('.album-delete-button').show()
+    $('#edit-button').show();
+    $('#add-album-button').show();
+    $('.album-delete-button').show();
   }).catch(function(error) {
     // Handle Errors here.
-  })
+  });
 }
 
 function logOut() {
   firebase.auth().signOut().then(function() {
-    userID = false
+    userID = false;
     // log out functionality
-    $('#full_menu_login_logout_container').show()
-    $('#login_button').show()
-    $('#full_menu_login_button').show()
-    $('#logout_button').hide()
-    $('#full_menu_logout_button').hide()
+    $('#full_menu_login_logout_container').show();
+    $('#login_button').show();
+    $('#full_menu_login_button').show();
+    $('#logout_button').hide();
+    $('#full_menu_logout_button').hide();
 
-    $('#edit-button').hide()
-    $('.album-delete-button').hide()
+    $('#edit-button').hide();
+    $('#add-album-button').hide();
+    $('.album-delete-button').hide();
   }).catch(function(error) {
   // An error happened.
-  })
+  });
 }
 
 // add event listener to log in and out buttons

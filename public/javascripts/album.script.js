@@ -1,4 +1,9 @@
 // ====== START UTILITY SECTION ======
+// ======
+// To compile with google closure compiler
+// instructions: https://developers.google.com/closure/compiler/docs/gettingstarted_app
+// terminal command: `java -jar compiler.jar --js album.script.js --js_output_file album.script.min.js`
+// ======
 function makeNiceDate(uglyDate) {
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   let year = uglyDate.slice(0, 4);
@@ -151,8 +156,11 @@ function populateAlbumPage(userLoggedIn) {
   $('#apple-album-id span').text(albumResult.appleAlbumID);
   $('#more-by-this-artist').click(function(event) {
     event.preventDefault();
-    sessionStorage.setItem('artist', albumResult.artist);
-    window.location.href = '/search';
+
+    // NEW SEARCH-MODAL ARTIST SEARCH
+    $('#searchModal').modal('show');
+    $('#search-modal-input').val(albumResult.artist);
+    executeSearch(albumResult.artist);
   });
   $('#apple-music-link').click(function(event){
     event.preventDefault();
@@ -346,14 +354,14 @@ function addToNewList(listTitle, displayName) {
   // user either said okay to create a duplicate list, or there
   // is no other list with this name by this user
   if (confirmed) {
-    let private = false;
-    if ($('#private-checkbox').is(":checked")) { private = true; }
+    let privateList = false;
+    if ($('#private-checkbox').is(":checked")) { privateList = true; }
     if (listTitle && displayName) {
       let newList = {
         user: userID,
         displayName: displayName,
         title: listTitle,
-        isPrivate: private,
+        isPrivate: privateList,
         albums: [albumResult]
       };
       $.ajax({
@@ -425,12 +433,18 @@ function updateListDisplay() {
 }
 
 function displayAllLists() {
-  $("#lists-toggle").html('<img src="/images/toggle_on.png" id="show-all-lists" style="height:22px;margin-left:10px;">');
+  if ($("#lists-toggle").html().length === 0) {
+    $("#lists-toggle").html('<img src="/images/toggle_on.png" id="show-all-lists" style="height:22px;margin-left:10px;"><img src="/images/toggle_off.png" id="show-my-lists" style="height:22px;margin-left:10px;display:none;">');
+  } else {
+    $('#show-my-lists').hide();
+    $('#show-all-lists').show();
+  }
   $('.my-list').show();
   $('.other-list').show();
   $('#list-title-modifier').html('All <span class="large-button-text">user </span>');
+
+  $('.list-message').remove();
   if ($('.list').length === 0) { 
-    $('.list-message').remove();
     $('#all-lists').after('<div class="text-primary text-center list-message"><small>This album is not in any public user lists. Click "Add to a list" below to get started!</small><br/><br/></div>'); 
   }
 
@@ -442,12 +456,18 @@ function displayAllLists() {
 }
 
 function displayMyLists() {
-  $("#lists-toggle").html('<img src="/images/toggle_off.png" id="show-my-lists" style="height:22px;margin-left:10px;">');
-  $('.my-lists').show();
-  $('.other-lists').hide();
+  if ($("#lists-toggle").html().length === 0) {
+    $("#lists-toggle").html('<img src="/images/toggle_off.png" id="show-my-lists" style="height:22px;margin-left:10px;"><img src="/images/toggle_on.png" id="show-all-lists" style="height:22px;margin-left:10px;display:none;">');
+  } else {
+    $('#show-all-lists').hide();
+    $('#show-my-lists').show();
+  }
+  $('.my-list').show();
+  $('.other-list').hide();
   $('#list-title-modifier').text('Your ');
+
+  $('.list-message').remove();
   if ($('.my-list').length === 0) { 
-    $('.list-message').remove();
     $('#all-lists').after('<div class="text-primary text-center list-message"><small>You have added this album to any lists. Click "Add to a list" below to get started!</small><br/><br/></div>'); 
   }
 
@@ -521,7 +541,7 @@ function addConnection(newAlbumID) {
               }
             }
           });
-        } else {
+        } else if (databaseAlbum.message === "No matching album in the database.") {
           // ALBUM DOES NOT EXIST IN THE DATABASE POST A NEW ALBUM WITH THE CONNECTION IN IT
           $.ajax(`/api/v1/album/connections/${albumResult._id || "new"}`, {
             method: 'POST',
@@ -542,6 +562,8 @@ function addConnection(newAlbumID) {
               }
             }
           });
+        } else {
+          alert(databaseAlbum.message);
         }
       });
     } else {
@@ -549,6 +571,52 @@ function addConnection(newAlbumID) {
     }
     $('#add-connection-input').val('');
   });
+}
+
+function populateConnectionModalResults(data) {
+  $('#connection-search-results').html('');
+  if (data.albums) {
+    for (let index = 0; index < data.albums.length; index++) {
+      const album = data.albums[index];
+      const cardNumber = index + 1;
+      createConnectionModalCard(album, cardNumber);
+      populateConnectionModalCard(album, cardNumber);
+    }
+    // this adds an empty space at the end so the user can scroll 
+    // all the way to the right to see the last album
+    createConnectionModalCard(data.albums.length + 1);
+  }
+}
+
+function createConnectionModalCard(album, cardNumber) {
+  $('#connection-search-results').append(`<div id="connectionModalCard${cardNumber}" class="search-modal-card" data-apple-album-id="${album.appleAlbumID}"><a class="search-modal-card-album-link" href=""><img class="search-modal-card-image" src="" alt=""><a/><div class="search-modal-card-body"><h4 class="search-modal-card-title"></h4><span class="search-modal-card-album"></span></div></div>`)
+}
+
+function populateConnectionModalCard(album, cardNumber) {
+  // set up album and artist trunction
+  let smallArtist = album.artist;
+  let largeArtist = album.artist;
+  let smallAlbum = album.title;
+  let largeAlbum = album.title;
+  if (smallArtist.length > 32) { smallArtist = truncate(smallArtist, 32); } 
+  if (smallAlbum.length > 44) { smallAlbum = truncate(smallAlbum, 44); } 
+
+  if (largeArtist.length > 49) { largeArtist = truncate(largeArtist, 49); } 
+  if (largeAlbum.length > 66) { largeAlbum = truncate(largeAlbum, 66); }
+  
+  // artist name
+  $(`#connectionModalCard${cardNumber} .search-modal-card-title`).html(`<span class="search-modal-card-large-artist">${largeArtist}</span><span class="search-modal-card-small-artist">${smallArtist}</span>`);
+  // album name
+  $(`#connectionModalCard${cardNumber} .search-modal-card-album`).html(`<span class="search-modal-card-large-album">${largeAlbum}</span><span class="search-modal-card-small-album">${smallAlbum}</span>`);
+  // album cover
+  $(`#connectionModalCard${cardNumber} .search-modal-card-image`).attr('src', album.cover.replace('{w}', 260).replace('{h}', 260));
+
+  $(`#connectionModalCard${cardNumber}`).click(function(event) {
+    event.preventDefault();
+    // connect to this album
+    const selectedAlbum = $(this).data("apple-album-id");
+    addConnection(selectedAlbum);
+  })
 }
 
 function deleteConnection(connectedAlbum) {
@@ -588,11 +656,19 @@ function updateConnectionDisplay() {
 }
 
 function displayAllConnections() {
-  $("#connections-toggle").html('<img src="/images/toggle_on.png" id="show-all-connections" style="height:22px;margin-left:10px;">');
+  if ($("#connections-toggle").html().length === 0) {
+    $("#connections-toggle").html('<img src="/images/toggle_on.png" id="show-all-connections" style="height:22px;margin-left:10px;"><img src="/images/toggle_off.png" id="show-my-connections" style="height:22px;margin-left:10px;display:none;">');
+  } else {
+    $('#show-my-connections').hide();
+    $('#show-all-connections').show();
+  }
   $('.my-connection').show();
   $('.other-connection').show();
-  $('#connection-title-modifier').text('all users:');
-  if ($('.connection').length === 0) { $('#connected-albums').html('<div class="text-primary text-center"><small>There are currently no connections for this album. Click "Add connections" below to get started!</small><br/><br/></div>'); }
+  $('#connection-title-modifier').text('all users');
+
+  $('#no-my-connections').remove();
+  $('#no-other-connections').remove();
+  if ($('.connection').length === 0) { $('#connected-albums').html('<div id="no-other-connections" class="text-primary text-center"><small>There are currently no connections for this album. Click "Add connections" below to get started!</small><br/><br/></div>'); }
 
   $('#show-all-connections').click(function(event) {
     event.preventDefault();
@@ -602,11 +678,19 @@ function displayAllConnections() {
 }
 
 function displayMyConnections() {
-  $("#connections-toggle").html('<img src="/images/toggle_off.png" id="show-my-connections" style="height:22px;margin-left:10px;">');
-  $('.my-connections').show();
-  $('.other-connections').hide();
-  $('#connection-title-modifier').text('you:');
-  if ($('.my-connection').length === 0) { $('#connected-albums').html('<div class="text-primary text-center"><small>You have not created any connections for this album. Click "Add connections" below to get started!</small><br/><br/></div>'); }
+  if ($("#connections-toggle").html().length === 0) {
+    $("#connections-toggle").html('<img src="/images/toggle_off.png" id="show-my-connections" style="height:22px;margin-left:10px;"><img src="/images/toggle_on.png" id="show-all-connections" style="height:22px;margin-left:10px;display:none;">');
+  } else {
+    $('#show-all-connections').hide();
+    $('#show-my-connections').show();
+  }
+  $('.my-connection').show();
+  $('.other-connection').hide();
+  $('#connection-title-modifier').text('you');
+
+  $('#no-my-connections').remove();
+  $('#no-other-connections').remove();
+  if ($('.my-connection').length === 0) { $('#connected-albums').append('<div id="no-my-connections" class="text-primary text-center"><small>You have not created any connections for this album. Click "Add connections" below to get started!</small><br/><br/></div>'); }
 
   $('#show-my-connections').click(function(event) {
     event.preventDefault();
@@ -788,21 +872,34 @@ function clearTagArray(event) {
   }
 }
 
-function updateTagDisplay(userIsLoggedIn) {
+function updateTagDisplay(data) {
+  let userIsLoggedIn = false;
+  if (data || userID) { userIsLoggedIn = true; }
+
   const whatTagsToShow = sessionStorage.getItem('tags');
-  if (whatTagsToShow === 'My Tags' && !userIsLoggedIn) {
-    displayMyTags();
+  if (whatTagsToShow === 'My Tags' && userIsLoggedIn) {
+    displayMyTags(userIsLoggedIn);
   } else {
     displayAllTags(userIsLoggedIn);
   }
 }
 
 function displayAllTags(userIsLoggedIn) {
-  if (userIsLoggedIn) { $("#tags-toggle").html('<img src="/images/toggle_on.png" id="show-all-tags" style="height:22px;margin-left:10px;">'); }
+  if (userIsLoggedIn) { 
+    if ($("#tags-toggle").html().length === 0) {
+      $("#tags-toggle").html('<img src="/images/toggle_on.png" id="show-all-tags" style="height:22px;margin-left:10px;"><img src="/images/toggle_off.png" id="show-my-tags" style="height:22px;margin-left:10px;display:none;">'); 
+    } else {
+      $('#show-my-tags').hide();
+      $('#show-all-tags').show();
+    }
+  }
   $('.my-tag').show();
   $('.other-tag').show();
-  $('#tag-title-modifier').text('all users:');
-  if ($('.album-tag').length === 0) { $('#current-tags').html('<div class="text-primary text-center"><small>There are currently no tags for this album. Click "Add tags" below to get started!</small></div>'); }
+  $('#tag-title-modifier').text('all users');
+
+  $('#no-all-tags').remove();
+  $('#no-my-tags').remove();
+  if ($('.album-tag').length === 0) { $('#current-tags').append('<div id="no-all-tags" class="text-primary text-center"><small>There are currently no tags for this album. Click "Add tags" below to get started!</small></div>'); }
 
   if (userIsLoggedIn) {
     $('#show-all-tags').click(function(event) {
@@ -813,17 +910,25 @@ function displayAllTags(userIsLoggedIn) {
   }
 }
 
-function displayMyTags() {
-  $("#tags-toggle").html('<img src="/images/toggle_off.png" id="show-my-tags" style="height:22px;margin-left:10px;">');
+function displayMyTags(userIsLoggedIn) {
+  if ($("#tags-toggle").html().length === 0) {
+    $("#tags-toggle").html('<img src="/images/toggle_off.png" id="show-my-tags" style="height:22px;margin-left:10px;"><img src="/images/toggle_on.png" id="show-all-tags" style="height:22px;margin-left:10px;display:none;">');
+  } else {
+    $('#show-all-tags').hide();
+    $('#show-my-tags').show();
+  }
   $('.my-tag').show();
   $('.other-tag').hide();
-  $('#tag-title-modifier').text('you:');
-  if ($('.my-tag').length === 0) { $('#current-tags').html('<div class="text-primary text-center"><small>You have not created any tags for this album. Click "Add tags" below to get started!</small></div>'); }
+  $('#tag-title-modifier').text('you');
+
+  $('#no-all-tags').remove();
+  $('#no-my-tags').remove();
+  if ($('.my-tag').length === 0) { $('#current-tags').append('<div id="no-my-tags" class="text-primary text-center"><small>You have not created any tags for this album. Click "Add tags" below to get started!</small></div>'); }
 
   $('#show-my-tags').click(function(event) {
     event.preventDefault();
     sessionStorage.setItem('tags', 'All Tags');
-    updateTagDisplay();
+    updateTagDisplay(userIsLoggedIn);
   });
 }
 
@@ -881,12 +986,8 @@ $("#add-tag-input").keyup(function(event) {
 });
 $("#add-connection-button").click(function(event) {
   event.preventDefault();
-  const newAlbum = $('#add-connection-input').val().trim();
-  if (newAlbum.length > 0) {
-    addConnection(newAlbum);
-  } else {
-    alert("Add an apple album ID to connect two albums.");
-  }
+  const search = $('#add-connection-input').val().trim();
+  executeSearch(search, "connection")
 });
 $("#add-connection-input").keyup(function(event) {
   if (event.keyCode === 13) {
@@ -939,6 +1040,18 @@ $('#add-to-new-list-button').click(function(event) {
     document.getElementById("new-list-title").value = "";
   }
 });
+
+// make hover scrollbar always visible on touchscreens
+$(document).ready(function() {
+  let isTouchDevice = false;
+  if ("ontouchstart" in document.documentElement) { isTouchDevice = true; }
+  if (isTouchDevice) {
+    const searchResultsBox = document.getElementById("connection-search-results");
+    searchResultsBox.style.paddingBottom="0px";
+    searchResultsBox.style.overflowX="scroll";
+  }
+});
+
 // ----- START FIREBASE AUTH SECTION ------
 function userIsLoggedIn() {
   $('.hide_when_logged_in').addClass('hide_me');

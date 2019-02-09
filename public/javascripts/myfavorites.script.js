@@ -1,4 +1,9 @@
 // ------- START UTILITIES SECTION ----------
+// ======
+// To compile with google closure compiler
+// instructions: https://developers.google.com/closure/compiler/docs/gettingstarted_app
+// terminal command: `java -jar compiler.jar --js myfavorites.script.js --js_output_file myfavorites.script.min.js`
+// ======
 function scrollToTop() {
   document.body.scrollTop = 0 // For Safari
   document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
@@ -92,8 +97,7 @@ function truncatePlain(str, len){
   )
 }
 
-function bubbleSort(arr, prop)
-{
+function bubbleSort(arr, prop) {
   var swapped
   do {
     swapped = false
@@ -109,8 +113,31 @@ function bubbleSort(arr, prop)
 }
 // ------- END UTILITIES SECTION ----------
 
-function createCard(cardNumber) {
-  $('#all_cards').append(`<div id="card${cardNumber}" class="card albumCard"><a class="album_details_link" href=""><img class="card-img-top" src="" alt=""><a/><div class="card-body"><h4 class="card-title"></h4><span class="album"><span class="text-primary">Loading Album Details...</span></span></div></div>`)
+// === UI MODIFICATION FOR MOBILE MENU BAR ===
+function addInfoButtons() {
+  const infoButtonSmall = '<span class="text-secondary ml-2 float-right page-info-button" style="cursor:pointer;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</span>';
+  $('#compact_menu p').width("80%");
+  $('.my_dropdown').css("margin-top", "-2px");
+  $('#compact_menu p').append(infoButtonSmall);
+  
+  // btn-outline-secondary
+  const infoButtonLage = '<button class="btn btn-sm btn-light sticky-top float-left button_text ml-1" style="cursor:pointer;margin-top:2px;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</button>';
+  const addAlbumButtonLarge = '<button class="btn btn-sm btn-light sticky-top float-left button_text ml-1" style="cursor:pointer;margin-top:2px;" data-toggle="modal" data-target="#addFavoritesAlbumModal">Add Album</button>';
+  $('#all-favorites-filters').append(addAlbumButtonLarge);
+  $('#all-favorites-filters').append(infoButtonLage);
+}
+
+addInfoButtons();
+
+$('.add-album-instruction-link').click(function(event) {
+  event.preventDefault();
+  $('#pageInfoModal').modal('hide');
+  $('#addFavoritesAlbumModal').modal('show');
+});
+// === END UI MODIFICATION FOR MOBILE MENU BAR ===
+
+function createCard(album, cardNumber) {
+  $('#all_cards').append(`<div id="card${cardNumber}" class="card albumCard"><a class="album_details_link" href=""><img class="card-img-top" src="" alt=""><a/><span class="remove-favorite-button" data-album-id="${album._id}">&#10005;</span><div class="card-body"><h4 class="card-title"></h4><span class="album"><span class="text-primary">Loading Album Details...</span></span></div></div>`)
 }
 
 function populateCard(album, cardNumber) {
@@ -188,12 +215,6 @@ document.getElementById("get-shareable-link").addEventListener("click", function
 })
 
 // ----- START FIREBASE AUTH SECTION ------
-// === OLD CONFIG ===
-// var config = {
-//   apiKey: "AIzaSyD1Hts7zVBvDXUf-sCb89hcPesJkrUKyUc",
-//   authDomain: "album-tag-auth.firebaseapp.com",
-//   projectId: "album-tag-auth",
-// }
 // == New Config, November 2018 == 
 const config = {
   apiKey: "AIzaSyAoadL6l7wVMmMcjqqa09_ayEC8zwnTyrc",
@@ -320,7 +341,7 @@ function masterFilter(classToFilter) {
 
 function restoreCards() {
   for (let index = 0; index < albumCardsList.length; index++) {
-    albumCardsList[index].style.display = "inline"
+    albumCardsList[index].style.display = "inline-flex"
   }
 }
 
@@ -340,10 +361,10 @@ function clearFilters() {
 
 // closes filter dropdown menu's when page is scrolling
 $(document).on( 'scroll', function(){
-  $('#year_filter_menu').removeClass('show')
-  $('#genre_filter_menu').removeClass('show')
-  // $('#artist_filter_menu').removeClass('show')
-})
+  $('#year_filter_menu').removeClass('show');
+  $('#genre_filter_menu').removeClass('show');
+  $('#artist_filter_menu').removeClass('show');
+});
 
 // filters artists in filter to match what albums are on page
 function whatsOnThePage_artists() {
@@ -663,6 +684,125 @@ function filterByTopTen(classToFilter) {
 // ----------- END FILTERING FUNCTIONALITY --------------
 
 
+let addAlbumResults = [];
+function populateAddToFavoritesModalResults(data) {
+  $('#favorites-search-results').html('');
+  $('#addFavoritesAlbumModal .new-loader').hide();
+  if (data.albums) {
+    for (let index = 0; index < data.albums.length; index++) {
+      const album = data.albums[index];
+      const cardNumber = index;
+      createFavoritesModalCard(cardNumber);
+      populateFavoritesModalCard(album, cardNumber);
+    }
+    // this adds an empty space at the end so the user can scroll 
+    // all the way to the right to see the last album
+    createFavoritesModalCard(data.albums.length + 1)
+    addAlbumResults = data.albums;
+  }
+}
+
+function createFavoritesModalCard(cardNumber) {
+  $('#favorites-search-results').append(`<div id="addFavoritesModalCard${cardNumber}" class="search-modal-card" data-result-index="${cardNumber}"><img class="search-modal-card-image" src="" alt=""><div class="search-modal-card-body"><h4 class="search-modal-card-title"></h4><span class="search-modal-card-album"></span></div></div>`)
+}
+
+function populateFavoritesModalCard(album, cardNumber) {
+  // set up album and artist trunction
+  let smallArtist = album.artist
+  let largeArtist = album.artist
+  let smallAlbum = album.title
+  let largeAlbum = album.title
+  if (smallArtist.length > 32) { smallArtist = truncate(smallArtist, 32) } 
+  if (smallAlbum.length > 44) { smallAlbum = truncate(smallAlbum, 44) } 
+
+  if (largeArtist.length > 49) { largeArtist = truncate(largeArtist, 49) } 
+  if (largeAlbum.length > 66) { largeAlbum = truncate(largeAlbum, 66) }
+  
+  // artist name
+  $(`#addFavoritesModalCard${cardNumber} .search-modal-card-title`).html(`<span class="search-modal-card-large-artist">${largeArtist}</span><span class="search-modal-card-small-artist">${smallArtist}</span>`)
+  // album name
+  $(`#addFavoritesModalCard${cardNumber} .search-modal-card-album`).html(`<span class="search-modal-card-large-album">${largeAlbum}</span><span class="search-modal-card-small-album">${smallAlbum}</span>`) 
+  // album cover
+  $(`#addFavoritesModalCard${cardNumber} .search-modal-card-image`).attr('src', album.cover.replace('{w}', 260).replace('{h}', 260))
+
+  $(`#addFavoritesModalCard${cardNumber}`).click(function(event) {
+    event.preventDefault();
+    // add this album to favorites
+    const selectedAlbumIndex = $(this).data("result-index");
+    const selectedAlbum = addAlbumResults[selectedAlbumIndex];
+    let alreadyInFavorites = myFavoriteAlbums.find(x => x.appleAlbumID === selectedAlbum.appleAlbumID);
+    if (!alreadyInFavorites) {
+      addToFavorites(selectedAlbum);
+    } else {
+      alert(`"${selectedAlbum.title}" is already in your favorites.`);
+    }
+  })
+}
+
+$('#add-favorites-album-button').click(function(event) {
+  event.preventDefault();
+  const search = $('#add-favorites-album-input').val().trim().replace(/[^\w\s]/gi, '');
+  $('#favorites-search-results').html('');
+  $('#addFavoritesAlbumModal .new-loader').show();
+  executeSearch(search, "add to favorites");
+});
+
+// execute search when enter key is pressed
+$("#add-favorites-album-input").keyup(function(event) {
+  if (event.keyCode === 13) {
+    $("#add-favorites-album-button").click();
+  }
+});
+
+function addToFavorites(selectedAlbum) {
+  $.getJSON ('/api/v1/album/albumid/' + selectedAlbum.appleAlbumID, function(databaseAlbum) {
+    if (!databaseAlbum.message) {
+      // ALBUM EXISTS IN DATABASE,
+      $.ajax(`/api/v1/album/favorites/${databaseAlbum._id}`, {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ 
+          "user" : userID,
+          "albumData" : selectedAlbum
+        }),
+        success: function(album) {
+          if (!album.message) {
+            myFavoriteAlbums.push(album);
+            $('#addFavoritesAlbumModal').modal("hide");
+            startFavoritesPage();
+            $('#add-favorites-album-input').val('');
+            $('#favorites-search-results').html('');
+          } else {
+            alert(album.message);
+          }
+        }
+      });
+    } else if (databaseAlbum.message === "No matching album in the database.") {
+      // ALBUM IS NOT YET IN DATABASE
+      $.ajax(`/api/v1/album/favorites/new`, {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ 
+          "user" : userID,
+          "albumData" : selectedAlbum
+        }),
+        success: function(album) {
+          if (!album.message) {
+            myFavoriteAlbums.push(album);
+            $('#addFavoritesAlbumModal').modal("hide");
+            startFavoritesPage();
+            $('#add-favorites-album-input').val('');
+            $('#favorites-search-results').html('');
+          } else {
+            alert(album.message);
+          }
+        }
+      });
+    } else {
+      alert(databaseAlbum.message);
+    }
+  })
+}
 
 function startFavoritesPage() {
   // clear any warnings
@@ -671,13 +811,14 @@ function startFavoritesPage() {
   // display instructions if no favorites exist for this user
   if (myFavoriteAlbums.message) {
     showDOMelement("log_in_message")
-    $('#log_in_message').html("<div style='text-align:center;'><p style='margin: 20px 5px 50px 5px;'>Looks like you don't have any favorites yet! <a href='/search'>Search</a> for an album then click the <img src='../images/heart-unliked.png' height='30' width='auto'> icon on the Lists tab to add it to your favorites.</p></div>")
+    $('#log_in_message').html("<div class='text-secondary' style='text-align:center;'><p style='margin: 20px 5px 50px 5px;'>Looks like you don't have any favorites yet! Click <span class='text-primary' style='cursor:pointer;' data-toggle='modal' data-target='#addFavoritesAlbumModal'>Add Album</span> to find an album and add it to your favorites.</p></div>")
     hideDOMelement("filter_by_genre_dropdown_button")
     hideDOMelement("filter_by_year_dropdown_button")
     hideDOMelement("filter_by_artist_dropdown_button")
     hideDOMelement("clear_filters_button")
     hideDOMelement("share-favorites-button")
     hideDOMelement("to_top_button")
+    // hideDOMelement("add-album-menu-button")
     return
   } else {
     $('#log_in_message').html("")
@@ -695,19 +836,46 @@ function startFavoritesPage() {
     let album = myFavoriteAlbums[index]
     let card = (index + 1)
     
-    createCard(card)
+    createCard(album, card)
     populateCard(album, card)
   }
+  $('.remove-favorite-button').click(function(event) {
+    event.preventDefault();
+    const selectedAlbum = $(this).data("album-id");
+    removeFromFavorites(selectedAlbum);
+  }) 
   // populate our list of dom elements for filtering 
   albumCardsList = $(".albumCard")
   startTags()
 }
 
-function addInfoButtons() {
-  const infoButtonSmall = '<small class="text-secondary ml-2 float-right page-info-button" style="cursor:pointer;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</small>'
-  $('#compact_menu p').append(infoButtonSmall)
-  const infoButtonLage = '<button class="btn btn-sm btn-outline-secondary sticky-top float-left button_text" style="cursor:pointer;margin-top:2px;" data-toggle="modal" data-target="#pageInfoModal">&#9432;</button>'
-  $('#all-favorites-filters').append(infoButtonLage)
+function removeFromFavorites(selectedAlbum) {
+  let albumToRemove = myFavoriteAlbums.find(x => x._id === selectedAlbum);
+  let confirmed = confirm(`Are you sure you want to remove "${albumToRemove.title}" from your favorites? You cannot undo this operation.`);
+  if (confirmed) {
+    $.ajax(`/api/v1/album/favorites/${selectedAlbum}`, {
+      method: 'DELETE',
+      contentType: 'application/json',
+      data: JSON.stringify({ "user" : userID }),
+      success: function(album) {
+        if (!album.message) {
+          removeElementFromArray(myFavoriteAlbums, albumToRemove);
+          startFavoritesPage();
+        } else {
+          alert(album.message);
+        }
+      }
+    });
+  }
 }
 
-addInfoButtons()
+// make hover scrollbar always visible on touchscreens
+$(document).ready(function() {
+  let isTouchDevice = false;
+  if ("ontouchstart" in document.documentElement) { isTouchDevice = true; }
+  if (isTouchDevice) {
+    const searchResultsBox = document.getElementById("favorites-search-results");
+    searchResultsBox.style.paddingBottom="0px";
+    searchResultsBox.style.overflowX="scroll";
+  }
+});
