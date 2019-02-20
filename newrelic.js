@@ -49,5 +49,11 @@ exports.config = {
       'response.headers.setCookie*',
       'response.headers.x*'
     ]
+  },
+  distributed_tracing: {
+    enabled: true
+  },
+  transaction_tracer: {
+    transaction_threshold: 50
   }
 }
