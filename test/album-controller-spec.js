@@ -1,44 +1,43 @@
 const should = require('should')
+require('dotenv').load();
 const album_controller = require('../controllers/album.controller')
 
-// ====== TESTING GETKEYWORDS UTILITY FUNCTION ======
-describe('getKeyWords', function() {
-  it('should return an array', function() {
-    const result = album_controller.utility_getKeyWords("")
-    result.should.be.an.Array()
+// ====== TESTING CLEANALBUMDATA UTILITY FUNCTION ======
+describe('cleanAlbumData', function() {
+  it('should return an object when passed an object', function() {
+    const result = album_controller.cleanAlbumData({})
+    result.should.be.an.Object()
   })
-  it('result should contain only strings', function() {
-    const result = album_controller.utility_getKeyWords("test")
-    let arrayOfStrings = true
-    result.forEach(element => {
-      if (typeof element === 'string' || element instanceof String) {  }
-      else { arrayOfStrings = false }
-    })
-
-    arrayOfStrings.should.not.be.false()
+  it('adds `tagObjects` property with the value of `tags` property', function() {
+    const result = album_controller.cleanAlbumData({ "tags": [ "Tag 1", "Tag 2" ] })
+    should.deepEqual(result, { "tags": [ "Tag 1", "Tag 2" ], "tagObjects": [ "Tag 1", "Tag 2" ] }, 'the result object does not match expected')
   })
-  it('result should not contain special characters', function() {
-    const result = album_controller.utility_getKeyWords("test's & more tests!")
-    result.should.matchEach(/[a-zA-Z0-9]/)
+  it('should split songname strings and genre strings', function() {
+    const result = album_controller.cleanAlbumData({ "songNames": "Song One,,Song Two", "genres": "Rock,,Metal" })
+    should.deepEqual(result, { "songNames": [ "Song One", "Song Two" ], "genres": [ "Rock", "Metal" ] }, 'the result object does not match expected')
   })
-  it('result should not contain duplicate elements', function() {
-    const result = album_controller.utility_getKeyWords("tests tests tests")
-    let testResults = []
-    result.forEach(element => {
-      if (testResults.indexOf(element) === -1) { testResults.push(element) }
-    })
+})
 
-    should.equal(result.length, testResults.length, 'there are duplicates in the returned array')
+// ====== TESTING CREATESONGSTRING UTILITY FUNCTION ======
+describe('createSongString', function() {
+  it('should return a string from input array', function() {
+    const result = album_controller.createSongString([ "Song One", "Song Two" ])
+    result.should.be.a.String()
   })
-  it('result should not contain unimportant words', function() {
-    const result = album_controller.utility_getKeyWords("a test is a test and that is that")
-    const unimportant = ["AND","THE","OR","OF","A", ""]
-    let uninmportantWordsIncluded = []
+  it('should build string from array', function() {
+    const result = album_controller.createSongString([ "Song One", "Song Two" ])
+    should.deepEqual(result, "Song One,,Song Two", 'the result string does not match expected')
+  })
+})
 
-    result.forEach(element => {
-      if (unimportant.includes(element)) { uninmportantWordsIncluded.push(element) }
-    })
-
-    should.equal(uninmportantWordsIncluded.length, 0, 'unimportant words exist in the returned array')
+// ====== TESTING CREATEGENRESTRING UTILITY FUNCTION ======
+describe('createGenreString', function() {
+  it('should return a string from input array', function() {
+    const result = album_controller.createSongString([ "Rock", "Metal" ])
+    result.should.be.a.String()
+  })
+  it('should build string from array', function() {
+    const result = album_controller.createSongString([ "Rock", "Metal" ])
+    should.deepEqual(result, "Rock,,Metal", 'the result string does not match expected')
   })
 })

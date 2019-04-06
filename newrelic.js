@@ -54,6 +54,7 @@ exports.config = {
     enabled: true
   },
   transaction_tracer: {
-    transaction_threshold: 50
+    transaction_threshold: 20,
+    record_sql: "raw"
   }
 }

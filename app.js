@@ -1,3 +1,4 @@
+const newrelic = require('newrelic')
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'staging') {
   require('dotenv').load();
 }
@@ -11,6 +12,8 @@ const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
 const cors = require('cors')
 // module.exports allows me to access `app` later in tests
 const app = express()
+// in express, this lets you call newrelic from within a template
+app.locals.newrelic = newrelic;
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -54,24 +57,23 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
 }
 
 // ====== Set up database connection ======
-const mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false)
-mongoose.connect(process.env.MONGO_STRING, { useNewUrlParser: true })
-let db = mongoose.connection
-db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+
 
 // ====== Set up routes ======
-const albumRoutes = require('./routes/album.routes')
-const listRoutes = require('./routes/list.routes')
 const appleAPIRoutes = require('./routes/appleAPI.routes')
 const staticRoutes = require('./routes/static.routes')
-const utilityRoutes = require('./routes/utility.routes')
-app.use('/api/utility', utilityRoutes)
-app.use('/api/v1/album', albumRoutes)
+const albumRoutes = require('./routes/album.routes')
+const favoriteRoutes = require('./routes/favorite.routes')
+const tagRoutes = require('./routes/tag.routes')
+const connectionRoutes = require('./routes/connection.routes')
+const listRoutes = require('./routes/list.routes')
 app.use('/api/v1/list', listRoutes)
+app.use('/api/v1/connection', connectionRoutes)
+app.use('/api/v1/tag', tagRoutes)
+app.use('/api/v1/album', albumRoutes)
+app.use('/api/v1/favorite', favoriteRoutes)
 app.use('/api/v1/apple', appleAPIRoutes)
 app.use('/', staticRoutes)
-
 // ====== Error Handler ======
 app.use(function(err, res) {
 	res.status(err.status || 404);
