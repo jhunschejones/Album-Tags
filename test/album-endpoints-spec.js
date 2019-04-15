@@ -61,7 +61,7 @@ describe('POST, GET, and DELETE a new album in the database', function() {
 // ====== TESTING ADD AND REMOVE TAG FUNCTIONALITY ======
 describe('add and remove a tag', function() {
   it('should add a tag and a new album', function(done){
-    this.timeout(3500);
+    this.timeout(3000);
     request
       .post('/api/v1/tag')
       .send({
@@ -146,7 +146,7 @@ describe('add, view, and remove a connection', function() {
   }
 
   it('should add a connection between two new albums', function(done){
-    this.timeout(2000);
+    this.timeout(3000);
     request
       .post('/api/v1/connection')
       .send({
@@ -255,7 +255,7 @@ describe('add and remove an album from favorites', function() {
       .expect(200)
       .end(function(err,res){
         res.status.should.equal(200)
-        res.body.message.should.equal("User favorite deleted!")
+        res.body.message.should.equal("Album successfully removed from user favorites.")
         done()
       })
   })
