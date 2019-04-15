@@ -12,29 +12,10 @@ function truncate(str, len){
   return (subString.substr(0, subString.lastIndexOf(' ')).replace(/(^[,\s]+)|([,\s]+$)/g, '') + '...');
 }
 
-function removeDash(str) { return str.replace(/-/g, ''); }
-
-function bubbleSort(arr, prop) {
-  let swapped;
-  do {
-    swapped = false;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (parseInt(removeDash(arr[i][prop])) > parseInt(removeDash(arr[i + 1][prop]))) {
-        const temp = arr[i];
-        arr[i] = arr[i + 1];
-        arr[i + 1] = temp;
-        swapped = true;
-      }
-    }
-  } while (swapped);
-}
-
 function scrollToTop() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
-
-function textToClassName(str) { return str.replace(/[^\w\s]/gi, '').replace(/\s\s+/g, ' ').replace(/ /g, '_').toLowerCase(); }
 
 function isGenre(str) {
   const myGenres = ['Metalcore', 'Pop Punk', 'Emo', 'Rock', 'Post-Hardcore', 'Accoustic', 'Screamo', 'Metal', 'Nu Metal', 'Alt Metal', 'Djent', 'Accoustic', 'Jazz', 'Ska', 'Rap-Rock', 'Progressive', 'Punk', 'Rap'];
@@ -47,16 +28,6 @@ function removeFromArray(arr, ele){
 
 function addToArray(arr, ele){
   if (arr.indexOf(ele) === -1) { arr.push(ele); }
-}
-
-function removeDuplicates(inputArray){
-  let outputArray = [];
-  for(let i = 0;i < inputArray.length; i++){
-    if(outputArray.indexOf(inputArray[i]) == -1){
-      outputArray.push(inputArray[i]);
-    }
-  }
-  return outputArray;
 }
 
 function escapeHtml(text) {
@@ -283,9 +254,9 @@ function populateList() {
       if (listData.user !== userID) return alert("Sorry! Only the list creator can delete albums."); 
       
       if (listType === "userlist") {
-        removeListAlbum($(this).attr("data-album-id")); 
+        removeFromList($(this).attr("data-album-id")); 
       } else if (listType === "myfavorites") {
-        removeFavoritesAlbum($(this).attr("data-album-id")); 
+        removeFromFavorites($(this).attr("data-album-id")); 
       } else {
         return alert("Sorry! This type of list won't let you delete albums.");
       }
@@ -299,7 +270,7 @@ function populateList() {
   showAlbumCount();
 }
 
-function removeListAlbum(albumID) {
+function removeFromList(albumID) {
   if (listData.user !== userID) { alert("Sorry, only the list creator can delete albums from a list."); return; }
   let thisAlbum = listData.albums.find(x => x.appleAlbumID == albumID);
   let confirmed = confirm(`Are you sure you want to remove "${thisAlbum.title}" from this list? You cannot undo this operation.`);
@@ -524,7 +495,7 @@ function filterAlbums() {
     albumArray = albumArray.filter(album => !!album.year && album.year === filterObject.year);
     showAppliedFilter(filterObject.year, "year");
   }
-  bubbleSort(albumArray, "releaseDate");
+  albumArray = albumArray.sort((a, b) => (a.releaseDate > b.releaseDate) ? 1 : -1);
   albumArray = albumArray.reverse(); // reverse shows newer albums first (generally)
   return albumArray;
 }
@@ -613,7 +584,6 @@ function searchFilter() {
     }
   } else {
     for (let i = 0; i < artistFilterElements.length; i++) {
-      // if (tagElements[i].value.toUpperCase().indexOf(userInput)!= -1) {
       if (artistFilterElements[i].dataset.artist.toUpperCase().indexOf(userInput)!= -1) {
         artistFilterElements[i].style.display = "";
       } else {
@@ -708,7 +678,7 @@ function addToFavorites(selectedAlbum) {
   }
 }
 
-function removeFavoritesAlbum(selectedAlbum) {
+function removeFromFavorites(selectedAlbum) {
   if (listData.user !== userID) return alert("Sorry, only the list creator can delete albums from a list."); 
   let albumToRemove = listData.albums.find(x => x.appleAlbumID == selectedAlbum);
   let confirmed = confirm(`Are you sure you want to remove "${albumToRemove.title}" from your favorites? You cannot undo this operation.`);
@@ -719,14 +689,15 @@ function removeFavoritesAlbum(selectedAlbum) {
       contentType: 'application/json',
       data: JSON.stringify({ 
         "user" : userID,
-        "appleAlbumID" : albumToRemove.appleAlbumID
+        "appleAlbumID" : albumToRemove.appleAlbumID,
+        "returnData": "list"
       }),
-      success: function(data) {
-        if (!data.message || data.message === "User favorite deleted!") {
-          removeFromArray(listData.albums, albumToRemove);
+      success: function(response) {
+        if (!response.message || response.message === "Album successfully removed from user favorites.") {
+          listData.albums = response;
           populateList();
         } else {
-          alert(data.message);
+          alert(response.message);
         }
       }
     });

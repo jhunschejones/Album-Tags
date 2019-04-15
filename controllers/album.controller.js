@@ -52,7 +52,7 @@ async function findAppleAlbumData(req, album) {
       } else if (body) {
         resolve(body);
       } else {
-        resolve({ "message" : `unable to find an album with ID ${album}` });
+        resolve({ "message" : `Unable to find an album with ID '${album}'` });
       }
     })
   })
@@ -60,25 +60,19 @@ async function findAppleAlbumData(req, album) {
 
 exports.createSongString = function (songs) {
   let songString = "";
-  songs.forEach(song => {
-    if (songs.indexOf(song) === songs.length - 1) {
-      songString = songString + song;
-    } else {
-      songString = songString + song + ",,";
-    }
-  });
+  for (let i = 0; i < songs.length - 1; i++) {
+    songString = songString + songs[i] + ",,";
+  }
+  songString = songString + songs[songs.length - 1];
   return songString;
 }
 
 exports.createGenreString = function (genres) {
   let genreString = "";
-  genres.forEach(genre => {
-    if (genres.indexOf(genre) === genres.length -1) {
-      genreString = genreString + genre;
-    } else {
-      genreString = genreString + genre + ",,";
-    }
-  });
+  for (let i = 0; i < genres.length - 1; i++) {
+    genreString = genreString + genres[i] + ",,";
+  }
+  genreString = genreString + genres[genres.length - 1];
   return genreString;
 }
 
@@ -202,7 +196,7 @@ exports.add_favorite = function (req, res, next) {
   });
 };
 
-exports.get_user_favorites = function (req, res, next) {
+exports.get_user_favorites = async function (req, res, next) {
   Favorite.findAll({
     where: {
       userID: req.params.userID
@@ -213,7 +207,7 @@ exports.get_user_favorites = function (req, res, next) {
         include: [ Tag ]
       }
     ]
-  }).then(function(albums) {
+  }).then(async function(albums) {
     if (albums.length < 1) return res.send(albums);
 
     let cleanAlbums = [];
@@ -222,7 +216,7 @@ exports.get_user_favorites = function (req, res, next) {
       cleanAlbums.push(_this.cleanAlbumData(album.dataValues.album));
     }
     res.send(cleanAlbums);
-  }).catch(function(err) {
+  }).catch(async function(err) {
     console.log(err)
     res.status(500).json(err);
   });
@@ -234,11 +228,23 @@ exports.delete_favorite = function (req, res, next) {
       userID: req.body.user,
       appleAlbumID: req.body.appleAlbumID
     }
-  })
-    .then(function(albumsDeleted) {
+  }).then(function(albumsDeleted) {
       if (albumsDeleted === 0) return res.status(404).send({ "message" : `User '${req.body.userID}' has not favorited album '${req.body.appleAlbumID}'` });
-      res.send({ "message": "User favorite deleted!" });
+      
+      if (req.body.returnData === "album") {
+        req.params.appleAlbumID = req.body.appleAlbumID;
+        return _this.get_album(req, res);
+      } 
+      
+      if (req.body.returnData === "list") {
+        req.params.userID = req.body.user;
+        // TODO: throws warning that there is an unreturned promise here
+        return _this.get_user_favorites(req, res);
+      } 
+      
+      res.send({ "message": "Album successfully removed from user favorites." });
     }).catch(function(err) {
+      console.log(err);
       res.status(500).json(err);
     });
 };
@@ -334,12 +340,12 @@ exports.find_by_tags = function (req, res, next) {
 
 exports.get_all_tags = function(req, res, next) {
   Tag.findAll({}).then(function(tags) {
-    let justTags = [];
-    tags.forEach(tag => {
-      if (justTags.indexOf(tag.text) === -1) { justTags.push(tag.text); }
-    });
-    justTags.sort();
-    res.send(justTags);
+    let justTagText = {};
+    for (let i = 0; i < tags.length; i++) {
+      const tag = tags[i].text;
+      justTagText[tag] = 0;
+    }
+    res.send(Object.keys(justTagText).sort());
   }).catch(function(err) {
     res.status(500).json(err);
   });
