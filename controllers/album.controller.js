@@ -250,6 +250,9 @@ exports.delete_favorite = function (req, res, next) {
 };
 
 exports.add_tag = async function (req, res, next) {
+  if (req.body.customGenre === 'true') { req.body.customGenre = true; }
+  if (req.body.customGenre === 'false') { req.body.customGenre = false; }
+
   Tag.findOrCreate({
     where: {
       text: req.body.tag,
@@ -352,6 +355,9 @@ exports.get_all_tags = function(req, res, next) {
 };
 
 exports.delete_tag = async function (req, res, next) {
+  if (req.body.customGenre === 'true') { req.body.customGenre = true; }
+  if (req.body.customGenre === 'false') { req.body.customGenre = false; }
+
   Tag.findOne({
     where: {
       text: req.body.text,
@@ -374,7 +380,7 @@ exports.delete_tag = async function (req, res, next) {
             appleAlbumID: req.body.appleAlbumID
           },
           include: [ Tag ]
-        }).then(function(updatedAlbum) {
+        }).then(async function(updatedAlbum) {
           res.send(_this.cleanAlbumData(updatedAlbum));
 
           // destroy tag if it is not in any albumTags relationships
@@ -745,7 +751,8 @@ exports.get_album_lists = function (req, res, next) {
 };
 
 exports.create_virtual_favorites_list = function (req, res, next) {
-  res.send(cryptr.encrypt(`${req.params.id.trim()}\s\s\s${req.body.displayName.trim()}`));
+  const virtualFavoritesURL = cryptr.encrypt(`${req.params.id.trim()}\s\s\s${req.body.displayName.trim()}`);
+  res.send(JSON.stringify(virtualFavoritesURL));
 };
 
 exports.get_virtual_favorites_list = function (req, res, next) {
