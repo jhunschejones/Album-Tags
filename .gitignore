@@ -34,4 +34,3 @@ test.json
 *.DS_Store
 .env
 public/javascripts/compiler.jar
-data/
