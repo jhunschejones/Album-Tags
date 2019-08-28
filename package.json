@@ -30,7 +30,7 @@
     "newrelic": "^5.7.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "sequelize": "^5.8.4",
+    "sequelize": "^5.17.0",
     "should": "^13.2.3",
     "sqlite3": "^4.0.6",
     "supertest": "^4.0.2"
