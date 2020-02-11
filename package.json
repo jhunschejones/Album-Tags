@@ -27,15 +27,15 @@
     "helmet": "^3.21.2",
     "mocha": "^6.2.2",
     "mysql2": "^1.7.0",
-    "newrelic": "^5.13.1",
+    "newrelic": "^6.3.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "sequelize": "^5.21.3",
+    "sequelize": "^5.21.4",
     "should": "^13.2.3",
     "sqlite3": "^4.1.1",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.2"
   }
 }
